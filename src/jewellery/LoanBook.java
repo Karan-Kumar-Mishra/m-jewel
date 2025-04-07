@@ -237,31 +237,54 @@ public class LoanBook extends javax.swing.JPanel {
         // Convert selected date to SQL date for comparison
         java.sql.Date sqlSelectedDate = new java.sql.Date(selectedDate.getTime());
 
-        // Format for database comparison (assuming your data uses yyyy-MM-dd format)
-        SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String targetDateStr = dbDateFormat.format(sqlSelectedDate);
+        // Format for display (matches your DateRenderer format)
+        SimpleDateFormat displayFormat = new SimpleDateFormat("dd-MM-yyyy");
+        // Format for parsing dates from your data
+        SimpleDateFormat parseFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         if (completeLoanData == null || completeLoanData.length == 0) {
+            populateTable(new Object[0][]); // Show empty table if no data
             return;
         }
 
         // Filter the data based on the selected date
         Object[][] filteredData = Arrays.stream(completeLoanData)
-                .filter(row -> row != null && row.length > 1 && row[1] != null) // Check for valid row and date exists
+                .filter(row -> row != null && row.length > 1 && row[0] != null) // Check for valid row and date exists (date is at index 0 in display)
                 .filter(row -> {
                     try {
-                        String rowDateStr;
-                        if (row[1] instanceof java.sql.Date) {
-                            rowDateStr = dbDateFormat.format((java.sql.Date) row[1]);
-                        } else if (row[1] instanceof String) {
-                            // Parse string date if that's how your data is stored
-                            java.util.Date rowDate = dbDateFormat.parse(row[1].toString());
-                            rowDateStr = dbDateFormat.format(rowDate);
+                        // The date to compare is in the display data at index 0
+                        Object dateObj = row[0]; // This is the date from the display data
+
+                        if (dateObj == null) {
+                            return false;
+                        }
+
+                        java.util.Date rowDate;
+
+                        if (dateObj instanceof java.sql.Date) {
+                            rowDate = (java.sql.Date) dateObj;
+                        } else if (dateObj instanceof String) {
+                            // Try to parse the string date
+                            try {
+                                rowDate = parseFormat.parse(dateObj.toString());
+                            } catch (Exception e) {
+                                // If parsing fails, try display format
+                                rowDate = displayFormat.parse(dateObj.toString());
+                            }
+                        } else if (dateObj instanceof java.util.Date) {
+                            rowDate = (java.util.Date) dateObj;
                         } else {
                             return false;
                         }
-                        return rowDateStr.equals(targetDateStr);
+
+                        // Compare just the dates (ignore time)
+                        SimpleDateFormat compareFormat = new SimpleDateFormat("yyyyMMdd");
+                        String selectedDateStr = compareFormat.format(sqlSelectedDate);
+                        String rowDateStr = compareFormat.format(rowDate);
+
+                        return selectedDateStr.equals(rowDateStr);
                     } catch (Exception e) {
+                        e.printStackTrace();
                         return false;
                     }
                 })
@@ -269,6 +292,14 @@ public class LoanBook extends javax.swing.JPanel {
 
         // Populate the table with filtered data
         populateTable(filteredData);
+
+        // Show message if no results found
+        if (filteredData.length == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "No records found for date: " + displayFormat.format(selectedDate),
+                    "No Data",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public javax.swing.JPanel getContentPane() {
@@ -892,6 +923,7 @@ public class LoanBook extends javax.swing.JPanel {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+
     }// GEN-LAST:event_jButton4ActionPerformed
 
     /**

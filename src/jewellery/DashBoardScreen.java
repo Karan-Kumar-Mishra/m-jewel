@@ -39,7 +39,6 @@ import jewellery.InsertLoanEntry;
 import jewellery.LoanBook;
 import javax.swing.JPanel;
 
-
 /**
  *
  * @author SACHIN MISHRA
@@ -1861,46 +1860,46 @@ public class DashBoardScreen extends javax.swing.JFrame {
         try {
             int index = tabbedPane.indexOfTab("Loan Entry");
             if (index == -1) {
-                LoanEntry le = new LoanEntry();
-                tabbedPane.addTab("Loan Entry", le.getContentPane());
-                tabbedPane.setSelectedComponent(le.getContentPane());
+                LoanEntry loanEntryPanel = new LoanEntry(); // Create a new instance of LoanEntry
+                tabbedPane.addTab("Loan Entry", loanEntryPanel); // Add it to the tabbed pane
+                tabbedPane.setSelectedComponent(loanEntryPanel); // Select the newly added tab
             } else {
-                tabbedPane.setSelectedIndex(index);
+                tabbedPane.setSelectedIndex(index); // If it exists, select the existing tab
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error creating Loan Entry: " + e.getMessage());
+            e.printStackTrace(); // Print the stack trace for debugging
+            JOptionPane.showMessageDialog(this, "Error creating Loan Entry: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-      
+
         try {
-        int index = tabbedPane.indexOfTab("Loan Book");
-        if (index == -1) {
-            LoanBook loanBook = new LoanBook();
-            // Ensure the panel is properly initialized
-            JPanel contentPane = loanBook.getContentPane();
-            if (contentPane != null) {
-                tabbedPane.addTab("Loan Book", contentPane);
-                tabbedPane.setSelectedComponent(contentPane);
+            int index = tabbedPane.indexOfTab("Loan Book");
+            if (index == -1) {
+                LoanBook loanBook = new LoanBook();
+                // Ensure the panel is properly initialized
+                JPanel contentPane = loanBook.getContentPane();
+                if (contentPane != null) {
+                    tabbedPane.addTab("Loan Book", contentPane);
+                    tabbedPane.setSelectedComponent(contentPane);
+                } else {
+                    throw new Exception("Loan Book content pane is null");
+                }
             } else {
-                throw new Exception("Loan Book content pane is null");
+                tabbedPane.setSelectedIndex(index);
             }
-        } else {
-            tabbedPane.setSelectedIndex(index);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error opening Loan Book:\n" + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, 
-            "Error opening Loan Book:\n" + e.getMessage(), 
-            "Error", JOptionPane.ERROR_MESSAGE);
-    }
-  
+
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
-    /**    
+    /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
