@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage; // For image handling
 import javax.imageio.ImageIO; // For reading images
 import com.toedter.calendar.JDateChooser;
 import java.awt.Dimension;
+
 public class LoanBook extends javax.swing.JPanel {
 
     // Custom cell renderer for dates
@@ -100,7 +101,7 @@ public class LoanBook extends javax.swing.JPanel {
             todate = new com.toedter.calendar.JDateChooser();
             todate.setDateFormatString("dd-MM-yyyy");
             todate.setVisible(true);
-         //   todate.setPreferredSize(new Dimension(150, 25));
+            //   todate.setPreferredSize(new Dimension(150, 25));
 
             // Initialize data with null check
             completeLoanData = GetLoanData.get();
@@ -118,8 +119,7 @@ public class LoanBook extends javax.swing.JPanel {
             jTable1.setModel(model);
 
             // Populate the table with data
-           // populateTable(completeLoanData);
-           
+            // populateTable(completeLoanData);
             customizeTable(); // Customize after all components exist
 
         } catch (Exception e) {
@@ -227,80 +227,50 @@ public class LoanBook extends javax.swing.JPanel {
 
     private void filterByDate() {
         java.util.Date selectedDate = todate.getDate();
+
         if (selectedDate == null) {
-            // Show empty table when no date is selected
-            jTable1.setModel(new DefaultTableModel(new Object[0][], columnNames));
+            // If no date is selected, show all data
+            populateTable(completeLoanData);
             return;
         }
-    
-        // Format the selected date for display
-        SimpleDateFormat displayFormat = new SimpleDateFormat("dd-MM-yyyy");
-        String displayDate = displayFormat.format(selectedDate);
-    
-        // Convert to SQL date for comparison
-        java.sql.Date sqlDate = new java.sql.Date(selectedDate.getTime());
+
+        // Convert selected date to SQL date for comparison
+        java.sql.Date sqlSelectedDate = new java.sql.Date(selectedDate.getTime());
+
+        // Format for database comparison (assuming your data uses yyyy-MM-dd format)
         SimpleDateFormat dbDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String targetDateStr = dbDateFormat.format(sqlDate);
-    
+        String targetDateStr = dbDateFormat.format(sqlSelectedDate);
+
         if (completeLoanData == null || completeLoanData.length == 0) {
             return;
         }
-    
-        // Filter the data
+
+        // Filter the data based on the selected date
         Object[][] filteredData = Arrays.stream(completeLoanData)
-                .filter(row -> row != null && row.length > 1 && row[1] != null)
+                .filter(row -> row != null && row.length > 1 && row[1] != null) // Check for valid row and date exists
                 .filter(row -> {
                     try {
+                        String rowDateStr;
                         if (row[1] instanceof java.sql.Date) {
-                            String rowDateStr = dbDateFormat.format((java.sql.Date) row[1]);
-                            return rowDateStr.equals(targetDateStr);
+                            rowDateStr = dbDateFormat.format((java.sql.Date) row[1]);
                         } else if (row[1] instanceof String) {
+                            // Parse string date if that's how your data is stored
                             java.util.Date rowDate = dbDateFormat.parse(row[1].toString());
-                            String rowDateStr = dbDateFormat.format(rowDate);
-                            return rowDateStr.equals(targetDateStr);
+                            rowDateStr = dbDateFormat.format(rowDate);
+                        } else {
+                            return false;
                         }
-                        return false;
+                        return rowDateStr.equals(targetDateStr);
                     } catch (Exception e) {
                         return false;
                     }
                 })
                 .toArray(Object[][]::new);
-    
-        // Create display data with formatted dates
-        Object[][] displayData = new Object[filteredData.length][columnNames.length];
-        for (int i = 0; i < filteredData.length; i++) {
-            if (filteredData[i] == null || filteredData[i].length < 4) {
-                continue;
-            }
-    
-            // Map data to display columns with formatted date
-            displayData[i][0] = displayDate; // Use the formatted display date
-            displayData[i][1] = filteredData[i][2]; // SLIP_NO
-            displayData[i][2] = filteredData[i][3]; // PARTY_NAME
-            // ... rest of your column mappings ...
-        }
-    
-        // Update the table model
-        DefaultTableModel model = new DefaultTableModel(displayData, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-    
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 1) {
-                    return Integer.class;
-                }
-                if (columnIndex >= 3 && columnIndex <= 8) {
-                    return Double.class;
-                }
-                return Object.class;
-            }
-        };
-    
-        jTable1.setModel(model);
+
+        // Populate the table with filtered data
+        populateTable(filteredData);
     }
+
     public javax.swing.JPanel getContentPane() {
         return this;
     }
@@ -538,6 +508,7 @@ public class LoanBook extends javax.swing.JPanel {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
@@ -633,6 +604,8 @@ public class LoanBook extends javax.swing.JPanel {
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -668,7 +641,10 @@ public class LoanBook extends javax.swing.JPanel {
                             .addComponent(jButton4)
                             .addComponent(jButton5)
                             .addComponent(jButton6))
-                        .addGap(19, 19, 19))))
+                        .addGap(19, 19, 19))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29))))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -933,6 +909,7 @@ public class LoanBook extends javax.swing.JPanel {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JCheckBox jCheckBox1;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
