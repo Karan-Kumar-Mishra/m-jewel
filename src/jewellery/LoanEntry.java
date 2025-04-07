@@ -14,6 +14,7 @@ import java.sql.DriverManager;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import jewellery.InsertLoanEntry;
@@ -25,6 +26,18 @@ import jewellery.DatabaseTableCreator;
 import jewellery.DBController;
 import jewellery.GLOBAL_VARS;
 import jewellery.ImageSelector;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.awt.FileDialog;
+import java.awt.Frame;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class LoanEntry extends javax.swing.JFrame {
 
@@ -115,6 +128,7 @@ public class LoanEntry extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
 
         jLabelPartyName = new javax.swing.JLabel();
         jLabelPartyAddress = new javax.swing.JLabel();
@@ -123,6 +137,7 @@ public class LoanEntry extends javax.swing.JFrame {
         jLabelPartyEmail = new javax.swing.JLabel();
         jLabelPartyLedgerBalance = new javax.swing.JLabel();
         jLabelPartyLastEntry = new javax.swing.JLabel();
+        imageListModel = new DefaultListModel<>();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -335,14 +350,21 @@ public class LoanEntry extends javax.swing.JFrame {
         jPanel3.add(jTextField13, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 180, -1));
         jPanel3.add(jTextField14, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 180, -1));
 
-        jButton5.setText("Add Images");
+        jButton5.setText("Add item's Images");
+
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        jButton6.setText("Add Guarantor Image");
         jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 180, -1));
-
+        jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 300, 180, -1));
         jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 160, 370, 380));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
@@ -671,43 +693,43 @@ public class LoanEntry extends javax.swing.JFrame {
         });
     }
 
- private void addFocusListenerToTextFields() {
-    addFocusListener(jTextField17);
-    addFocusListener(jTextField18);
-    addFocusListener(jTextField26);
-    addFocusListener(jTextField20); 
-    addFocusListener(jTextField23); 
-    addFocusListener(jTextField1);  
-}
+    private void addFocusListenerToTextFields() {
+        addFocusListener(jTextField17);
+        addFocusListener(jTextField18);
+        addFocusListener(jTextField26);
+        addFocusListener(jTextField20);
+        addFocusListener(jTextField23);
+        addFocusListener(jTextField1);
+    }
 
-  private void addFocusListener(JTextField textField) {
-    textField.addFocusListener(new FocusListener() {
-        @Override
-        public void focusGained(FocusEvent e) {
-            if (textField == jTextField17) {
-                jTextField17.setText(LocalDate.now().toString());
-            } else if (textField == jTextField18) {
-                jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-                GLOBAL_VARS.slip_number++;
-            } else if (textField == jTextField26) {
-                jTextField26.setText(LocalDate.now().toString());
+    private void addFocusListener(JTextField textField) {
+        textField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textField == jTextField17) {
+                    jTextField17.setText(LocalDate.now().toString());
+                } else if (textField == jTextField18) {
+                    jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+                    GLOBAL_VARS.slip_number++;
+                } else if (textField == jTextField26) {
+                    jTextField26.setText(LocalDate.now().toString());
+                }
             }
-        }
 
-        @Override
-        public void focusLost(FocusEvent e) {
-            // Calculate net weight when focus is lost on relevant fields
-            if (e.getSource() == jTextField20 || e.getSource() == jTextField23 || e.getSource() == jTextField1) {
-                calculateNetWeight();
+            @Override
+            public void focusLost(FocusEvent e) {
+                // Calculate net weight when focus is lost on relevant fields
+                if (e.getSource() == jTextField20 || e.getSource() == jTextField23 || e.getSource() == jTextField1) {
+                    calculateNetWeight();
+                }
             }
-        }
-    });
-}
+        });
+    }
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {
         Object selectedItem = jComboBox2.getSelectedItem();
         System.out.println("Selected party: " + selectedItem.toString());
-      //  setVisible(true);
+        //  setVisible(true);
         String details[] = getPartyDetailInLoan.get(selectedItem.toString());
 
         jLabelPartyName.setText(details[0]);
@@ -717,29 +739,67 @@ public class LoanEntry extends javax.swing.JFrame {
         jLabelPartyEmail.setText(details[4]);
     }
 
-   private void calculateNetWeight() {
-    // Check if all required fields are filled and valid
-    if (jTextField20.getText().trim().isEmpty() || 
-        jTextField23.getText().trim().isEmpty() || 
-        jTextField1.getText().trim().isEmpty()) {
-        // If any field is empty, do not calculate net weight
-        return;
+    private void calculateNetWeight() {
+        // Check if all required fields are filled and valid
+        if (jTextField20.getText().trim().isEmpty()
+                || jTextField23.getText().trim().isEmpty()
+                || jTextField1.getText().trim().isEmpty()) {
+            // If any field is empty, do not calculate net weight
+            return;
+        }
+
+        try {
+            // Parse the input values
+            double goldWeight = Double.parseDouble(jTextField20.getText());
+            double purity = Double.parseDouble(jTextField23.getText());
+            double interest = Double.parseDouble(jTextField1.getText());
+            // Perform the calculation
+            double netWeight = goldWeight * (purity / 100);
+            // Update the net weight field
+            jTextField22.setText(String.format("%.4f", netWeight)); // Format to 4 decimal places
+        } catch (NumberFormatException e) {
+            // If parsing fails, show an error message
+            JOptionPane.showMessageDialog(this, "Please enter valid numbers for gold weight, purity, and interest.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    try {
-        // Parse the input values
-        double goldWeight = Double.parseDouble(jTextField20.getText());
-        double purity = Double.parseDouble(jTextField23.getText());
-        double interest = Double.parseDouble(jTextField1.getText());
-        // Perform the calculation
-        double netWeight = goldWeight * (purity / 100) ;
-        // Update the net weight field
-        jTextField22.setText(String.format("%.4f", netWeight)); // Format to 4 decimal places
-    } catch (NumberFormatException e) {
-        // If parsing fails, show an error message
-        JOptionPane.showMessageDialog(this, "Please enter valid numbers for gold weight, purity, and interest.", "Input Error", JOptionPane.ERROR_MESSAGE);
+    private void uploadImage() {
+        FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image", FileDialog.LOAD);
+        fileDialog.setFilenameFilter((dir, name)
+                -> name.endsWith(".jpg") || name.endsWith(".jpeg")
+                || name.endsWith(".png") || name.endsWith(".gif")
+        );
+
+        fileDialog.setVisible(true);
+
+        String selectedFile = fileDialog.getFile();
+        String selectedDirectory = fileDialog.getDirectory();
+
+        if (selectedFile != null) {
+            String filePath = selectedDirectory + selectedFile;
+
+            // Create images folder if it doesn't exist
+            Object selectedItem = jComboBox2.getSelectedItem();
+            File imagesFolder = new File("assets/" + selectedItem.toString());
+            if (!imagesFolder.exists()) {
+                imagesFolder.mkdirs(); // Changed to mkdirs() in case parent directories don't exist
+            }
+
+            // Copy the selected file to the images folder
+            try {
+                Path sourcePath = Paths.get(filePath);
+                Path destinationPath = Paths.get("assets/" + selectedItem.toString(), "GUARNATOR_PHOTO.png");
+
+                // Handle duplicate by always replacing (as per your requirement)
+                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                imageListModel.addElement(destinationPath.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error saving image: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
-}
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         setVisible(true);
@@ -784,6 +844,11 @@ public class LoanEntry extends javax.swing.JFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
         ImageSelector is = new ImageSelector();
         is.setVisible(true);
+    }
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
+        uploadImage();
+
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -877,13 +942,13 @@ public class LoanEntry extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
-
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
@@ -964,4 +1029,5 @@ public class LoanEntry extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private DefaultListModel<String> imageListModel;
 }
