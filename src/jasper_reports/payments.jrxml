@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="receipt" pageWidth="595" pageHeight="260" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="432dd6f7-66f9-4476-ba3e-bc7dfa0547e8">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="4"/>
+	<property name="ireport.y" value="59"/>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select * from payments]]>
+	</queryString>
+	<field name="Receiptno" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="discount" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amtpaid" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="mop" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="remarks" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="totalSum" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{amtpaid}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band height="220" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="220" uuid="d2836b5a-4ca7-4337-b991-ea9ec32586b7"/>
+			</rectangle>
+		</band>
+	</background>
+	
+        
+        <title>
+		<band height="105" splitType="Stretch">
+			
+			<staticText>
+				<reportElement x="200" y="0" width="161" height="30" uuid="51e6cad2-df6e-43e6-b3f2-38430c984cd3"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAYMENTS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="54" y="9" width="440" height="67" forecolor="#FFCC00" uuid="f46bd147-c7de-4558-a1b9-e082ea0f3c3d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Nirmala UI" size="24"/>
+				</textElement>
+				<text><![CDATA[CHANDRA BHUSHAN JEWELLERS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="131" y="59" width="300" height="43" forecolor="#F21C18" uuid="3e710d9b-cb82-4b93-9f2d-47ab8a2ef3bc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Nirmala UI" size="14"/>
+				</textElement>
+				<text><![CDATA[HIRALAL CHOWK
+MAIN ROAD, BEGUSARAI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="5" width="100" height="30" uuid="ed66391a-7f2d-4a44-9f07-6af3118a6dcb"/>
+				<text><![CDATA[Mob:- 8709014084]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="483" y="2" width="70" height="30" uuid="06e84ae7-8fac-4616-b3f1-c2d31aec4a95"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[8709014084]]></text>
+			</staticText>
+			<image>
+				<reportElement x="470" y="3" width="13" height="13" uuid="e4af677d-5f94-4df8-bfe8-eb87c8b37a43">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{imagePath}+"whatsapp.jpeg"]]></imageExpression>
+			</image>
+			
+		</band>
+	</title>
+	<pageHeader>
+		<band height="110" splitType="Stretch">
+			<staticText>
+				<reportElement x="22" y="2" width="219" height="29" uuid="03630726-5ccc-4a30-91af-e86aaa7b49fc"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="11" width="100" height="20" uuid="cd28e172-c1db-45bd-9ee3-99f6fe39d6a9"/>
+				<text><![CDATA[INVOICE DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="22" width="100" height="20" uuid="aa734bc0-ccf2-4aab-b65f-2b7e168357de"/>
+				<text><![CDATA[INVOICE NO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="22" y="22" width="219" height="20" uuid="5c20f900-fa96-4ee8-bf85-4d2036f9fe95"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="22" width="100" height="20" uuid="2b533212-f284-493f-b49c-e4d6ada8ced4"/>
+				<textFieldExpression><![CDATA[$F{Receiptno}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="455" y="11" width="100" height="20" uuid="0954c11b-0777-474f-b18c-2d5423474172"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="50" width="555" height="1" uuid="ddf43a80-bb9b-4417-90c2-aebbfced5975"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="0663a5bb-7005-455d-a0e1-51ba49590e2d"/>
+			</line>
+                        
+                        <staticText>
+				<reportElement x="50" y="60" width="100" height="20" uuid="5fc33f83-43d0-415f-a4d5-a5fe15312cb7"/>
+				<text><![CDATA[AMOUNT PAID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="60" width="100" height="20" uuid="b2ba2532-95ac-4625-b891-ff1f42da72c6"/>
+				<text><![CDATA[DISCOUNT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="395" y="60" width="100" height="20" uuid="be015513-fd76-4f25-8c3c-fb8ea673469e"/>
+				<text><![CDATA[REMARKS]]></text>
+			</staticText>
+                        
+                        <line>
+				<reportElement x="0" y="79" width="555" height="1" uuid="df8632ce-1258-4d80-aa98-0f78bdbc1071"/>
+			</line>
+			
+			<textField>
+				<reportElement x="50" y="85" width="100" height="20" uuid="4844e73b-3a43-46cd-88cf-0107872cb8ca"/>
+				<textFieldExpression><![CDATA[$F{amtpaid}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="229" y="85" width="100" height="20" uuid="f040a6ee-5be8-4172-9c9d-881bad0ba3ba"/>
+				<textFieldExpression><![CDATA[$F{discount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="395" y="85" width="100" height="20" uuid="d4485d10-bb00-456a-92d8-9d0d5b21d9da"/>
+				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+			</textField>
+		</band>
+        </pageHeader>        
+	
+</jasperReport>

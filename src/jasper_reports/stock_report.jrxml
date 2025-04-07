@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="receipt" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="432dd6f7-66f9-4476-ba3e-bc7dfa0547e8">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="4"/>
+	<property name="ireport.y" value="59"/>
+	<parameter name="imagePath" class="java.lang.String"/>
+	
+	<field name="itemname" class="java.lang.String"/>
+        <field name="opqty" class="java.lang.Double"/>
+        <field name="purchaseQty" class="java.lang.Double"/>
+        <field name="soldQty" class="java.lang.Double"/>
+        <field name="closingStock" class="java.lang.Double"/>
+        <field name="netRemainingWt" class="java.lang.Double"/>
+        <field name="closingWt" class="java.lang.Double"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="802" uuid="d2836b5a-4ca7-4337-b991-ea9ec32586b7"/>
+			</rectangle>
+		</band>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="200" y="0" width="161" height="30" uuid="51e6cad2-df6e-43e6-b3f2-38430c984cd3"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Stock]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="40" width="221" height="26" uuid="47c06774-f6db-4eec-b5fb-48ff32b8f6d9"/>
+				<textElement textAlignment="Center">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMPANY NAME]]></text>
+                                
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="168" y="2" width="219" height="26" uuid="03630726-5ccc-4a30-91af-e86aaa7b49fc"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Stock Report]]></text>
+			</staticText>
+			
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="0" width="48" height="20" uuid="8f1c4e09-a0fb-4b82-adb7-4f4da8db1dab"/>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="54" height="20" uuid="5fc33f83-43d0-415f-a4d5-a5fe15312cb7"/>
+				<text><![CDATA[Op Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="0" width="90" height="20" uuid="b2ba2532-95ac-4625-b891-ff1f42da72c6"/>
+				<text><![CDATA[Purchase Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="0" width="60" height="20" uuid="be015513-fd76-4f25-8c3c-fb8ea673469e"/>
+				<text><![CDATA[Sale Qty]]></text>
+			</staticText>
+                        <staticText>
+				<reportElement x="330" y="0" width="60" height="20" uuid="be015513-fd76-4f25-8c3c-fb8ea673469e"/>
+				<text><![CDATA[Cl.Stock]]></text>
+			</staticText>
+                        <staticText>
+				<reportElement x="400" y="0" width="60" height="20" uuid="be015513-fd76-4f25-8c3c-fb8ea673469e"/>
+				<text><![CDATA[Total Wt.]]></text>
+			</staticText>
+                        <staticText>
+				<reportElement x="470" y="0" width="70" height="20" uuid="be015513-fd76-4f25-8c3c-fb8ea673469e"/>
+				<text><![CDATA[Closing Wt.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+                    <textField>
+                        <reportElement x="10" y="0" width="100" height="20"/>
+                        <textFieldExpression><![CDATA[$F{itemname}]]></textFieldExpression>
+                    </textField>
+                    <textField>
+                        <reportElement x="100" y="0" width="54" height="20"/>
+                        <textFieldExpression><![CDATA[$F{opqty}]]></textFieldExpression>
+                    </textField>
+                    <textField>
+                        <reportElement x="170" y="0" width="90" height="20"/>
+                        <textFieldExpression><![CDATA[$F{purchaseQty}]]></textFieldExpression>
+                    </textField>
+                    <textField>
+                        <reportElement x="260" y="0" width="60" height="20"/>
+                        <textFieldExpression><![CDATA[$F{soldQty}]]></textFieldExpression>
+                    </textField>
+                    <textField>
+                        <reportElement x="330" y="0" width="60" height="20"/>
+                        <textFieldExpression><![CDATA[$F{closingStock}]]></textFieldExpression>
+                    </textField>
+                    <textField>
+                        <reportElement x="400" y="0" width="60" height="20"/>
+                        <textFieldExpression><![CDATA[$F{netRemainingWt}]]></textFieldExpression>
+                    </textField>
+                    <textField>
+                        <reportElement x="470" y="0" width="70" height="20"/>
+                        <textFieldExpression><![CDATA[$F{closingWt}]]></textFieldExpression>
+                    </textField>
+                </band>
+                
+                
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="191" y="16" width="188" height="20" uuid="196d82ac-eca4-49e3-8d1c-00d501327b1a"/>
+				<text><![CDATA[this section is used for the last of the page]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="412be60b-53e0-4513-aacc-4ec89f773dad"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="af528569-6360-46c5-a30b-631c20cd2e0e"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

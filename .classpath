@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="dist/Jewelry.jar"/>
+	<classpathentry kind="lib" path="dist/lib/AbsoluteLayout.jar"/>
+	<classpathentry kind="lib" path="dist/lib/apache-commons-net.jar"/>
+	<classpathentry kind="lib" path="dist/lib/com.lowagie.text-2.1.7.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-beanutils-1.9.4.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-collections-3.2.2.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-collections4-4.2.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-csv-1.6.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="dist/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="dist/lib/ImageJ.jar"/>
+	<classpathentry kind="lib" path="dist/lib/itextpdf-5.5.3.jar"/>
+	<classpathentry kind="lib" path="dist/lib/jasperreports-5.1.0.jar"/>
+	<classpathentry kind="lib" path="dist/lib/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="dist/lib/jsch-0.1.55.jar"/>
+	<classpathentry kind="lib" path="dist/lib/mysql-connector-java-8.0.26.jar"/>
+	<classpathentry kind="lib" path="lib/AbsoluteLayout.jar"/>
+	<classpathentry kind="lib" path="lib/apache-commons-net.jar"/>
+	<classpathentry kind="lib" path="lib/com.lowagie.text-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/commons-beanutils-1.9.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections4-4.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-csv-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/ImageJ.jar"/>
+	<classpathentry kind="lib" path="lib/itextpdf-5.5.3.jar"/>
+	<classpathentry kind="lib" path="lib/jasper-compiler-jdt.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/commons-beanutils-1.9.4.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/commons-collections-3.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/commons-collections4-4.2.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/jasper-compiler-jdt.jar"/>
+	<classpathentry kind="lib" path="lib/jasper/jasperreports-5.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jasperreports-6.18.1.jar"/>
+	<classpathentry kind="lib" path="lib/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/jsch-0.1.55.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.42-bin.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.42-bin/mysql-connector-java-5.1.42-bin.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-8.0.26.jar"/>
+	<classpathentry kind="lib" path="org.pushingpixels.trident_1.2.0.v20100204-1500.jar" sourcepath="org.pushingpixels.trident.source_1.2.0.v20100204-1500.jar"/>
+	<classpathentry kind="lib" path="org.eclipse.e4.xwt_0.9.1.SNAPSHOT.jar" sourcepath="org.eclipse.e4.xwt.source_0.9.1.SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="org.eclipse.e4.xwt.forms_0.9.1.SNAPSHOT.jar" sourcepath="org.eclipse.e4.xwt.forms.source_0.9.1.SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DELL/.p2/pool/plugins/org.eclipse.core.databinding_1.10.100.v20200926-1123.jar" sourcepath="C:/Users/DELL/.p2/pool/plugins/org.eclipse.core.databinding_1.10.100.v20200926-1123.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DELL/.p2/pool/plugins/org.eclipse.core.databinding.observable_1.10.0.v20200730-0848.jar" sourcepath="C:/Users/DELL/.p2/pool/plugins/org.eclipse.core.databinding.observable_1.10.0.v20200730-0848.jar"/>
+	<classpathentry kind="lib" path="C:/Users/DELL/.p2/pool/plugins/org.eclipse.jface.databinding_1.12.200.v20210111-0911.jar" sourcepath="C:/Users/DELL/.p2/pool/plugins/org.eclipse.jface.databinding_1.12.200.v20210111-0911.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

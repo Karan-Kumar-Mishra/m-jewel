@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="200" pageHeight="56" columnWidth="200" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d8acd2ca-846c-480d-bb7c-27d3b118059a">
+	<property name="ireport.zoom" value="5.0"/>
+	<property name="ireport.x" value="181"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="imagePath" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select * from entryitem]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="itemname" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="itemprefix" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="itemgroup" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="taxslab" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hsncode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="shortname" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tagno" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="huid" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="grosswt" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="beedswt" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="netwt" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="diamondwt" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="carats" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="polishpercent" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	
+	<field name="op_qty_type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="itemimage" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="item_sold" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="56" splitType="Stretch">
+			<rectangle>
+				<reportElement x="169" y="10" width="1" height="30" backcolor="#FFFF33" uuid="7d60d88b-2743-4a9e-bbfd-cb4df9c93ce3"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="25" y="10" width="39" height="8" uuid="41e3d1a3-4e52-4b7a-89c6-4cd1082045a6"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="25" y="44" width="24" height="6" uuid="57e5976e-75a9-4466-a8ba-85f87d9c8f04"/>
+				<textElement textAlignment="Center">
+					<font size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tag no]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="54" y="10" width="56" height="8" uuid="abc0dba0-68b8-4bd4-9081-6c30d1f5b378"/>
+				<textElement textAlignment="Center">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{itemname}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="25" y="19" width="69" height="30" uuid="b98b2f27-02b1-41a3-b0a4-069858c955b4"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39 (Extended)" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{tagno}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="41" y="44" width="53" height="6" uuid="24701388-1be6-4bfc-bc62-3dd43a1ea5d0"/>
+				<textElement textAlignment="Center">
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tagno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="94" y="19" width="18" height="8" uuid="e7f4e515-008c-44fb-bc63-344e607d804a"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Net Wt.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="112" y="19" width="33" height="8" uuid="5f3c8401-f69b-467b-81c4-4c131f56012b"/>
+				<textElement textAlignment="Center">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{netwt}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
