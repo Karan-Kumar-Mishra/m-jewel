@@ -46,7 +46,6 @@ public class LoanBook extends javax.swing.JPanel {
         "Current Value"
     };
     private Object[][] completeLoanData;
-    private com.toedter.calendar.JDateChooser todate;
 
     class DateRenderer extends DefaultTableCellRenderer {
 
@@ -98,11 +97,6 @@ public class LoanBook extends javax.swing.JPanel {
             initComponents(); // Initialize all UI components first
 
             // Initialize date chooser before adding to panel
-            todate = new com.toedter.calendar.JDateChooser();
-            todate.setDateFormatString("dd-MM-yyyy");
-            todate.setVisible(true);
-            //   todate.setPreferredSize(new Dimension(150, 25));
-
             // Initialize data with null check
             completeLoanData = GetLoanData.get();
             if (completeLoanData == null) {
@@ -226,7 +220,8 @@ public class LoanBook extends javax.swing.JPanel {
     }
 
     private void filterByDate() {
-        java.util.Date selectedDate = todate.getDate();
+
+        java.util.Date selectedDate = jDateChooser1.getDate();
 
         if (selectedDate == null) {
             // If no date is selected, show all data
@@ -236,11 +231,7 @@ public class LoanBook extends javax.swing.JPanel {
 
         // Convert selected date to SQL date for comparison
         java.sql.Date sqlSelectedDate = new java.sql.Date(selectedDate.getTime());
-
-        // Format for display (matches your DateRenderer format)
-        SimpleDateFormat displayFormat = new SimpleDateFormat("dd-MM-yyyy");
-        // Format for parsing dates from your data
-        SimpleDateFormat parseFormat = new SimpleDateFormat("yyyy-MM-dd");
+        JOptionPane.showMessageDialog(this, "selected date is= " + sqlSelectedDate);
 
         if (completeLoanData == null || completeLoanData.length == 0) {
             populateTable(new Object[0][]); // Show empty table if no data
@@ -249,11 +240,11 @@ public class LoanBook extends javax.swing.JPanel {
 
         // Filter the data based on the selected date
         Object[][] filteredData = Arrays.stream(completeLoanData)
-                .filter(row -> row != null && row.length > 1 && row[0] != null) // Check for valid row and date exists (date is at index 0 in display)
+                .filter(row -> row != null && row.length > 1 && row[0] != null) // Check for valid row and date exists
                 .filter(row -> {
                     try {
-                        // The date to compare is in the display data at index 0
-                        Object dateObj = row[0]; // This is the date from the display data
+                        // The date to compare is in the original data at index 1 (assuming it's the date)
+                        Object dateObj = row[1]; // Adjust this index if necessary
 
                         if (dateObj == null) {
                             return false;
@@ -265,12 +256,8 @@ public class LoanBook extends javax.swing.JPanel {
                             rowDate = (java.sql.Date) dateObj;
                         } else if (dateObj instanceof String) {
                             // Try to parse the string date
-                            try {
-                                rowDate = parseFormat.parse(dateObj.toString());
-                            } catch (Exception e) {
-                                // If parsing fails, try display format
-                                rowDate = displayFormat.parse(dateObj.toString());
-                            }
+                            SimpleDateFormat parseFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            rowDate = parseFormat.parse(dateObj.toString());
                         } else if (dateObj instanceof java.util.Date) {
                             rowDate = (java.util.Date) dateObj;
                         } else {
@@ -278,11 +265,8 @@ public class LoanBook extends javax.swing.JPanel {
                         }
 
                         // Compare just the dates (ignore time)
-                        SimpleDateFormat compareFormat = new SimpleDateFormat("yyyyMMdd");
-                        String selectedDateStr = compareFormat.format(sqlSelectedDate);
-                        String rowDateStr = compareFormat.format(rowDate);
-
-                        return selectedDateStr.equals(rowDateStr);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        return dateFormat.format(rowDate).equals(dateFormat.format(sqlSelectedDate));
                     } catch (Exception e) {
                         e.printStackTrace();
                         return false;
@@ -296,7 +280,7 @@ public class LoanBook extends javax.swing.JPanel {
         // Show message if no results found
         if (filteredData.length == 0) {
             JOptionPane.showMessageDialog(this,
-                    "No records found for date: " + displayFormat.format(selectedDate),
+                    "No records found for date: " + new SimpleDateFormat("dd-MM-yyyy").format(selectedDate),
                     "No Data",
                     JOptionPane.INFORMATION_MESSAGE);
         }
@@ -636,7 +620,7 @@ public class LoanBook extends javax.swing.JPanel {
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addGap(49, 49, 49)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -665,17 +649,16 @@ public class LoanBook extends javax.swing.JPanel {
                             .addComponent(jLabel3))
                         .addGap(2, 2, 2))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2)
-                            .addComponent(jButton3)
-                            .addComponent(jButton4)
-                            .addComponent(jButton5)
-                            .addComponent(jButton6))
-                        .addGap(19, 19, 19))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29))))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jButton1)
+                                .addComponent(jButton2)
+                                .addComponent(jButton3)
+                                .addComponent(jButton4)
+                                .addComponent(jButton5)
+                                .addComponent(jButton6)))
+                        .addGap(19, 19, 19))))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
