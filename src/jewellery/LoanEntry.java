@@ -975,12 +975,14 @@ public class LoanEntry extends javax.swing.JPanel {
         Logger.getLogger(DBController.class.getName()).log(Level.SEVERE, "interest date => " + jTextField1.getText());
 
         Object selectedItem = jComboBox2.getSelectedItem();
-
-        String entryDate = LocalDate.now().toString();
+       //jTextField17.getText()
+      
+        String entryDate = jTextField17.getText();
         String slipNo = jTextField18.getText().isEmpty() ? " " : jTextField18.getText();
         String partyName = selectedItem == null ? " " : selectedItem.toString();
         String remarks = jTextField19.getText().isEmpty() ? " " : jTextField19.getText();
         String startDate = jTextField26.getText().isEmpty() ? LocalDate.now().toString() : jTextField26.getText();
+       
         String interestDatePercentage = jTextField1.getText().isEmpty() ? "0" : jTextField1.getText();
         String weightType = jComboBox1.getSelectedItem() == null ? " " : jComboBox1.getSelectedItem().toString();
         String goldWeight = jTextField20.getText().isEmpty() ? "0" : jTextField20.getText();
@@ -995,7 +997,7 @@ public class LoanEntry extends javax.swing.JPanel {
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
-
+        JOptionPane.showMessageDialog(this, "start date is => "+startDate);
         InsertLoanDetails.insert(
                 entryDate,
                 slipNo,

@@ -190,7 +190,10 @@ public class LoanBook extends javax.swing.JPanel {
                 double intAmt = (displayData[i][6] instanceof Number)
                         ? ((Number) displayData[i][6]).doubleValue()
                         : 0.00;
-                displayData[i][7] = loanAmt + intAmt;
+                double dailyInterest = (loanAmt * intAmt / 100) / 30;
+                double totalInterest = dailyInterest * rowDays;
+                
+                displayData[i][7] = totalInterest+loanAmt;
             } catch (Exception e) {
                 displayData[i][7] = 0.00;
             }
@@ -231,7 +234,6 @@ public class LoanBook extends javax.swing.JPanel {
 
         // Convert selected date to SQL date for comparison
         java.sql.Date sqlSelectedDate = new java.sql.Date(selectedDate.getTime());
-        JOptionPane.showMessageDialog(this, "selected date is= " + sqlSelectedDate);
 
         if (completeLoanData == null || completeLoanData.length == 0) {
             populateTable(new Object[0][]); // Show empty table if no data
@@ -458,6 +460,8 @@ public class LoanBook extends javax.swing.JPanel {
             double interestRate = Double.parseDouble(rowData[6].toString());
             // Get and parse the start date string
             String dateString = rowData[1].toString();
+         
+       
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // adjust format to match your date string
             java.util.Date parsedDate = dateFormat.parse(dateString);
             java.sql.Date startDate = new java.sql.Date(parsedDate.getTime());
@@ -469,6 +473,7 @@ public class LoanBook extends javax.swing.JPanel {
             double dailyInterest = (loanAmount * interestRate / 100) / 30;
             double monthlyInterest = loanAmount * interestRate / 100;
             double totalInterest = dailyInterest * days;
+            
 
             // Format values with 2 decimal places
             DecimalFormat df = new DecimalFormat("#,##0.00");

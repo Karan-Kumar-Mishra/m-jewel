@@ -26,13 +26,14 @@ public class InsertLoanDetails {
                 DOCUMENTS, REMINDERS, NOTES, ITEM_LOCATION) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """;
-
+ 
         try (Connection connection = DBConnect.connect(); 
              PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
 
             // Convert LocalDate to java.sql.Date
-            Date entryDate = Date.valueOf(LocalDate.now());
-            Date startDate = Date.valueOf(LocalDate.now());
+            Date entryDate = Date.valueOf(ENTRY_DATE);
+            Date startDate = Date.valueOf(START_DATE);
+
 
             // Set parameters for the prepared statement
             preparedStatement.setDate(1, entryDate); // ENTRY_DATE
