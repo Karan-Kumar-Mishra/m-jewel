@@ -39,6 +39,7 @@ import java.nio.file.StandardCopyOption;
 
 public class LoanEntry extends javax.swing.JPanel {
 
+    private String[] partyNames;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -46,6 +47,7 @@ public class LoanEntry extends javax.swing.JPanel {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
@@ -219,6 +221,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
 
         jLabelPartyName = new javax.swing.JLabel();
         jLabelPartyAddress = new javax.swing.JLabel();
@@ -282,7 +285,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jLabel2.setText("LOAN ENTRY");
         jPanel5.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 40, -1, -1));
 
-       jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -332,8 +335,8 @@ public class LoanEntry extends javax.swing.JPanel {
                 jComboBox1ActionPerformed(evt);
             }
         });
-        String[] partyNames = GetPartyName.get();
-        
+        partyNames = GetPartyName.get();
+
         if (partyNames != null && partyNames.length > 0) {
             jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(partyNames));
         } else {
@@ -449,9 +452,17 @@ public class LoanEntry extends javax.swing.JPanel {
                 jButton6ActionPerformed(evt);
             }
         });
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
         jButton6.setText("Add Guarantor Image");
+        jButton7.setText("Refresh");
         jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 180, -1));
         jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 300, 180, -1));
+        jPanel5.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 80, 90, -1));
+
         jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 160, 370, 380));
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
@@ -662,7 +673,7 @@ public class LoanEntry extends javax.swing.JPanel {
 
         jButton4.setBackground(new java.awt.Color(255, 0, 0));
         jButton4.setText("Close");
-        jPanel5.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 80, 90, -1));
+        jPanel5.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 80, 90, -1));
 
         //getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1060, 530));
         //pack();
@@ -940,6 +951,36 @@ public class LoanEntry extends javax.swing.JPanel {
         uploadImage();
     }
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
+         partyNames = GetPartyName.get();
+
+        if (partyNames != null && partyNames.length > 0) {
+            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(partyNames));
+        } else {
+            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"No Parties Available"}));
+        }
+
+        // Clear all fields
+        clearAllTextBox();
+
+        // Reset the party details display
+        jLabelPartyName.setText("");
+        jLabelPartyAddress.setText("");
+        jLabelPartyCity.setText("");
+        jLabelPartyMobile.setText("");
+        jLabelPartyEmail.setText("");
+        jLabelPartyLedgerBalance.setText("");
+        jLabelPartyLastEntry.setText("");
+
+        // Set default date
+        jTextField17.setText(LocalDate.now().toString());
+        jTextField26.setText(LocalDate.now().toString());
+
+        // Increment slip number
+        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+        GLOBAL_VARS.slip_number++;
+    }
+
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
         javax.swing.JTabbedPane tabbedPane = (javax.swing.JTabbedPane) this.getParent();
         if (tabbedPane != null) {
@@ -976,14 +1017,14 @@ public class LoanEntry extends javax.swing.JPanel {
         Logger.getLogger(DBController.class.getName()).log(Level.SEVERE, "interest date => " + jTextField1.getText());
 
         Object selectedItem = jComboBox2.getSelectedItem();
-       //jTextField17.getText()
-      
+        //jTextField17.getText()
+
         String entryDate = jTextField17.getText();
         String slipNo = jTextField18.getText().isEmpty() ? " " : jTextField18.getText();
         String partyName = selectedItem == null ? " " : selectedItem.toString();
         String remarks = jTextField19.getText().isEmpty() ? " " : jTextField19.getText();
         String startDate = jTextField26.getText().isEmpty() ? LocalDate.now().toString() : jTextField26.getText();
-       
+
         String interestDatePercentage = jTextField1.getText().isEmpty() ? "0" : jTextField1.getText();
         String weightType = jComboBox1.getSelectedItem() == null ? " " : jComboBox1.getSelectedItem().toString();
         String goldWeight = jTextField20.getText().isEmpty() ? "0" : jTextField20.getText();
@@ -998,7 +1039,7 @@ public class LoanEntry extends javax.swing.JPanel {
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
-        JOptionPane.showMessageDialog(this, "start date is => "+startDate);
+        JOptionPane.showMessageDialog(this, "start date is => " + startDate);
         InsertLoanDetails.insert(
                 entryDate,
                 slipNo,
