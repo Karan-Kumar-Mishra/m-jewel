@@ -175,9 +175,23 @@ public class LoanBook extends javax.swing.JPanel {
             displayData[i][5] = rowDays; // Calculated days
 
             try {
-                displayData[i][6] = (data[i].length > 6 && data[i][6] != null)
+                // INTEREST_DATE_PERCENTAGE
+//                displayData[i][6] = (data[i].length > 6 && data[i][6] != null)
+//                        ? Double.parseDouble(data[i][6].toString())
+//                        : 0.00; 
+
+                double loanAmt = (displayData[i][3] instanceof Number)
+                        ? ((Number) displayData[i][3]).doubleValue()
+                        : 0.00;
+                double intAmt = (data[i].length > 6 && data[i][6] != null)
                         ? Double.parseDouble(data[i][6].toString())
-                        : 0.00; // INTEREST_DATE_PERCENTAGE
+                        : 0.00;
+                double dailyInterest = (loanAmt * intAmt / 100) / 30;
+
+                double totalInterest = dailyInterest * rowDays;
+
+                displayData[i][6] = totalInterest;
+
             } catch (NumberFormatException e) {
                 displayData[i][6] = 0.00;
             }
@@ -187,13 +201,12 @@ public class LoanBook extends javax.swing.JPanel {
                 double loanAmt = (displayData[i][3] instanceof Number)
                         ? ((Number) displayData[i][3]).doubleValue()
                         : 0.00;
-                double intAmt = (displayData[i][6] instanceof Number)
+
+                double totalInterest = (displayData[i][6] instanceof Number)
                         ? ((Number) displayData[i][6]).doubleValue()
                         : 0.00;
-                double dailyInterest = (loanAmt * intAmt / 100) / 30;
-                double totalInterest = dailyInterest * rowDays;
-                
-                displayData[i][7] = totalInterest+loanAmt;
+
+                displayData[i][7] = totalInterest + loanAmt;
             } catch (Exception e) {
                 displayData[i][7] = 0.00;
             }
@@ -460,8 +473,7 @@ public class LoanBook extends javax.swing.JPanel {
             double interestRate = Double.parseDouble(rowData[6].toString());
             // Get and parse the start date string
             String dateString = rowData[1].toString();
-         
-       
+
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // adjust format to match your date string
             java.util.Date parsedDate = dateFormat.parse(dateString);
             java.sql.Date startDate = new java.sql.Date(parsedDate.getTime());
@@ -473,7 +485,6 @@ public class LoanBook extends javax.swing.JPanel {
             double dailyInterest = (loanAmount * interestRate / 100) / 30;
             double monthlyInterest = loanAmount * interestRate / 100;
             double totalInterest = dailyInterest * days;
-            
 
             // Format values with 2 decimal places
             DecimalFormat df = new DecimalFormat("#,##0.00");

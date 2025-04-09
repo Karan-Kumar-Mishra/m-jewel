@@ -333,6 +333,7 @@ public class LoanEntry extends javax.swing.JPanel {
             }
         });
         String[] partyNames = GetPartyName.get();
+        
         if (partyNames != null && partyNames.length > 0) {
             jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(partyNames));
         } else {
