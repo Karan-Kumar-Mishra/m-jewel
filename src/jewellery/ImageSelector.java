@@ -8,6 +8,11 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.FileDialog;
 import java.awt.Frame;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import jewellery.LoanEntry;
 
 public class ImageSelector extends javax.swing.JFrame {
 
@@ -16,6 +21,7 @@ public class ImageSelector extends javax.swing.JFrame {
     private JButton uploadButton;
     private JButton closeButton;  // New close button
     private JLabel imageLabel;
+    private int imageNumber=0;
 
     public ImageSelector() {
         initComponents(); // Auto-generated method
@@ -40,12 +46,12 @@ public class ImageSelector extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 497, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 497, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 463, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 463, Short.MAX_VALUE)
         );
 
         pack();
@@ -89,7 +95,7 @@ public class ImageSelector extends javax.swing.JFrame {
         // Add action listeners
         uploadButton.addActionListener(e -> uploadImage());
         closeButton.addActionListener(e -> dispose());  // Close the window when clicked
-        
+
         imageList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 displaySelectedImage();
@@ -101,19 +107,36 @@ public class ImageSelector extends javax.swing.JFrame {
 
     private void uploadImage() {
         FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image", FileDialog.LOAD);
-        fileDialog.setFilenameFilter((dir, name) -> 
-            name.endsWith(".jpg") || name.endsWith(".jpeg") || 
-            name.endsWith(".png") || name.endsWith(".gif")
+        fileDialog.setFilenameFilter((dir, name)
+                -> name.endsWith(".jpg") || name.endsWith(".jpeg")
+                || name.endsWith(".png") || name.endsWith(".gif")
         );
 
         fileDialog.setVisible(true);
 
         String selectedFile = fileDialog.getFile();
         String selectedDirectory = fileDialog.getDirectory();
+        LoanEntry le = new LoanEntry();
 
         if (selectedFile != null) {
             String filePath = selectedDirectory + selectedFile;
-            imageListModel.addElement(filePath); 
+            imageListModel.addElement(filePath);
+            File imagesFolder = new File("assets/" + le.getSelectedPartyName() + "/itemsImages");
+            if (!imagesFolder.exists()) {
+                imagesFolder.mkdirs(); // Changed to mkdirs() in case parent directories don't exist
+            }
+            try {
+                Path sourcePath = Paths.get(filePath);
+                Path destinationPath = Paths.get("assets/" + le.getSelectedPartyName() + "/itemsImages", "ITEM_PHOTO"+imageNumber+".png");
+                imageNumber++;
+                // Handle duplicate by always replacing (as per your requirement)
+                Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+              //  imageListModel.addElement(destinationPath.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error saving image: " + e.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -125,7 +148,7 @@ public class ImageSelector extends javax.swing.JFrame {
 
             int labelWidth = imageLabel.getWidth();
             int labelHeight = imageLabel.getHeight();
-            
+
             if (labelWidth > 0 && labelHeight > 0) {
                 Image scaledImage = image.getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH);
                 imageLabel.setIcon(new ImageIcon(scaledImage));

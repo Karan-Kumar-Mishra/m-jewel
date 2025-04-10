@@ -859,7 +859,11 @@ public class LoanEntry extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for gold weight, purity, and interest.", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    public String getSelectedPartyName()
+    {
+        Object selectedItem = jComboBox2.getSelectedItem(); 
+        return selectedItem.toString();// this function is call in ImageSelector window for store the images  
+    }
     private void uploadImage() {
         FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image", FileDialog.LOAD);
         fileDialog.setFilenameFilter((dir, name)
