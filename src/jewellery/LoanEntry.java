@@ -1043,7 +1043,7 @@ public class LoanEntry extends javax.swing.JPanel {
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
-        JOptionPane.showMessageDialog(this, "start date is => " + startDate);
+       
         InsertLoanDetails.insert(
                 entryDate,
                 slipNo,

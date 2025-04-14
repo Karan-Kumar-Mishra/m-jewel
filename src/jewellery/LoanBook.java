@@ -30,6 +30,28 @@ import javax.imageio.ImageIO; // For reading images
 import com.toedter.calendar.JDateChooser;
 import java.awt.Dimension;
 import jewellery.viewItems;
+import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import javax.imageio.ImageIO;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import org.jdesktop.swingx.JXImageView;
+import javax.swing.JFrame;
+import java.util.List;
+import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.awt.BorderLayout;
+import javax.swing.*; // If you're using Swing components
+import java.awt.*; // This imports all AWT classes, including BorderLayout
 
 public class LoanBook extends javax.swing.JPanel {
 
@@ -358,6 +380,7 @@ public class LoanBook extends javax.swing.JPanel {
         jTable1.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 showSelectedLoanDetails();
+
             }
         });
 
@@ -417,6 +440,19 @@ public class LoanBook extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
         filterByDate();
     }
+    String selectedPartyname = "not found";
+
+    public String GetSelectedPartyName() {
+
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0 && selectedRow < completeLoanData.length) {
+            Object[] rowData = completeLoanData[selectedRow];
+            selectedPartyname = getStringValue(rowData, 3);
+        }
+        // JOptionPane.showMessageDialog(this, "Party is while sending ... " + selectedPartyname);
+
+        return selectedPartyname;
+    }
 
     private void showSelectedLoanDetails() {
         int selectedRow = jTable1.getSelectedRow();
@@ -435,6 +471,7 @@ public class LoanBook extends javax.swing.JPanel {
 
             // Also show the party name (from index 3)
             jLabel4.setText("Party Information: " + getStringValue(rowData, 3));
+
             String destinationPath = "assets/" + getStringValue(rowData, 3) + "/" + "GUARNATOR_PHOTO.png";
             try {
                 BufferedImage image = ImageIO.read(new File(destinationPath));
@@ -631,25 +668,25 @@ public class LoanBook extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE))
-                .addGap(94, 94, 94)
+                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
+                .addGap(71, 71, 71)
+                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButton6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -665,17 +702,19 @@ public class LoanBook extends javax.swing.JPanel {
                             .addComponent(jCheckBox1)
                             .addComponent(jLabel3))
                         .addGap(2, 2, 2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap())
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jButton1)
                                 .addComponent(jButton2)
                                 .addComponent(jButton3)
                                 .addComponent(jButton4)
                                 .addComponent(jButton5)
-                                .addComponent(jButton6)))
-                        .addGap(19, 19, 19))))
+                                .addComponent(jButton6))
+                            .addGap(19, 19, 19)))))
         );
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -906,11 +945,116 @@ public class LoanBook extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+      private void showImagePopup(JFrame parent, java.awt.event.MouseEvent evt) {
+        JXImageView source = (JXImageView) evt.getSource();
+        String imagePath = (String) source.getClientProperty("imagePath");
 
+        try {
+            // Create popup dialog
+            JDialog popup = new JDialog(parent, "Image View", true);
+            popup.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+            // Load the image in original size
+            BufferedImage img = ImageIO.read(new File(imagePath));
+            JXImageView largeImageView = new JXImageView();
+            largeImageView.setImage(img);
+
+            // Add to scroll pane in case image is very large
+            JScrollPane scrollPane = new JScrollPane(largeImageView);
+            popup.add(scrollPane);
+
+            // Set dialog size
+            popup.setSize(800, 600);
+            popup.setLocationRelativeTo(parent);
+            popup.setVisible(true);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(parent, "Error loading image: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    int imageNumber = 0;
+    private void loadImages(JFrame frame, JScrollPane scrollPane) {
+        JPanel imagePanel = new JPanel();
+        imagePanel.setLayout(new GridLayout(0, 3, 5, 5)); // 3 columns, 5px gap
+    
+        String partyName = GetSelectedPartyName();
+        if (partyName == null || partyName.isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "No party selected", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    
+        // Use ArrayList to dynamically handle images
+        List<String> imagePaths = new ArrayList<>();
+    
+        // Add default image first
+        imagePaths.add("C:/Users/91888/Pictures/Default.jpg");
+    
+        // Try to find item images
+        Path imageDir = Paths.get("assets/" + partyName + "/itemsImages/");
+        if (Files.exists(imageDir)) {
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(imageDir, "ITEM_PHOTO*.png")) {
+                for (Path path : stream) {
+                    imagePaths.add(path.toString());
+                }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(frame, "Error reading image directory: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    
+        // Load all found images
+        for (String path : imagePaths) {
+            try {
+                BufferedImage img = ImageIO.read(new File(path));
+                if (img != null) {
+                    JXImageView imageView = new JXImageView();
+                    imageView.setImage(img);
+                    imageView.setPreferredSize(new Dimension(200, 200));
+                    imageView.putClientProperty("imagePath", path);
+                    imageView.addMouseListener(new java.awt.event.MouseAdapter() {
+                        public void mouseClicked(java.awt.event.MouseEvent evt) {
+                            showImagePopup(frame, evt);
+                        }
+                    });
+                    imagePanel.add(imageView);
+                }
+            } catch (IOException ex) {
+                System.err.println("Couldn't load image: " + path);
+                }
+            }
+        
+    
+        scrollPane.setViewportView(imagePanel);
+        scrollPane.setPreferredSize(new Dimension(800, 600));
+        imagePanel.revalidate();
+        imagePanel.repaint();
+    }
+    public void showViewItems() {
+        // Create the frame
+        JFrame frame = new JFrame("View Items");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        // Create scroll pane
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    
+        // Set layout
+        frame.setLayout(new BorderLayout());
+        frame.add(scrollPane, BorderLayout.CENTER);
+    
+        // Load images
+        loadImages(frame, scrollPane);
+    
+        // Set frame properties
+        frame.pack();
+        frame.setSize(850, 650);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
-        viewItems vt = new viewItems();
-        vt.setVisible(true);
+        showViewItems();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed

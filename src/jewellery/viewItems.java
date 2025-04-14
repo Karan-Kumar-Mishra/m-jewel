@@ -8,12 +8,15 @@ import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import org.jdesktop.swingx.JXImageView;
+import jewellery.LoanBook;
 
 /**
  *
@@ -24,26 +27,49 @@ public class viewItems extends javax.swing.JFrame {
     /**
      * Creates new form viewItems
      */
+    private int imageNumber = 0;
+
     public viewItems() {
         initComponents();
         loadImages();
+        overrideDefaultCloseOperation();
     }
-
+    private void overrideDefaultCloseOperation() {
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                dispose();
+            }
+        });
+    }
     private void loadImages() {
         // Create a panel to hold the images
         JPanel imagePanel = new JPanel();
+        LoanBook lb = new LoanBook();
+
+        String[] imagePaths = {
+            "C:/Users/91888/Pictures/Default.jpg",
+        };
+        try {
+         
+    JOptionPane.showMessageDialog(this, "Coming Path is...  "+lb.GetSelectedPartyName());
+        Path destinationPath = Paths.get("assets/" + "Party1" + "/itemsImages/", "ITEM_PHOTO" + imageNumber + ".png");
+        JOptionPane.showMessageDialog(this, "Path is  "+destinationPath);
+        imagePaths[0] = destinationPath.toString();
+    
+        
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(this, "Error loading image in string : " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
         // Use GridLayout with 0 rows (means flexible) and 3 columns
         imagePanel.setLayout(new GridLayout(0, 3, 5, 5)); // 3 columns, 5px gap
 
         // Example: Load some images (replace with your actual image paths)
-        String[] imagePaths = {
-            "C:/Users/91888/Pictures/Default.jpg",
-            "C:/Users/91888/Pictures/Screenshots/Screenshot 2025-04-09 160305.png",
-            "C:/Users/91888/Pictures/Screenshots/Screenshot 2025-04-09 092558.png",
-            "C:/Users/91888/Pictures/Screenshots/Screenshot 2025-03-22 195422.png",
-            "C:/Users/91888/Pictures/Screenshots/Screenshot 2024-07-12 195516.png"
-        };
-
         for (String path : imagePaths) {
             try {
                 // Load the image
@@ -137,41 +163,9 @@ public class viewItems extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(viewItems.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(viewItems.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(viewItems.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(viewItems.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new viewItems().setVisible(true);
-            }
-        });
-    }
-
+    
+ 
+  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables

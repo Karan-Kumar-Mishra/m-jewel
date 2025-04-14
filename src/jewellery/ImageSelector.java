@@ -21,7 +21,7 @@ public class ImageSelector extends javax.swing.JFrame {
     private JButton uploadButton;
     private JButton closeButton;  // New close button
     private JLabel imageLabel;
-    private int imageNumber=0;
+    private int imageNumber = 0;
 
     public ImageSelector() {
         initComponents(); // Auto-generated method
@@ -127,11 +127,11 @@ public class ImageSelector extends javax.swing.JFrame {
             }
             try {
                 Path sourcePath = Paths.get(filePath);
-                Path destinationPath = Paths.get("assets/" + le.getSelectedPartyName() + "/itemsImages", "ITEM_PHOTO"+imageNumber+".png");
+                Path destinationPath = Paths.get("assets/" + le.getSelectedPartyName() + "/itemsImages", "ITEM_PHOTO" + imageNumber + ".png");
                 imageNumber++;
                 // Handle duplicate by always replacing (as per your requirement)
                 Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-              //  imageListModel.addElement(destinationPath.toString());
+                //  imageListModel.addElement(destinationPath.toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error saving image: " + e.getMessage(),
