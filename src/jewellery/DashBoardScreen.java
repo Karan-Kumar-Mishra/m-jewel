@@ -80,8 +80,8 @@ public class DashBoardScreen extends javax.swing.JFrame {
         BildDate.setText(update);
         newtimer();
 
-//        tabbedPane = new JTabbedPane();
-//        tabbedPane.setUI(new CustomTabbedPaneUI());
+        // tabbedPane = new JTabbedPane();
+        // tabbedPane.setUI(new CustomTabbedPaneUI());
         tabbedPane.addTab("home", new DailyUpdatesScreen().getContentPane());
 
         ActionListener a = new ActionListener() {
@@ -90,7 +90,8 @@ public class DashBoardScreen extends javax.swing.JFrame {
                 removeTabs();
             }
         };
-        getRootPane().registerKeyboardAction(a, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_IN_FOCUSED_WINDOW);
+        getRootPane().registerKeyboardAction(a, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
 
     }
 
@@ -135,17 +136,18 @@ public class DashBoardScreen extends javax.swing.JFrame {
 
     }
 
-//    private class CustomTabbedPaneUI extends BasicTabbedPaneUI {
-//        @Override
-//        protected void paintTabBackground(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
-//            if (isSelected) {
-//                g.setColor(Color.GREEN);
-//            } else {
-//                g.setColor(Color.LIGHT_GRAY); 
-//            }
-//            g.fillRect(x, y, w, h);
-//        }
-//    }
+    // private class CustomTabbedPaneUI extends BasicTabbedPaneUI {
+    // @Override
+    // protected void paintTabBackground(Graphics g, int tabPlacement, int tabIndex,
+    // int x, int y, int w, int h, boolean isSelected) {
+    // if (isSelected) {
+    // g.setColor(Color.GREEN);
+    // } else {
+    // g.setColor(Color.LIGHT_GRAY);
+    // }
+    // g.fillRect(x, y, w, h);
+    // }
+    // }
     void newtimer() {
         java.util.Timer timer = new java.util.Timer();
         timer.schedule(new TimerTask() {
@@ -157,7 +159,7 @@ public class DashBoardScreen extends javax.swing.JFrame {
                     timer.cancel();
                 }
             }
-        }, 0, 60000);//wait 0 ms before doing the action and do it evry 60000ms (60second)
+        }, 0, 60000);// wait 0 ms before doing the action and do it evry 60000ms (60second)
 
     }
 
@@ -208,7 +210,8 @@ public class DashBoardScreen extends javax.swing.JFrame {
                 Date currentDatePlusplan = cal.getTime();
                 String active_till = dtf.format(currentDatePlusplan);
 
-                String sql = "INSERT INTO licence VALUES ('default', 'default', 7, 'day','" + date + "','" + active_till + "')";
+                String sql = "INSERT INTO licence VALUES ('default', 'default', 7, 'day','" + date + "','" + active_till
+                        + "')";
                 s.executeUpdate(sql);
                 return false;
             }
@@ -220,7 +223,7 @@ public class DashBoardScreen extends javax.swing.JFrame {
                 s1 = rs.getString("license_id");
                 s2 = rs.getString("license_key");
                 s3 = rs.getString("active_till");
-                //s3=s3.substring(0, s3.indexOf('.'));
+                // s3=s3.substring(0, s3.indexOf('.'));
             }
             if (s1.equals("default")) {
                 DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -251,12 +254,12 @@ public class DashBoardScreen extends javax.swing.JFrame {
                 System.out.println("Connection done");
                 Statement st = c1.createStatement();
                 String q1 = "Select * from license_act_comp_reqs where system_id='" + s1 + "';";
-//            JOptionPane.showMessageDialog(this,s1);
+                // JOptionPane.showMessageDialog(this,s1);
                 ResultSet rs1 = st.executeQuery(q1);
                 while (rs1.next()) {
                     id = rs1.getString("activation_key");
                     date_till = rs1.getString("active_till");
-//                date_till = date_till.substring(0, date_till.indexOf('.'));
+                    // date_till = date_till.substring(0, date_till.indexOf('.'));
                 }
             } else {
                 id = s2;
@@ -267,9 +270,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         } catch (SQLException e) {
             Logger.getLogger(DashBoardScreen.class.getName()).log(Level.SEVERE, null, "system is offline");
 
-//            
+            //
         }
-//        JOptionPane.showMessageDialog(this, date_till);
+        // JOptionPane.showMessageDialog(this, date_till);
         if (s1 == null || s2 == null || s3 == null) {
             return true;
         }
@@ -293,22 +296,21 @@ public class DashBoardScreen extends javax.swing.JFrame {
 
     public void license() {
         License_form ob = new License_form();
-//        pnlLicence.removeAll();
-//        pnlLicence.add(ob.jPanel1);
-//        tpScreensHolder.setSelectedIndex(12);
+        // pnlLicence.removeAll();
+        // pnlLicence.add(ob.jPanel1);
+        // tpScreensHolder.setSelectedIndex(12);
     }
 
     public void license_accepted() {
 
         License_accepted ob = new License_accepted();
-//        pnlLicence.removeAll();
-//        pnlLicence.add(ob.jPanel1);
-//        tpScreensHolder.setSelectedIndex(11);
+        // pnlLicence.removeAll();
+        // pnlLicence.add(ob.jPanel1);
+        // tpScreensHolder.setSelectedIndex(11);
     }
 
     private void maximizeWindow() {
-        GraphicsEnvironment env
-                = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
         this.setMaximizedBounds(env.getMaximumWindowBounds());
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
@@ -341,8 +343,8 @@ public class DashBoardScreen extends javax.swing.JFrame {
             while (rs.next()) {
                 name = name + rs.getString("name");
             }
-//            UserName.removeAll();
-//            UserName.setText(name);
+            // UserName.removeAll();
+            // UserName.setText(name);
         } catch (SQLException ex) {
             Logger.getLogger(DashBoardScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -382,7 +384,8 @@ public class DashBoardScreen extends javax.swing.JFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -614,90 +617,132 @@ public class DashBoardScreen extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(versioning, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(50, 50, 50))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(BildDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(12, 12, 12)))
-                .addGap(45, 45, 45))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btndailyUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnItem, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSale, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnpurcse, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnpayment, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnledger, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnOutstanding, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDayBook, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSaleRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(stockreport, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnPurchaseRegister, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)))
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(versioning, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(50, 50, 50))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(40, 40, 40)
+                                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 135,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addContainerGap()
+                                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 99,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(BildDate, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(12, 12, 12)))
+                                .addGap(45, 45, 45))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btndailyUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnItem, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnSale, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnpurcse, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnpayment, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnledger, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnOutstanding, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnDayBook, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 230,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnSaleRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 203,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout
+                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(stockreport, javax.swing.GroupLayout.Alignment.LEADING,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnPurchaseRegister,
+                                                        javax.swing.GroupLayout.Alignment.LEADING,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE)));
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btndailyUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnItem, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSale, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnpurcse, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnpayment, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnledger, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOutstanding, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDayBook, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSaleRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnPurchaseRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(stockreport, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(versioning, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(BildDate, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 43,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btndailyUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnItem, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSale, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnReceipt, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnpurcse, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnpayment, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnledger, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnOutstanding, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnDayBook, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSaleRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPurchaseRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(stockreport, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23,
+                                        Short.MAX_VALUE)
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel2)
+                                        .addComponent(versioning, javax.swing.GroupLayout.PREFERRED_SIZE, 19,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout
+                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(BildDate, javax.swing.GroupLayout.DEFAULT_SIZE, 24,
+                                                Short.MAX_VALUE)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap()));
 
         tabbedPane.setBackground(new java.awt.Color(255, 0, 0));
         tabbedPane.setForeground(new java.awt.Color(255, 255, 0));
@@ -736,8 +781,10 @@ public class DashBoardScreen extends javax.swing.JFrame {
             public void menuKeyPressed(javax.swing.event.MenuKeyEvent evt) {
                 MenuItemCloseCompanyMenuKeyPressed(evt);
             }
+
             public void menuKeyReleased(javax.swing.event.MenuKeyEvent evt) {
             }
+
             public void menuKeyTyped(javax.swing.event.MenuKeyEvent evt) {
             }
         });
@@ -1053,30 +1100,31 @@ public class DashBoardScreen extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1081, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 212,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1081,
+                                        Short.MAX_VALUE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(tabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 650,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
-        String str
-                = "            Build date: 24-Feb-2022                      \n"
+    private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem20ActionPerformed
+        String str = "            Build date: 24-Feb-2022                      \n"
                 + "Jewellery is a user-friendly software for managing your    \n"
                 + "personal financial accounting needs.Now not much training\n"
                 + "and updating is required for maintaining your accounts   \n"
@@ -1102,16 +1150,16 @@ public class DashBoardScreen extends javax.swing.JFrame {
                 null,
                 str,
                 "About Software", JOptionPane.INFORMATION_MESSAGE,
-                icon);        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem20ActionPerformed
+                icon); // TODO add your handling code here:
+    }// GEN-LAST:event_jMenuItem20ActionPerformed
 
-    private void btndailyUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btndailyUpdateActionPerformed
+    private void btndailyUpdateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btndailyUpdateActionPerformed
         // TODO add your handling code here:
         tabbedPane.setSelectedIndex(0);
 
-    }//GEN-LAST:event_btndailyUpdateActionPerformed
+    }// GEN-LAST:event_btndailyUpdateActionPerformed
 
-    private void btnAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccountActionPerformed
+    private void btnAccountActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAccountActionPerformed
 
         int index = tabbedPane.indexOfTab("Account");
         if (index == -1) {
@@ -1124,9 +1172,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAccountActionPerformed
+    }// GEN-LAST:event_btnAccountActionPerformed
 
-    private void btnItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemActionPerformed
+    private void btnItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnItemActionPerformed
         int index = tabbedPane.indexOfTab("Item");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1139,9 +1187,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnItemActionPerformed
+    }// GEN-LAST:event_btnItemActionPerformed
 
-    private void btnSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaleActionPerformed
+    private void btnSaleActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnSaleActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("sale");
         if (index == -1) {
@@ -1154,10 +1202,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
+    }// GEN-LAST:event_btnSaleActionPerformed
 
-    }//GEN-LAST:event_btnSaleActionPerformed
-
-    private void btnReceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReceiptActionPerformed
+    private void btnReceiptActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnReceiptActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("Receipt");
         if (index == -1) {
@@ -1170,9 +1217,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
-    }//GEN-LAST:event_btnReceiptActionPerformed
+    }// GEN-LAST:event_btnReceiptActionPerformed
 
-    private void btnpurcseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnpurcseActionPerformed
+    private void btnpurcseActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnpurcseActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("Purchase");
         if (index == -1) {
@@ -1185,9 +1232,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
-    }//GEN-LAST:event_btnpurcseActionPerformed
+    }// GEN-LAST:event_btnpurcseActionPerformed
 
-    private void btnpaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnpaymentActionPerformed
+    private void btnpaymentActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnpaymentActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("Payment");
         if (index == -1) {
@@ -1206,9 +1253,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
-    }//GEN-LAST:event_btnpaymentActionPerformed
+    }// GEN-LAST:event_btnpaymentActionPerformed
 
-    private void btnledgerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnledgerActionPerformed
+    private void btnledgerActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnledgerActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("ledger");
         if (index == -1) {
@@ -1221,9 +1268,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
-    }//GEN-LAST:event_btnledgerActionPerformed
+    }// GEN-LAST:event_btnledgerActionPerformed
 
-    private void btnOutstandingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOutstandingActionPerformed
+    private void btnOutstandingActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnOutstandingActionPerformed
         int index = tabbedPane.indexOfTab("Outstanding");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1240,10 +1287,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
+    }// GEN-LAST:event_btnOutstandingActionPerformed
 
-    }//GEN-LAST:event_btnOutstandingActionPerformed
-
-    private void btnDayBookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDayBookActionPerformed
+    private void btnDayBookActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnDayBookActionPerformed
         int index = tabbedPane.indexOfTab("Day Book");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1261,10 +1307,10 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
-// TODO add your handling code here:
-    }//GEN-LAST:event_btnDayBookActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_btnDayBookActionPerformed
 
-    private void btnSaleRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaleRegisterActionPerformed
+    private void btnSaleRegisterActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnSaleRegisterActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("sALE rEGISTER".toLowerCase());
         if (index == -1) {
@@ -1278,10 +1324,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
+    }// GEN-LAST:event_btnSaleRegisterActionPerformed
 
-    }//GEN-LAST:event_btnSaleRegisterActionPerformed
-
-    private void btnPurchaseRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPurchaseRegisterActionPerformed
+    private void btnPurchaseRegisterActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnPurchaseRegisterActionPerformed
         int index = tabbedPane.indexOfTab("Purchase Register");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1296,9 +1341,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnPurchaseRegisterActionPerformed
+    }// GEN-LAST:event_btnPurchaseRegisterActionPerformed
 
-    private void menuitemCompanyProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuitemCompanyProfileActionPerformed
+    private void menuitemCompanyProfileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_menuitemCompanyProfileActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("Company Profile");
         if (index == -1) {
@@ -1311,10 +1356,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
+    }// GEN-LAST:event_menuitemCompanyProfileActionPerformed
 
-    }//GEN-LAST:event_menuitemCompanyProfileActionPerformed
-
-    private void menuitemUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuitemUsersActionPerformed
+    private void menuitemUsersActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_menuitemUsersActionPerformed
         int index = tabbedPane.indexOfTab("Users");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1326,9 +1370,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_menuitemUsersActionPerformed
+    }// GEN-LAST:event_menuitemUsersActionPerformed
 
-    private void MenuItemSttingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemSttingsActionPerformed
+    private void MenuItemSttingsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MenuItemSttingsActionPerformed
         int index = tabbedPane.indexOfTab("Settings");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1340,16 +1384,16 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_MenuItemSttingsActionPerformed
+    }// GEN-LAST:event_MenuItemSttingsActionPerformed
 
-    private void jMenuItemOutstandingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOutstandingActionPerformed
+    private void jMenuItemOutstandingActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemOutstandingActionPerformed
         int index = tabbedPane.indexOfTab("Outstanding");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
             try {
                 OutstandingAnalysis s = new OutstandingAnalysis();
                 tabbedPane.addTab("Outstanding", s.getContentPane());
-                tabbedPane.setSelectedComponent(s.getContentPane());        // TODO add your handling code here:
+                tabbedPane.setSelectedComponent(s.getContentPane()); // TODO add your handling code here:
             } catch (ParseException ex) {
                 Logger.getLogger(DashBoardScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1358,9 +1402,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
-    }//GEN-LAST:event_jMenuItemOutstandingActionPerformed
+    }// GEN-LAST:event_jMenuItemOutstandingActionPerformed
 
-    private void jMenuItemReceiptHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemReceiptHistoryActionPerformed
+    private void jMenuItemReceiptHistoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemReceiptHistoryActionPerformed
         int index = tabbedPane.indexOfTab("Reciept History");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1373,9 +1417,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemReceiptHistoryActionPerformed
+    }// GEN-LAST:event_jMenuItemReceiptHistoryActionPerformed
 
-    private void jMenuItemPaymentHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPaymentHistoryActionPerformed
+    private void jMenuItemPaymentHistoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemPaymentHistoryActionPerformed
         int index = tabbedPane.indexOfTab("Payment History");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1387,9 +1431,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemPaymentHistoryActionPerformed
+    }// GEN-LAST:event_jMenuItemPaymentHistoryActionPerformed
 
-    private void jMenuItemSaleRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaleRegisterActionPerformed
+    private void jMenuItemSaleRegisterActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemSaleRegisterActionPerformed
         int index = tabbedPane.indexOfTab("Sale Register");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1402,9 +1446,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemSaleRegisterActionPerformed
+    }// GEN-LAST:event_jMenuItemSaleRegisterActionPerformed
 
-    private void jMenuItemPurchaseRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemPurchaseRegisterActionPerformed
+    private void jMenuItemPurchaseRegisterActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemPurchaseRegisterActionPerformed
         int index = tabbedPane.indexOfTab("Purchase Register");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1418,9 +1462,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemPurchaseRegisterActionPerformed
+    }// GEN-LAST:event_jMenuItemPurchaseRegisterActionPerformed
 
-    private void jMenuItemExchangeReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExchangeReportActionPerformed
+    private void jMenuItemExchangeReportActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemExchangeReportActionPerformed
         int index = tabbedPane.indexOfTab("Exchange Report");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1433,9 +1477,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemExchangeReportActionPerformed
+    }// GEN-LAST:event_jMenuItemExchangeReportActionPerformed
 
-    private void jMenuItemStockReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemStockReportActionPerformed
+    private void jMenuItemStockReportActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemStockReportActionPerformed
         int index = tabbedPane.indexOfTab("Item Stock");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1449,9 +1493,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemStockReportActionPerformed
+    }// GEN-LAST:event_jMenuItemStockReportActionPerformed
 
-    private void jMenuItemTqagPrintingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTqagPrintingActionPerformed
+    private void jMenuItemTqagPrintingActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemTqagPrintingActionPerformed
         int index = tabbedPane.indexOfTab("Tag Printing");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1465,9 +1509,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemTqagPrintingActionPerformed
+    }// GEN-LAST:event_jMenuItemTqagPrintingActionPerformed
 
-    private void jMenuItemLedgerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLedgerActionPerformed
+    private void jMenuItemLedgerActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemLedgerActionPerformed
         int index = tabbedPane.indexOfTab("ledger");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1480,9 +1524,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemLedgerActionPerformed
+    }// GEN-LAST:event_jMenuItemLedgerActionPerformed
 
-    private void Gst1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gst1ActionPerformed
+    private void Gst1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Gst1ActionPerformed
         int index = tabbedPane.indexOfTab("GST1 B2B");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1495,9 +1539,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_Gst1ActionPerformed
+    }// GEN-LAST:event_Gst1ActionPerformed
 
-    private void Gst2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Gst2ActionPerformed
+    private void Gst2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Gst2ActionPerformed
         int index = tabbedPane.indexOfTab("GST2 B2B");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1511,9 +1555,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_Gst2ActionPerformed
+    }// GEN-LAST:event_Gst2ActionPerformed
 
-    private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
+    private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem17ActionPerformed
         int index = tabbedPane.indexOfTab("Bill History");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1526,9 +1570,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem17ActionPerformed
+    }// GEN-LAST:event_jMenuItem17ActionPerformed
 
-    private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
+    private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem18ActionPerformed
         int index = tabbedPane.indexOfTab("Payment History");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1541,9 +1585,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem18ActionPerformed
+    }// GEN-LAST:event_jMenuItem18ActionPerformed
 
-    private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
+    private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem19ActionPerformed
 
         int index = tabbedPane.indexOfTab("Receipt History");
         if (index == -1) {
@@ -1556,9 +1600,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem19ActionPerformed
+    }// GEN-LAST:event_jMenuItem19ActionPerformed
 
-    private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem21ActionPerformed
+    private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem21ActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("Licence Form");
         if (index == -1) {
@@ -1571,10 +1615,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
+    }// GEN-LAST:event_jMenuItem21ActionPerformed
 
-    }//GEN-LAST:event_jMenuItem21ActionPerformed
-
-    private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
+    private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem22ActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("RE New Licence");
         if (index == -1) {
@@ -1587,12 +1630,13 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
-    }//GEN-LAST:event_jMenuItem22ActionPerformed
+    }// GEN-LAST:event_jMenuItem22ActionPerformed
 
-    private void jMenuItem23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem23ActionPerformed
+    private void jMenuItem23ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem23ActionPerformed
         DebugAndLogsScreen logs = new DebugAndLogsScreen();
         logs.setVisible(true);
-    }//GEN-LAST:event_jMenuItem23ActionPerformed
+    }// GEN-LAST:event_jMenuItem23ActionPerformed
+
     private void InsertTableHidingFields(String value) {
         try {
             Connection con = DBConnect.connect();
@@ -1609,7 +1653,8 @@ public class DashBoardScreen extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-    private void jRadioButtonMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItem1ActionPerformed
+
+    private void jRadioButtonMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jRadioButtonMenuItem1ActionPerformed
         // TODO add your handling code here:cf
         if (jRadioButtonMenuItem1.isSelected()) {
             InsertTableHidingFields("true");
@@ -1617,18 +1662,18 @@ public class DashBoardScreen extends javax.swing.JFrame {
             InsertTableHidingFields("false");
         }
 
-    }//GEN-LAST:event_jRadioButtonMenuItem1ActionPerformed
+    }// GEN-LAST:event_jRadioButtonMenuItem1ActionPerformed
 
-    private void jRadioButtonMenuItem1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jRadioButtonMenuItem1MouseClicked
+    private void jRadioButtonMenuItem1MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jRadioButtonMenuItem1MouseClicked
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_jRadioButtonMenuItem1MouseClicked
+    }// GEN-LAST:event_jRadioButtonMenuItem1MouseClicked
 
-    private void jMenuItemOutstanding1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOutstanding1ActionPerformed
+    private void jMenuItemOutstanding1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemOutstanding1ActionPerformed
         tabbedPane.setSelectedIndex(0);
 
-//        SaleRegisterScreen obj = new SaleRegisterScreen();
-//        obj.setVisible(true);
+        // SaleRegisterScreen obj = new SaleRegisterScreen();
+        // obj.setVisible(true);
         int index = tabbedPane.indexOfTab("Sale Register");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1640,10 +1685,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
+    }// GEN-LAST:event_jMenuItemOutstanding1ActionPerformed
 
-    }//GEN-LAST:event_jMenuItemOutstanding1ActionPerformed
-
-    private void jMenuItemOutstanding2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOutstanding2ActionPerformed
+    private void jMenuItemOutstanding2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemOutstanding2ActionPerformed
 
         int index = tabbedPane.indexOfTab("Account");
         if (index == -1) {
@@ -1656,9 +1700,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemOutstanding2ActionPerformed
+    }// GEN-LAST:event_jMenuItemOutstanding2ActionPerformed
 
-    private void jMenuItemOutstanding3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOutstanding3ActionPerformed
+    private void jMenuItemOutstanding3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemOutstanding3ActionPerformed
         int index = tabbedPane.indexOfTab("Item");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1670,9 +1714,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemOutstanding3ActionPerformed
+    }// GEN-LAST:event_jMenuItemOutstanding3ActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("sale");
         if (index == -1) {
@@ -1686,9 +1730,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }// GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("Receipt");
         if (index == -1) {
@@ -1701,9 +1745,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }// GEN-LAST:event_jMenuItem2ActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem3ActionPerformed
         // TODO add your handling code here:
         int index = tabbedPane.indexOfTab("Purchase");
         if (index == -1) {
@@ -1716,9 +1760,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }// GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem4ActionPerformed
         int index = tabbedPane.indexOfTab("Payment");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1734,10 +1778,10 @@ public class DashBoardScreen extends javax.swing.JFrame {
         } else {
             // If it exists, select the existing tab
             tabbedPane.setSelectedIndex(index);
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+        } // TODO add your handling code here:
+    }// GEN-LAST:event_jMenuItem4ActionPerformed
 
-    private void jMenuItemOutstanding4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOutstanding4ActionPerformed
+    private void jMenuItemOutstanding4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItemOutstanding4ActionPerformed
         int index = tabbedPane.indexOfTab("Day Book");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1755,46 +1799,46 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemOutstanding4ActionPerformed
+    }// GEN-LAST:event_jMenuItemOutstanding4ActionPerformed
 
-    private void jLabel4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jLabel4KeyPressed
+    private void jLabel4KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_jLabel4KeyPressed
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_jLabel4KeyPressed
+    }// GEN-LAST:event_jLabel4KeyPressed
 
-    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jLabel4MouseClicked
         // TODO add your handling code here:
         DashBoardScreen ds = new DashBoardScreen();
         ds.setVisible(true);
         dispose();
-    }//GEN-LAST:event_jLabel4MouseClicked
+    }// GEN-LAST:event_jLabel4MouseClicked
 
-    private void btndailyUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btndailyUpdateMouseClicked
+    private void btndailyUpdateMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_btndailyUpdateMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_btndailyUpdateMouseClicked
+    }// GEN-LAST:event_btndailyUpdateMouseClicked
 
-    private void MenuItemCloseCompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemCloseCompanyActionPerformed
+    private void MenuItemCloseCompanyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_MenuItemCloseCompanyActionPerformed
         // TODO add your handling code here:
 
         listOfAllCompany obj = new listOfAllCompany();
         obj.setVisible(true);
 
-    }//GEN-LAST:event_MenuItemCloseCompanyActionPerformed
+    }// GEN-LAST:event_MenuItemCloseCompanyActionPerformed
 
-    private void MenuItemCloseCompanyMenuKeyPressed(javax.swing.event.MenuKeyEvent evt) {//GEN-FIRST:event_MenuItemCloseCompanyMenuKeyPressed
+    private void MenuItemCloseCompanyMenuKeyPressed(javax.swing.event.MenuKeyEvent evt) {// GEN-FIRST:event_MenuItemCloseCompanyMenuKeyPressed
         // TODO add your handling code here:
 
-//        listOfAllCompany obj = new listOfAllCompany();
-//        obj.setVisible(true);
-    }//GEN-LAST:event_MenuItemCloseCompanyMenuKeyPressed
+        // listOfAllCompany obj = new listOfAllCompany();
+        // obj.setVisible(true);
+    }// GEN-LAST:event_MenuItemCloseCompanyMenuKeyPressed
 
-    private void MenuItemCloseCompanyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MenuItemCloseCompanyMouseClicked
+    private void MenuItemCloseCompanyMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_MenuItemCloseCompanyMouseClicked
         // TODO add your handling code here:
-//        listOfAllCompany obj = new listOfAllCompany();
-//        obj.setVisible(true);
-    }//GEN-LAST:event_MenuItemCloseCompanyMouseClicked
+        // listOfAllCompany obj = new listOfAllCompany();
+        // obj.setVisible(true);
+    }// GEN-LAST:event_MenuItemCloseCompanyMouseClicked
 
-    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem5ActionPerformed
 
         int index = tabbedPane.indexOfTab("Item wise Stock");
 
@@ -1808,10 +1852,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             tabbedPane.setSelectedIndex(index);
         }
 
+    }// GEN-LAST:event_jMenuItem5ActionPerformed
 
-    }//GEN-LAST:event_jMenuItem5ActionPerformed
-
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem6ActionPerformed
         // TODO add your handling code here:
         {
             int index = tabbedPane.indexOfTab("Bank Group");
@@ -1826,9 +1869,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             }
         }
 
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
+    }// GEN-LAST:event_jMenuItem6ActionPerformed
 
-    private void stockreportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stockreportActionPerformed
+    private void stockreportActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_stockreportActionPerformed
         int index = tabbedPane.indexOfTab("Item Stock");
         if (index == -1) {
             // If it doesn't exist, create a new one and add it
@@ -1840,9 +1883,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             // If it exists, select the existing tab
             tabbedPane.setSelectedIndex(index);
         }
-    }//GEN-LAST:event_stockreportActionPerformed
+    }// GEN-LAST:event_stockreportActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         int index = tabbedPane.indexOfTab("Item wise Stock");
 
         if (index == -1) {
@@ -1854,9 +1897,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             // If it exists, select the existing tab
             tabbedPane.setSelectedIndex(index);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }// GEN-LAST:event_jButton1ActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem7ActionPerformed
         try {
             int index = tabbedPane.indexOfTab("Loan Entry");
             if (index == -1) {
@@ -1868,12 +1911,13 @@ public class DashBoardScreen extends javax.swing.JFrame {
             }
         } catch (Exception e) {
             e.printStackTrace(); // Print the stack trace for debugging
-            JOptionPane.showMessageDialog(this, "Error creating Loan Entry: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error creating Loan Entry: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
+    }// GEN-LAST:event_jMenuItem7ActionPerformed
 
-    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jMenuItem8ActionPerformed
 
         try {
             int index = tabbedPane.indexOfTab("Loan Book");
@@ -1897,16 +1941,20 @@ public class DashBoardScreen extends javax.swing.JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-    }//GEN-LAST:event_jMenuItem8ActionPerformed
+    }// GEN-LAST:event_jMenuItem8ActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -1916,16 +1964,20 @@ public class DashBoardScreen extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
+        // </editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -1935,14 +1987,13 @@ public class DashBoardScreen extends javax.swing.JFrame {
             }
         });
 
-//        SwingUtilities.invokeLater(new Runnable() {
-//        @Override
-//            public void run() {
-//                new DashBoardScreen().setVisible(true);
-//        }
-//        });
+        // SwingUtilities.invokeLater(new Runnable() {
+        // @Override
+        // public void run() {
+        // new DashBoardScreen().setVisible(true);
+        // }
+        // });
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BildDate;

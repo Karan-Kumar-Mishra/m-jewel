@@ -25,7 +25,7 @@ import jewellery.DBConnect;
 import jewellery.DatabaseTableCreator;
 import jewellery.DBController;
 import jewellery.GLOBAL_VARS;
-import jewellery.ImageSelector;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -859,11 +859,12 @@ public class LoanEntry extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for gold weight, purity, and interest.", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    public String getSelectedPartyName()
-    {
-        Object selectedItem = jComboBox2.getSelectedItem(); 
+
+    public String getSelectedPartyName() {
+        Object selectedItem = jComboBox2.getSelectedItem();
         return selectedItem.toString();// this function is call in ImageSelector window for store the images  
     }
+
     private void uploadImage() {
         FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image", FileDialog.LOAD);
         fileDialog.setFilenameFilter((dir, name)
@@ -900,6 +901,133 @@ public class LoanEntry extends javax.swing.JPanel {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    private void ImageSelector() {
+        javax.swing.JFrame frame = new javax.swing.JFrame();
+        frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        // Override default close operation
+        frame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                frame.dispose();
+            }
+        });
+
+        // Create components
+        DefaultListModel<String> imageListModel = new DefaultListModel<>();
+        JList<String> imageList = new JList<>(imageListModel);
+        JButton uploadButton = new JButton("Upload Image");
+        JButton closeButton = new JButton("Close");
+        JLabel imageLabel = new JLabel();
+        int[] imageNumber = {0}; // Using array to make it effectively final for lambda
+
+        // Set up the image label
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        imageLabel.setVerticalAlignment(JLabel.CENTER);
+
+        // Create a panel for the left side (list and buttons)
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.setBorder(BorderFactory.createTitledBorder("Image List"));
+
+        // Add the list to a scroll pane
+        JScrollPane listScrollPane = new JScrollPane(imageList);
+        leftPanel.add(listScrollPane, BorderLayout.CENTER);
+
+        // Create a panel for buttons (upload and close)
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        buttonPanel.add(uploadButton);
+        buttonPanel.add(closeButton);
+        leftPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // Create a panel for the right side (image display)
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setBorder(BorderFactory.createTitledBorder("Selected Image"));
+        rightPanel.add(imageLabel, BorderLayout.CENTER);
+
+        // Add both panels to the main frame
+        frame.getContentPane().setLayout(new GridLayout(1, 2));
+        frame.getContentPane().add(leftPanel);
+        frame.getContentPane().add(rightPanel);
+
+        // Add action listeners
+        uploadButton.addActionListener(e -> {
+            // Upload image functionality
+            FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image", FileDialog.LOAD);
+            fileDialog.setFilenameFilter((dir, name)
+                    -> name.endsWith(".jpg") || name.endsWith(".jpeg")
+                    || name.endsWith(".png") || name.endsWith(".gif")
+            );
+
+            fileDialog.setVisible(true);
+
+            String selectedFile = fileDialog.getFile();
+            String selectedDirectory = fileDialog.getDirectory();
+
+            if (selectedFile != null) {
+                String filePath = selectedDirectory + selectedFile;
+                imageListModel.addElement(filePath);
+                Object selectedItem = jComboBox2.getSelectedItem();
+                File imagesFolder = new File("assets/" + selectedItem.toString() + "/itemsImages");
+                if (!imagesFolder.exists()) {
+                    imagesFolder.mkdirs();
+                }
+                try {
+                    Path sourcePath = Paths.get(filePath);
+                    Path destinationPath = Paths.get("assets/" + selectedItem.toString() + "/itemsImages", "ITEM_PHOTO" + imageNumber[0] + ".png");
+                    imageNumber[0]++;
+                    Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error saving image: " + ex.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        closeButton.addActionListener(e -> frame.dispose());
+
+        imageList.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                // Display selected image functionality
+                String selectedImagePath = imageList.getSelectedValue();
+                if (selectedImagePath != null) {
+                    ImageIcon imageIcon = new ImageIcon(selectedImagePath);
+                    Image image = imageIcon.getImage();
+
+                    int labelWidth = imageLabel.getWidth();
+                    int labelHeight = imageLabel.getHeight();
+
+                    if (labelWidth > 0 && labelHeight > 0) {
+                        Image scaledImage = image.getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH);
+                        imageLabel.setIcon(new ImageIcon(scaledImage));
+                    } else {
+                        Image scaledImage = image.getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+                        imageLabel.setIcon(new ImageIcon(scaledImage));
+                    }
+                } else {
+                    imageLabel.setIcon(null);
+                }
+            }
+        });
+
+        // Set look and feel
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            // java.util.logging.Logger.getLogger(ImageSelectorSingleFunction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
+        // Show the frame
+        frame.pack();
+        frame.setVisible(true);
     }
 
     public javax.swing.JPanel getContentPane() {
@@ -947,8 +1075,8 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
-        ImageSelector is = new ImageSelector();
-        is.setVisible(true);
+
+        ImageSelector();
     }
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -956,7 +1084,7 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
-         partyNames = GetPartyName.get();
+        partyNames = GetPartyName.get();
 
         if (partyNames != null && partyNames.length > 0) {
             jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(partyNames));
@@ -1043,7 +1171,7 @@ public class LoanEntry extends javax.swing.JPanel {
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
-       
+
         InsertLoanDetails.insert(
                 entryDate,
                 slipNo,

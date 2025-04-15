@@ -987,7 +987,7 @@ public class LoanBook extends javax.swing.JPanel {
         List<String> imagePaths = new ArrayList<>();
     
         // Add default image first
-        imagePaths.add("C:/Users/91888/Pictures/Default.jpg");
+       // imagePaths.add("C:/Users/91888/Pictures/Default.jpg");
     
         // Try to find item images
         Path imageDir = Paths.get("assets/" + partyName + "/itemsImages/");
