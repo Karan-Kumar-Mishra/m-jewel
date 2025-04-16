@@ -2870,3 +2870,12 @@ select printname from account where grp='Loans' [42102-214]
 2025-04-05 15:36:30 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "account" not found; SQL statement:
 select printname from account where grp='Loans' [42102-214]
+2025-04-16 09:29:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "account" not found; SQL statement:
+select printname from account where grp='Loans' [42102-214]
+2025-04-16 09:30:53 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "account" not found; SQL statement:
+select printname from account where grp='Loans' [42102-214]
+2025-04-16 09:33:49 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "account" not found; SQL statement:
+select printname from account where grp='Loans' [42102-214]

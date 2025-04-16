@@ -14,6 +14,7 @@ public class InsertLoanDetails {
             String WEIGHT_TYPE, String GOLD_WEIGHT,
             String PURITY, String NET_WEIGHT, String ESTIMATED_COST, String AMOUNT_PAID,
             String ITEM_DETAILS, String GUARNATOR_NAME, String GUARNATOR_ADDRESS,
+            String GUARANTOR_PHONE,
             String DOCUMENTS, String REMINDERS, String NOTES, String ITEM_LOCATION) {
 
         String insertSQL = """
@@ -23,17 +24,16 @@ public class InsertLoanDetails {
                 WEIGHT_TYPE, GOLD_WEIGHT,
                 PURITY, NET_WEIGHT, ESTIMATED_COST, AMOUNT_PAID,
                 ITEM_DETAILS, GUARNATOR_NAME, GUARNATOR_ADDRESS,
+                GUARANTOR_PHONE,
                 DOCUMENTS, REMINDERS, NOTES, ITEM_LOCATION) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
         """;
- 
-        try (Connection connection = DBConnect.connect(); 
-             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
+
+        try (Connection connection = DBConnect.connect(); PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
 
             // Convert LocalDate to java.sql.Date
             Date entryDate = Date.valueOf(ENTRY_DATE);
             Date startDate = Date.valueOf(START_DATE);
-
 
             // Set parameters for the prepared statement
             preparedStatement.setDate(1, entryDate); // ENTRY_DATE
@@ -49,12 +49,13 @@ public class InsertLoanDetails {
             preparedStatement.setDouble(11, Double.parseDouble(ESTIMATED_COST)); // ESTIMATED_COST
             preparedStatement.setDouble(12, Double.parseDouble(AMOUNT_PAID)); // AMOUNT_PAID
             preparedStatement.setString(13, ITEM_DETAILS); // ITEM_DETAILS
-            preparedStatement.setString(14, GUARNATOR_NAME); // GUARNATOR_NAME
+            preparedStatement.setString(14, GUARANTOR_PHONE); // GUARNATOR_NAME
             preparedStatement.setString(15, GUARNATOR_ADDRESS); // GUARNATOR_ADDRESS
-            preparedStatement.setString(16, DOCUMENTS); // DOCUMENTS
-            preparedStatement.setString(17, REMINDERS); // REMINDERS
-            preparedStatement.setString(18, NOTES); // NOTES
-            preparedStatement.setString(19, ITEM_LOCATION); // ITEM_LOCATION
+            preparedStatement.setString(16, GUARANTOR_PHONE); // GUARNATOR_PHON
+            preparedStatement.setString(17, DOCUMENTS); // DOCUMENTS
+            preparedStatement.setString(18, REMINDERS); // REMINDERS
+            preparedStatement.setString(19, NOTES); // NOTES
+            preparedStatement.setString(20, ITEM_LOCATION); // ITEM_LOCATION
 
             // Execute the insert statement
             int rowsInserted = preparedStatement.executeUpdate();

@@ -2061,7 +2061,7 @@ public class DashBoardScreen extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuitemCompanyProfile;
     private javax.swing.JMenuItem menuitemUsers;
     private javax.swing.JButton stockreport;
-    public static javax.swing.JTabbedPane tabbedPane;
+    public static javax.swing.JTabbedPane tabbedPane;                                       
     private javax.swing.JLabel versioning;
     // End of variables declaration//GEN-END:variables
 

@@ -30,6 +30,7 @@ public class DatabaseTableCreator {
                     ITEM_DETAILS VARCHAR(255),
                     GUARNATOR_NAME VARCHAR(50),
                     GUARNATOR_ADDRESS VARCHAR(50),
+                    GUARANTOR_PHONE VARCHAR(50),
                     DOCUMENTS VARCHAR(50),
                     REMINDERS VARCHAR(50),
                     NOTES VARCHAR(40),
@@ -38,7 +39,6 @@ public class DatabaseTableCreator {
             """;
 
             statement.execute(createLoanEntryTable);
-           
 
             Logger.getLogger(DatabaseTableCreator.class.getName()).log(Level.INFO, "LOAN_ENTRY table created successfully.");
         } catch (Exception e) {

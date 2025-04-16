@@ -52,6 +52,7 @@ import java.nio.file.Paths;
 import java.awt.BorderLayout;
 import javax.swing.*; // If you're using Swing components
 import java.awt.*; // This imports all AWT classes, including BorderLayout
+import jewellery.LoanEntry;
 
 public class LoanBook extends javax.swing.JPanel {
 
@@ -130,7 +131,7 @@ public class LoanBook extends javax.swing.JPanel {
             DefaultTableModel model = new DefaultTableModel(new Object[0][], columnNames) {
                 @Override
                 public boolean isCellEditable(int row, int column) {
-                    return false; // Make table non-editable
+                    return false;
                 }
             };
             jTable1.setModel(model);
@@ -240,7 +241,7 @@ public class LoanBook extends javax.swing.JPanel {
         DefaultTableModel model = new DefaultTableModel(displayData, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return true; // Make table non-editable
+                return false; // Make table non-editable
             }
 
             @Override
@@ -387,8 +388,26 @@ public class LoanBook extends javax.swing.JPanel {
         // Custom renderer for numbers
         jTable1.setDefaultRenderer(Double.class, new DecimalRenderer());
         jTable1.setDefaultRenderer(java.sql.Date.class, new DateRenderer());
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) { // Double-click detected
+                    int selectedRow = jTable1.getSelectedRow();
+                    if (selectedRow >= 0 && selectedRow < completeLoanData.length) {
+                        openLoanEntryWindow(completeLoanData[selectedRow]);
+                    }
+                }
+            }
+        });
         // Customize other components
         customizeComponents();
+    }
+
+    private void openLoanEntryWindow(Object[] loanData) {
+        JOptionPane.showMessageDialog(null, "try to open the window");
+        
+        UpdateLoan lup= new UpdateLoan();
+        lup.setVisible(true);
     }
 
     private void customizeComponents() {
@@ -973,22 +992,22 @@ public class LoanBook extends javax.swing.JPanel {
         }
     }
     int imageNumber = 0;
+
     private void loadImages(JFrame frame, JScrollPane scrollPane) {
         JPanel imagePanel = new JPanel();
         imagePanel.setLayout(new GridLayout(0, 3, 5, 5)); // 3 columns, 5px gap
-    
+
         String partyName = GetSelectedPartyName();
         if (partyName == null || partyName.isEmpty()) {
             JOptionPane.showMessageDialog(frame, "No party selected", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-    
+
         // Use ArrayList to dynamically handle images
         List<String> imagePaths = new ArrayList<>();
-    
+
         // Add default image first
-       // imagePaths.add("C:/Users/91888/Pictures/Default.jpg");
-    
+        // imagePaths.add("C:/Users/91888/Pictures/Default.jpg");
         // Try to find item images
         Path imageDir = Paths.get("assets/" + partyName + "/itemsImages/");
         if (Files.exists(imageDir)) {
@@ -1001,7 +1020,7 @@ public class LoanBook extends javax.swing.JPanel {
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    
+
         // Load all found images
         for (String path : imagePaths) {
             try {
@@ -1020,32 +1039,32 @@ public class LoanBook extends javax.swing.JPanel {
                 }
             } catch (IOException ex) {
                 System.err.println("Couldn't load image: " + path);
-                }
             }
-        
-    
+        }
+
         scrollPane.setViewportView(imagePanel);
         scrollPane.setPreferredSize(new Dimension(800, 600));
         imagePanel.revalidate();
         imagePanel.repaint();
     }
+
     public void showViewItems() {
         // Create the frame
         JFrame frame = new JFrame("View Items");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
+
         // Create scroll pane
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    
+
         // Set layout
         frame.setLayout(new BorderLayout());
         frame.add(scrollPane, BorderLayout.CENTER);
-    
+
         // Load images
         loadImages(frame, scrollPane);
-    
+
         // Set frame properties
         frame.pack();
         frame.setSize(850, 650);

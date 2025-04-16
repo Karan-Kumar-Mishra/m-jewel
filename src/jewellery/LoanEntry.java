@@ -25,6 +25,7 @@ import jewellery.DBConnect;
 import jewellery.DatabaseTableCreator;
 import jewellery.DBController;
 import jewellery.GLOBAL_VARS;
+import jewellery.UpdateLoan;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -1167,7 +1168,9 @@ public class LoanEntry extends javax.swing.JPanel {
         String itemDetails = jTextField25.getText().isEmpty() ? " " : jTextField25.getText();
         String guarantorName = jTextField7.getText().isEmpty() ? " " : jTextField7.getText();
         String guarantorAddress = jTextField8.getText().isEmpty() ? " " : jTextField8.getText();
+        String guarantorPhone = jTextField9.getText().isEmpty() ? " " : jTextField9.getText();
         String documents = jTextField10.getText().isEmpty() ? " " : jTextField10.getText();
+        
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
@@ -1188,6 +1191,7 @@ public class LoanEntry extends javax.swing.JPanel {
                 itemDetails,
                 guarantorName,
                 guarantorAddress,
+                guarantorPhone,
                 documents,
                 reminders,
                 notes,
