@@ -1,4 +1,5 @@
 
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -1155,7 +1156,7 @@ public class UpdateLoan extends javax.swing.JFrame {
             String notes,
             String itemLocation
     ) {
-        jTextField1.setText(entryDate);
+        jTextField1.setText(interestDatePercentage);
         jTextField2.setText(estimatedCost);
         jTextField6.setText(itemLocation);
         jTextField7.setText(guarantorName);

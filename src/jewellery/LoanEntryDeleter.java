@@ -1,0 +1,81 @@
+
+package jewellery;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
+public class LoanEntryDeleter {
+
+    private static final Logger LOGGER = Logger.getLogger(LoanEntryDeleter.class.getName());
+
+    public static boolean deleteLoanByPartyName(String partyName) {
+        if (partyName == null || partyName.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Party name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        try (Connection connection = DBConnect.connect()) {
+            // First confirm the loan exists
+            String checkSql = "SELECT LOAN_ID, PARTY_NAME FROM LOAN_ENTRY WHERE PARTY_NAME = ?";
+            try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
+                checkStmt.setString(1, partyName);
+                ResultSet rs = checkStmt.executeQuery();
+
+                if (!rs.next()) {
+                    JOptionPane.showMessageDialog(null, 
+                        "No loan found for party: " + partyName, 
+                        "Not Found", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                    return false;
+                }
+
+                // Show confirmation dialog with loan details
+                int loanId = rs.getInt("LOAN_ID");
+                String foundPartyName = rs.getString("PARTY_NAME");
+                
+                int confirm = JOptionPane.showConfirmDialog(null, 
+                    "Are you sure you want to delete loan ID: " + loanId + 
+                    "\nFor party: " + foundPartyName, 
+                    "Confirm Deletion", 
+                    JOptionPane.YES_NO_OPTION);
+
+                if (confirm != JOptionPane.YES_OPTION) {
+                    return false;
+                }
+            }
+
+            // Proceed with deletion
+            String deleteSql = "DELETE FROM LOAN_ENTRY WHERE PARTY_NAME = ?";
+            try (PreparedStatement deleteStmt = connection.prepareStatement(deleteSql)) {
+                deleteStmt.setString(1, partyName);
+                int rowsAffected = deleteStmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    JOptionPane.showMessageDialog(null, 
+                        "Successfully deleted loan for party: " + partyName, 
+                        "Success", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                    LOGGER.log(Level.INFO, "Deleted loan entry for party: {0}", partyName);
+                    return true;
+                } else {
+                    JOptionPane.showMessageDialog(null, 
+                        "No loan was deleted for party: " + partyName, 
+                        "Warning", 
+                        JOptionPane.WARNING_MESSAGE);
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error deleting loan for party: " + partyName, e);
+            JOptionPane.showMessageDialog(null, 
+                "Error deleting loan: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+}
