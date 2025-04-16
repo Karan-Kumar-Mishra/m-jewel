@@ -53,6 +53,7 @@ import java.awt.BorderLayout;
 import javax.swing.*; // If you're using Swing components
 import java.awt.*; // This imports all AWT classes, including BorderLayout
 import jewellery.LoanEntry;
+import jewellery.LoanEntryDeleter;
 
 public class LoanBook extends javax.swing.JPanel {
 
@@ -471,6 +472,7 @@ private void openLoanEntryWindow(Object[] loanData) {
                 loanData[19].toString(),  // notes
                 loanData[20].toString()   // itemLocation
             );
+            LoanEntryDeleter.deleteLoanByPartyName(loanData[3].toString());
             lup.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(null, 
