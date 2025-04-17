@@ -261,7 +261,6 @@ public class LoanBook extends javax.swing.JPanel {
     }
 
     private void filterByDate() {
-
         java.util.Date selectedDate = jDateChooser1.getDate();
 
         if (selectedDate == null) {
@@ -278,13 +277,13 @@ public class LoanBook extends javax.swing.JPanel {
             return;
         }
 
-        // Filter the data based on the selected date
+        // Filter the data based on date range (start date <= selected date)
         Object[][] filteredData = Arrays.stream(completeLoanData)
-                .filter(row -> row != null && row.length > 1 && row[0] != null) // Check for valid row and date exists
+                .filter(row -> row != null && row.length > 1 && row[1] != null) // Check for valid row and date exists
                 .filter(row -> {
                     try {
-                        // The date to compare is in the original data at index 1 (assuming it's the date)
-                        Object dateObj = row[1]; // Adjust this index if necessary
+                        // The date to compare is in the original data at index 1 (START_DATE)
+                        Object dateObj = row[1];
 
                         if (dateObj == null) {
                             return false;
@@ -304,9 +303,8 @@ public class LoanBook extends javax.swing.JPanel {
                             return false;
                         }
 
-                        // Compare just the dates (ignore time)
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        return dateFormat.format(rowDate).equals(dateFormat.format(sqlSelectedDate));
+                        // Compare dates - include if row date is on or before selected date
+                        return !rowDate.after(sqlSelectedDate);
                     } catch (Exception e) {
                         e.printStackTrace();
                         return false;
@@ -320,7 +318,7 @@ public class LoanBook extends javax.swing.JPanel {
         // Show message if no results found
         if (filteredData.length == 0) {
             JOptionPane.showMessageDialog(this,
-                    "No records found for date: " + new SimpleDateFormat("dd-MM-yyyy").format(selectedDate),
+                    "No records found before or on: " + new SimpleDateFormat("dd-MM-yyyy").format(selectedDate),
                     "No Data",
                     JOptionPane.INFORMATION_MESSAGE);
         }
@@ -404,89 +402,89 @@ public class LoanBook extends javax.swing.JPanel {
         customizeComponents();
     }
 
-private void openLoanEntryWindow(Object[] loanData) {
-    // First validate if loanData exists and has enough elements
-    if (loanData == null || loanData.length < 20) {
-        JOptionPane.showMessageDialog(null, 
-            "Invalid loan data provided!\nExpected 20 fields but got " + 
-            (loanData == null ? "null" : loanData.length), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        return;
-    }
+    private void openLoanEntryWindow(Object[] loanData) {
+        // First validate if loanData exists and has enough elements
+        if (loanData == null || loanData.length < 20) {
+            JOptionPane.showMessageDialog(null,
+                    "Invalid loan data provided!\nExpected 20 fields but got "
+                    + (loanData == null ? "null" : loanData.length),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    try {
-        // Create a formatted message to display all loan data
-        StringBuilder message = new StringBuilder();
-        message.append("<html><body><h3>Loan Data Review</h3>");
-        message.append("<table border='1' cellpadding='5'>");
-        
-        // Define field labels for display
-        String[] fieldLabels = {
-            "Entry Date", "Slip No", "Party Name", "Remarks", 
-            "Start Date", "Interest Rate", "Weight Type", "Gold Weight",
-            "Purity", "Net Weight", "Estimated Cost", "Amount Paid",
-            "Item Details", "Guarantor Name", "Guarantor Address",
-            "Guarantor Phone", "Documents", "Reminders", "Notes", "Item Location"
-        };
-        
-        // Add each field to the display table
-        for (int i = 0; i < fieldLabels.length; i++) {
-            message.append("<tr>"+i+"<td><b>").append(fieldLabels[i]).append("</b></td>")
-                   .append("<td>").append(loanData[i] != null ? loanData[i].toString() : "N/A")
-                   .append("</td></tr>");
-        }
-        message.append("</table></body></html>");
-        
-        // Show confirmation dialog with all data
-        int option = JOptionPane.showConfirmDialog(
-            null,
-            message.toString(),
-            "Confirm Loan Data",
-            JOptionPane.OK_CANCEL_OPTION,
-            JOptionPane.INFORMATION_MESSAGE
-        );
-        
-        // Only proceed if user confirms
-        if (option == JOptionPane.OK_OPTION) {
-            UpdateLoan lup = new UpdateLoan();
-            lup.setInfo(
-                loanData[1].toString(),   // entryDate
-                loanData[0].toString(),   // slipNo
-                loanData[3].toString(),   // partyName
-                loanData[4].toString(),   // remarks
-                loanData[5].toString(),   // startDate
-                loanData[6].toString(),   // interestDatePercentage
-                loanData[7].toString(),   // weightType
-                loanData[11].toString(),   // goldWeight
-                loanData[9].toString(),   // purity
-                loanData[10].toString(),   // netWeight
-                loanData[11].toString(),  // estimatedCost
-                loanData[12].toString(),  // amountPaid
-                loanData[13].toString(),  // itemDetails
-                loanData[14].toString(), // guarantorName
-                loanData[15].toString(),  // guarantorAddress
-                loanData[16].toString(),  // guarantorPhone
-                loanData[17].toString(),  // documents
-                loanData[18].toString(),  // reminders
-                loanData[19].toString(),  // notes
-                loanData[20].toString()   // itemLocation
+        try {
+            // Create a formatted message to display all loan data
+            StringBuilder message = new StringBuilder();
+            message.append("<html><body><h3>Loan Data Review</h3>");
+            message.append("<table border='1' cellpadding='5'>");
+
+            // Define field labels for display
+            String[] fieldLabels = {
+                "Entry Date", "Slip No", "Party Name", "Remarks",
+                "Start Date", "Interest Rate", "Weight Type", "Gold Weight",
+                "Purity", "Net Weight", "Estimated Cost", "Amount Paid",
+                "Item Details", "Guarantor Name", "Guarantor Address",
+                "Guarantor Phone", "Documents", "Reminders", "Notes", "Item Location"
+            };
+
+            // Add each field to the display table
+            for (int i = 0; i < fieldLabels.length; i++) {
+                message.append("<tr>" + i + "<td><b>").append(fieldLabels[i]).append("</b></td>")
+                        .append("<td>").append(loanData[i] != null ? loanData[i].toString() : "N/A")
+                        .append("</td></tr>");
+            }
+            message.append("</table></body></html>");
+
+            // Show confirmation dialog with all data
+            int option = JOptionPane.showConfirmDialog(
+                    null,
+                    message.toString(),
+                    "Confirm Loan Data",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE
             );
-            LoanEntryDeleter.deleteLoanByPartyName(loanData[3].toString());
-            lup.setVisible(true);
-        } else {
-            JOptionPane.showMessageDialog(null, 
-                "Loan update cancelled by user", 
-                "Cancelled", 
-                JOptionPane.INFORMATION_MESSAGE);
+
+            // Only proceed if user confirms
+            if (option == JOptionPane.OK_OPTION) {
+                UpdateLoan lup = new UpdateLoan();
+                lup.setInfo(
+                        loanData[1].toString(), // entryDate
+                        loanData[0].toString(), // slipNo
+                        loanData[3].toString(), // partyName
+                        loanData[4].toString(), // remarks
+                        loanData[5].toString(), // startDate
+                        loanData[6].toString(), // interestDatePercentage
+                        loanData[7].toString(), // weightType
+                        loanData[11].toString(), // goldWeight
+                        loanData[9].toString(), // purity
+                        loanData[10].toString(), // netWeight
+                        loanData[11].toString(), // estimatedCost
+                        loanData[12].toString(), // amountPaid
+                        loanData[13].toString(), // itemDetails
+                        loanData[14].toString(), // guarantorName
+                        loanData[15].toString(), // guarantorAddress
+                        loanData[16].toString(), // guarantorPhone
+                        loanData[17].toString(), // documents
+                        loanData[18].toString(), // reminders
+                        loanData[19].toString(), // notes
+                        loanData[20].toString() // itemLocation
+                );
+                LoanEntryDeleter.deleteLoanByPartyName(loanData[3].toString());
+                lup.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "Loan update cancelled by user",
+                        "Cancelled",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Error processing loan data: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, 
-            "Error processing loan data: " + e.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
     }
-}
 
     private void customizeComponents() {
         jPanel1.setBackground(new java.awt.Color(56, 68, 76));

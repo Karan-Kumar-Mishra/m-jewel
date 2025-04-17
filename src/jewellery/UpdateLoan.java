@@ -1,5 +1,3 @@
-
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -1123,12 +1121,7 @@ public class UpdateLoan extends javax.swing.JFrame {
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
-        javax.swing.JTabbedPane tabbedPane = (javax.swing.JTabbedPane) this.getParent();
-        if (tabbedPane != null) {
-            // Remove this tab
-            tabbedPane.remove(this);
-        }
-        // TODO add your handling code here:
+      this.dispose();
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1174,7 +1167,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         jTextField24.setText(amountPaid);
         jTextField25.setText(itemDetails);
         jTextField26.setText(startDate);
-      //  System.out.println("weight type => " + jComboBox1.getSelectedItem());
+        //  System.out.println("weight type => " + jComboBox1.getSelectedItem());
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
