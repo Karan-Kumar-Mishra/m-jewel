@@ -242,6 +242,10 @@ public class LoanEntry extends javax.swing.JPanel {
         jLabel6.setText("GST Reports");
         jLabel7.setText("Tools");
         jLabel8.setText("Help");
+        jTextField17.setText(LocalDate.now().toString());
+        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+        GLOBAL_VARS.slip_number++;
+
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
 
@@ -600,7 +604,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField17.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField17ActionPerformed(evt);
-                jTextField17.setText(LocalDate.now().toString());
+              
             }
         });
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
@@ -701,6 +705,9 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField24.setText("");
         jTextField25.setText("");
         jTextField26.setText("");
+        jTextField17.setText(LocalDate.now().toString());
+        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+     //   GLOBAL_VARS.slip_number++;
     }
 
     private void addEnterKeyListenerToTextFields() {
@@ -807,8 +814,7 @@ public class LoanEntry extends javax.swing.JPanel {
                 if (textField == jTextField17) {
                     jTextField17.setText(LocalDate.now().toString());
                 } else if (textField == jTextField18) {
-                    jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-                    GLOBAL_VARS.slip_number++;
+                  
                 } else if (textField == jTextField26) {
                     jTextField26.setText(LocalDate.now().toString());
                 }
@@ -1068,8 +1074,7 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jTextField18ActionPerformed(java.awt.event.ActionEvent evt) {
-        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-        GLOBAL_VARS.slip_number++;
+     
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1109,9 +1114,6 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField17.setText(LocalDate.now().toString());
         jTextField26.setText(LocalDate.now().toString());
 
-        // Increment slip number
-        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-        GLOBAL_VARS.slip_number++;
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1198,14 +1200,17 @@ public class LoanEntry extends javax.swing.JPanel {
                 itemLocation
         );
         clearAllTextBox();
+        
+        // Increment slip number
+        
+     
     }
 
     private void jTextField23ActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
     private void jTextField118ActionPerformed(java.awt.event.ActionEvent evt) {
-        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-        GLOBAL_VARS.slip_number++;
+
     }
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {

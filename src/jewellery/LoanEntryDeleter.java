@@ -37,15 +37,7 @@ public class LoanEntryDeleter {
                 int loanId = rs.getInt("LOAN_ID");
                 String foundPartyName = rs.getString("PARTY_NAME");
                 
-                int confirm = JOptionPane.showConfirmDialog(null, 
-                    "Are you sure you want to delete loan ID: " + loanId + 
-                    "\nFor party: " + foundPartyName, 
-                    "Confirm Deletion", 
-                    JOptionPane.YES_NO_OPTION);
 
-                if (confirm != JOptionPane.YES_OPTION) {
-                    return false;
-                }
             }
 
             // Proceed with deletion
@@ -55,10 +47,10 @@ public class LoanEntryDeleter {
                 int rowsAffected = deleteStmt.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    JOptionPane.showMessageDialog(null, 
-                        "Successfully deleted loan for party: " + partyName, 
-                        "Success", 
-                        JOptionPane.INFORMATION_MESSAGE);
+//                    JOptionPane.showMessageDialog(null, 
+//                        "Successfully deleted loan for party: " + partyName, 
+//                        "Success", 
+//                        JOptionPane.INFORMATION_MESSAGE);
                     LOGGER.log(Level.INFO, "Deleted loan entry for party: {0}", partyName);
                     return true;
                 } else {
@@ -71,10 +63,10 @@ public class LoanEntryDeleter {
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Error deleting loan for party: " + partyName, e);
-            JOptionPane.showMessageDialog(null, 
-                "Error deleting loan: " + e.getMessage(), 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+//            JOptionPane.showMessageDialog(null, 
+//                "Error deleting loan: " + e.getMessage(), 
+//                "Error", 
+//                JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
