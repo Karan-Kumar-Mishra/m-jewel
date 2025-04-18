@@ -149,6 +149,25 @@ public class LoanBook extends javax.swing.JPanel {
         }
     }
 
+    private void setColumnWidths() {
+        jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        int[] columnWidths = {
+            150, // Date
+            100, // No.
+            180, // Name
+            200, // Loan Amt
+            120, // Wt
+            100, // Days (made narrower for simple numbers)
+            180, // Int. Amt
+            180, // Amount + int.
+            100 // Current Value
+        };
+
+        for (int i = 0; i < columnWidths.length; i++) {
+            jTable1.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
+        }
+    }
+
     private void populateTable(Object[][] data) {
         if (data == null || data.length == 0) {
             jTable1.setModel(new DefaultTableModel(new Object[0][], columnNames));
@@ -258,6 +277,7 @@ public class LoanBook extends javax.swing.JPanel {
         };
 
         jTable1.setModel(model);
+         setColumnWidths(); 
     }
 
     private void filterByDate() {
@@ -337,21 +357,7 @@ public class LoanBook extends javax.swing.JPanel {
 
         // Set column widths according to the image
         jTable1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        int[] columnWidths = {
-            100, // Date
-            80, // No.
-            120, // Name
-            100, // Loan Amt
-            100, // Wt
-            80, // Days (made narrower for simple numbers)
-            100, // Int. Amt
-            120, // Amount + int.
-            100 // Current Value
-        };
-
-        for (int i = 0; i < columnWidths.length; i++) {
-            jTable1.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
-        }
+        setColumnWidths();
 
         // Center align all columns except Name
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -773,19 +779,19 @@ public class LoanBook extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(71, 71, 71)
+                .addGap(48, 48, 48)
                 .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton6)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1006,7 +1012,6 @@ public class LoanBook extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel14))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jXImageView1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(9, 9, 9))
                                     .addGroup(layout.createSequentialGroup()
