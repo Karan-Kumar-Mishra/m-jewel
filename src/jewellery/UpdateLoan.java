@@ -35,6 +35,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import jewellery.LoanEntryDeleter;
 
 public class UpdateLoan extends javax.swing.JFrame {
 
@@ -126,6 +127,12 @@ public class UpdateLoan extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
     private DefaultListModel<String> imageListModel;
+    private static String PartynameForDeletetion = "";
+
+    public static void deleteLonaEntry(String partyname) {
+        PartynameForDeletetion = partyname;
+
+    }
 
     public UpdateLoan() {
         initComponents();
@@ -1121,7 +1128,7 @@ public class UpdateLoan extends javax.swing.JFrame {
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
-      this.dispose();
+        this.dispose();
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1217,7 +1224,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
-
+        LoanEntryDeleter.deleteLoanByPartyName(PartynameForDeletetion);
         InsertLoanDetails.insert(
                 entryDate,
                 slipNo,

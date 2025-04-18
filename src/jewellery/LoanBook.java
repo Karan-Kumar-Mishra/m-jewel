@@ -470,7 +470,8 @@ public class LoanBook extends javax.swing.JPanel {
                         loanData[19].toString(), // notes
                         loanData[20].toString() // itemLocation
                 );
-                LoanEntryDeleter.deleteLoanByPartyName(loanData[3].toString());
+                UpdateLoan.deleteLonaEntry(loanData[3].toString());
+                // LoanEntryDeleter.deleteLoanByPartyName(loanData[3].toString());
                 lup.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null,
