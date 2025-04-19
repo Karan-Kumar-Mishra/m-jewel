@@ -52,8 +52,15 @@ import java.nio.file.Paths;
 import java.awt.BorderLayout;
 import javax.swing.*; // If you're using Swing components
 import java.awt.*; // This imports all AWT classes, including BorderLayout
+import java.io.FileOutputStream;
+import java.util.Set;
+import java.util.TreeMap;
 import jewellery.LoanEntry;
 import jewellery.LoanEntryDeleter;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class LoanBook extends javax.swing.JPanel {
 
@@ -71,6 +78,7 @@ public class LoanBook extends javax.swing.JPanel {
         "Current Value"
     };
     private Object[][] completeLoanData;
+    public String paths = "";
 
     class DateRenderer extends DefaultTableCellRenderer {
 
@@ -277,7 +285,7 @@ public class LoanBook extends javax.swing.JPanel {
         };
 
         jTable1.setModel(model);
-         setColumnWidths(); 
+        setColumnWidths();
     }
 
     private void filterByDate() {
@@ -1156,6 +1164,95 @@ public class LoanBook extends javax.swing.JPanel {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
+
+    public void exportToExcel() {
+        // Create a file chooser
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Save Excel File");
+
+        // Set default filename with timestamp
+        String defaultFileName = "LoanBook_Export_"
+                + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new java.util.Date())
+                + ".xlsx";
+        fileChooser.setSelectedFile(new File(defaultFileName));
+
+        // Set file filter for Excel files
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Excel Files (*.xlsx)", "xlsx"));
+
+        // Show save dialog
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection != JFileChooser.APPROVE_OPTION) {
+            return; // User cancelled the operation
+        }
+
+        File fileToSave = fileChooser.getSelectedFile();
+        paths = fileToSave.getAbsolutePath();
+
+        // Ensure the file has .xlsx extension
+        if (!paths.toLowerCase().endsWith(".xlsx")) {
+            paths += ".xlsx";
+            fileToSave = new File(paths);
+        }
+
+        try (XSSFWorkbook wb = new XSSFWorkbook()) {
+            XSSFSheet ws = wb.createSheet("Loan Data");
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+            // Create header row
+            XSSFRow headerRow = ws.createRow(0);
+            for (int col = 0; col < model.getColumnCount(); col++) {
+                headerRow.createCell(col).setCellValue(model.getColumnName(col));
+            }
+
+            // Create data rows
+            for (int row = 0; row < model.getRowCount(); row++) {
+                XSSFRow dataRow = ws.createRow(row + 1); // +1 to skip header
+
+                for (int col = 0; col < model.getColumnCount(); col++) {
+                    Object value = model.getValueAt(row, col);
+                    XSSFCell cell = dataRow.createCell(col);
+
+                    if (value != null) {
+                        if (value instanceof Number) {
+                            cell.setCellValue(((Number) value).doubleValue());
+                        } else {
+                            cell.setCellValue(value.toString());
+                        }
+                    } else {
+                        cell.setCellValue("");
+                    }
+                }
+            }
+
+            // Auto-size columns
+            for (int col = 0; col < model.getColumnCount(); col++) {
+                ws.autoSizeColumn(col);
+            }
+
+            // Write the file
+            try (FileOutputStream fos = new FileOutputStream(fileToSave)) {
+                wb.write(fos);
+                JOptionPane.showMessageDialog(this,
+                        "File exported successfully to:\n" + fileToSave.getAbsolutePath(),
+                        "Export Successful",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,
+                        "Error writing file:\n" + e.getMessage(),
+                        "Export Error",
+                        JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error creating Excel file:\n" + e.getMessage(),
+                    "Export Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
         showViewItems();
@@ -1181,6 +1278,7 @@ public class LoanBook extends javax.swing.JPanel {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+        exportToExcel();
     }// GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton6ActionPerformed
