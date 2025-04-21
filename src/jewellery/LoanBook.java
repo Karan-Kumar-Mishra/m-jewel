@@ -118,7 +118,10 @@ public class LoanBook extends javax.swing.JPanel {
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
             if (value instanceof Number) {
-                value = ((Number) value).intValue(); // Convert to simple integer
+                int totalDays = ((Number) value).intValue();
+                int months = totalDays / 30;  // Calculate months
+                int remainingDays = totalDays % 30;  // Calculate remaining days
+                value = months + "(" + totalDays + ")";  // Format as months(totalDays)
             }
             return super.getTableCellRendererComponent(table, value, isSelected,
                     hasFocus, row, column);
@@ -146,7 +149,7 @@ public class LoanBook extends javax.swing.JPanel {
             jTable1.setModel(model);
 
             // Populate the table with data
-            // populateTable(completeLoanData);
+          //  populateTable(completeLoanData);
             customizeTable(); // Customize after all components exist
 
         } catch (Exception e) {
@@ -206,7 +209,7 @@ public class LoanBook extends javax.swing.JPanel {
             displayData[i][0] = data[i][1]; // START_DATE
             displayData[i][1] = data[i][2]; // SLIP_NO
             displayData[i][2] = data[i][3]; // PARTY_NAME
-
+            displayData[i][5] = (int) rowDays;
             // Handle numeric values with null checks
             try {
                 displayData[i][3] = (data[i].length > 12 && data[i][12] != null)
@@ -277,6 +280,9 @@ public class LoanBook extends javax.swing.JPanel {
                 if (columnIndex == 1) {
                     return Integer.class;
                 }
+                if (columnIndex == 5) {  // Days column
+                    return Integer.class;
+                }
                 if (columnIndex >= 3 && columnIndex <= 8) {
                     return Double.class;
                 }
@@ -286,6 +292,11 @@ public class LoanBook extends javax.swing.JPanel {
 
         jTable1.setModel(model);
         setColumnWidths();
+        jTable1.getColumnModel().getColumn(5).setCellRenderer(new DaysRenderer());
+
+        // Also ensure other renderers are set
+        jTable1.setDefaultRenderer(Double.class, new DecimalRenderer());
+        jTable1.setDefaultRenderer(java.sql.Date.class, new DateRenderer());
     }
 
     private void filterByDate() {
@@ -384,10 +395,9 @@ public class LoanBook extends javax.swing.JPanel {
         jTable1.getColumnModel().getColumn(6).setCellRenderer(rightRenderer); // Int. Amt
         jTable1.getColumnModel().getColumn(7).setCellRenderer(rightRenderer); // Amount + int.
         jTable1.getColumnModel().getColumn(8).setCellRenderer(rightRenderer); // Current Value
-
-        // Special renderer for Days column (simple number format)
         jTable1.getColumnModel().getColumn(5).setCellRenderer(new DaysRenderer());
 
+        // Special renderer for Days column (simple number format)
         jScrollPane1.setViewportView(jTable1);
 
         // Add selection listener to show details when a row is selected
