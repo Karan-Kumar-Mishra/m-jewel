@@ -660,7 +660,7 @@ public class UpdateLoan extends javax.swing.JFrame {
 
         jPanel5.add(jTextField19, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 130, 300, -1));
 
-        jButton1.setText("Save");
+        jButton1.setText("Update");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -825,7 +825,7 @@ public class UpdateLoan extends javax.swing.JFrame {
                     jTextField17.setText(LocalDate.now().toString());
                 } else if (textField == jTextField18) {
                     jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-                    GLOBAL_VARS.slip_number++;
+                  
                 } else if (textField == jTextField26) {
                     jTextField26.setText(LocalDate.now().toString());
                 }
@@ -1082,7 +1082,6 @@ public class UpdateLoan extends javax.swing.JFrame {
 
     private void jTextField18ActionPerformed(java.awt.event.ActionEvent evt) {
         jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-        GLOBAL_VARS.slip_number++;
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1123,8 +1122,8 @@ public class UpdateLoan extends javax.swing.JFrame {
         jTextField26.setText(LocalDate.now().toString());
 
         // Increment slip number
-        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-        GLOBAL_VARS.slip_number++;
+      //  jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+   
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1254,8 +1253,7 @@ public class UpdateLoan extends javax.swing.JFrame {
     }
 
     private void jTextField118ActionPerformed(java.awt.event.ActionEvent evt) {
-        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-        GLOBAL_VARS.slip_number++;
+      //  jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
     }
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {

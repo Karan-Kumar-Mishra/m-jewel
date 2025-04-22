@@ -242,9 +242,11 @@ public class LoanEntry extends javax.swing.JPanel {
         jLabel6.setText("GST Reports");
         jLabel7.setText("Tools");
         jLabel8.setText("Help");
-        jTextField17.setText(LocalDate.now().toString());
-        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
         GLOBAL_VARS.slip_number++;
+        jTextField17.setText(LocalDate.now().toString());
+        
+        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+        
 
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -707,7 +709,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField26.setText("");
         jTextField17.setText(LocalDate.now().toString());
         jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-     //   GLOBAL_VARS.slip_number++;
+
     }
 
     private void addEnterKeyListenerToTextFields() {

@@ -149,7 +149,7 @@ public class LoanBook extends javax.swing.JPanel {
             jTable1.setModel(model);
 
             // Populate the table with data
-          //  populateTable(completeLoanData);
+          //          populateTable(completeLoanData);
             customizeTable(); // Customize after all components exist
 
         } catch (Exception e) {
@@ -609,8 +609,8 @@ public class LoanBook extends javax.swing.JPanel {
                 e.printStackTrace();
 
                 // Handle error - maybe show a placeholder or error message
-                JOptionPane.showMessageDialog(null, "Error loading image: " + e.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
+               // JOptionPane.showMessageDialog(null, "Error loading image: " + e.getMessage(),
+                //        "Error", JOptionPane.ERROR_MESSAGE);
             }
             calculateAndDisplayInterest(selectedRow);
         }

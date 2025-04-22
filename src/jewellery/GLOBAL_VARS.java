@@ -17,7 +17,7 @@ public class GLOBAL_VARS {
     public static String un;
     public static String pw;
     public static int userid;
-    public static int slip_number=1; //use for slip number in loanEnter
+    public static int slip_number=0 ; //use for slip number in loanEnter
 
 //    public static List<List<Object>> purchaseItems = new ArrayList<>();
     
