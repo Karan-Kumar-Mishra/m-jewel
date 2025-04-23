@@ -195,7 +195,7 @@ public class LoanBook extends javax.swing.JPanel {
             long rowDays = 0;
             try {
                 if (data[i][1] != null) { // START_DATE is at index 1
-                    String dateString = data[i][1].toString();
+                    String dateString = data[i][0].toString();
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date parsedDate = dateFormat.parse(dateString);
                     java.sql.Date startDate = new java.sql.Date(parsedDate.getTime());
@@ -209,9 +209,8 @@ public class LoanBook extends javax.swing.JPanel {
             displayData[i][0] = data[i][0]; // START_DATE
             displayData[i][1] = data[i][1]; // SLIP_NO
             displayData[i][2] = data[i][2]; // PARTY_NAME
-            displayData[i][5] = (int) rowDays;
-            // Handle numeric values with null checks
 
+            // Handle numeric values with null checks
             try {
                 displayData[i][3] = (data[i].length > 11 && data[i][11] != null)
                         ? Double.parseDouble(data[i][11].toString())
@@ -219,16 +218,55 @@ public class LoanBook extends javax.swing.JPanel {
             } catch (NumberFormatException e) {
                 displayData[i][3] = 0.00;
             }
-
+           
             try {
                 displayData[i][4] = (data[i].length > 9 && data[i][9] != null)
                         ? Double.parseDouble(data[i][9].toString())
                         : 0.00; // NET_WEIGHT
             } catch (NumberFormatException e) {
-                displayData[i][4] = 0.00;
+                displayData[i][4] = 0.0;
             }
+            try {
+                //FOR DATE
+                displayData[i][5] = rowDays;
+            } catch (NumberFormatException e) {
+                displayData[i][5] = 0.0;
+            }
+            try {
+                //FOR interest amount
+                double loanAmt = (data[i].length > 11 && data[i][11] != null)
+                        ? Double.parseDouble(data[i][11].toString()) : 0.00;
+                double intAmt = (data[i].length > 6 && data[i][5] != null)
+                        ? Double.parseDouble(data[i][5].toString())
+                        : 0.00;
+                double dailyInterest = (loanAmt * intAmt / 100) / 30;
 
-            displayData[i][5] = rowDays; // Calculated days
+                double totalInterest = (dailyInterest * (rowDays/30));
+
+                displayData[i][6] = totalInterest;
+            } catch (NumberFormatException e) {
+                displayData[i][6] = 0.0;
+            }
+            try {
+                //FOR interest amount+loan amnt
+                double loanAmt = (displayData[i][3] instanceof Number)
+                        ? ((Number) displayData[i][3]).doubleValue()
+                        : 0.00;
+
+                double totalInterest = (displayData[i][6] instanceof Number)
+                        ? ((Number) displayData[i][6]).doubleValue()
+                        : 0.00;
+
+                displayData[i][7] = totalInterest + loanAmt;
+            } catch (NumberFormatException e) {
+                displayData[i][7] = 0.0;
+            }
+             try {
+                //FOR current value
+                displayData[i][8] = 0.0;
+            } catch (NumberFormatException e) {
+                displayData[i][8] = 0.0;
+            }
 
         }
 
@@ -532,8 +570,6 @@ public class LoanBook extends javax.swing.JPanel {
             Object[] rowData = completeLoanData[selectedRow];
             selectedPartyname = getStringValue(rowData, 3);
         }
-        // JOptionPane.showMessageDialog(this, "Party is while sending ... " + selectedPartyname);
-
         return selectedPartyname;
     }
 
@@ -575,7 +611,7 @@ public class LoanBook extends javax.swing.JPanel {
             JScrollPane scrollPane = new JScrollPane(detailTable);
             scrollPane.setPreferredSize(new Dimension(450, 200));
 
-            JOptionPane.showMessageDialog(this, scrollPane, "Loan Details", JOptionPane.INFORMATION_MESSAGE);
+           // JOptionPane.showMessageDialog(this, scrollPane, "Loan Details", JOptionPane.INFORMATION_MESSAGE);
 
             // Update labels as before
             jLabel21.setText(getStringValue(rowData, 8)); // PURITY 
@@ -588,7 +624,7 @@ public class LoanBook extends javax.swing.JPanel {
             jLabel30.setText(getStringValue(rowData, 19)); // ITEM_LOCATION (index 19)
 
             // Also show the party name (from index 3)
-            jLabel4.setText("Party Information: " + getStringValue(rowData, 3));
+            jLabel4.setText("Party Information: " + getStringValue(rowData, 2));
 
             String destinationPath = "assets/" + getStringValue(rowData, 3) + "/" + "GUARNATOR_PHOTO.png";
             try {
