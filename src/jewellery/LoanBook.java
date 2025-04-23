@@ -149,7 +149,7 @@ public class LoanBook extends javax.swing.JPanel {
             jTable1.setModel(model);
 
             // Populate the table with data
-          //          populateTable(completeLoanData);
+            //          populateTable(completeLoanData);
             customizeTable(); // Customize after all components exist
 
         } catch (Exception e) {
@@ -206,22 +206,23 @@ public class LoanBook extends javax.swing.JPanel {
             }
 
             // Map data to display columns
-            displayData[i][0] = data[i][1]; // START_DATE
-            displayData[i][1] = data[i][2]; // SLIP_NO
-            displayData[i][2] = data[i][3]; // PARTY_NAME
+            displayData[i][0] = data[i][0]; // START_DATE
+            displayData[i][1] = data[i][1]; // SLIP_NO
+            displayData[i][2] = data[i][2]; // PARTY_NAME
             displayData[i][5] = (int) rowDays;
             // Handle numeric values with null checks
+
             try {
-                displayData[i][3] = (data[i].length > 12 && data[i][12] != null)
-                        ? Double.parseDouble(data[i][12].toString())
+                displayData[i][3] = (data[i].length > 11 && data[i][11] != null)
+                        ? Double.parseDouble(data[i][11].toString())
                         : 0.00; // AMOUNT_PAID
             } catch (NumberFormatException e) {
                 displayData[i][3] = 0.00;
             }
 
             try {
-                displayData[i][4] = (data[i].length > 10 && data[i][10] != null)
-                        ? Double.parseDouble(data[i][10].toString())
+                displayData[i][4] = (data[i].length > 9 && data[i][9] != null)
+                        ? Double.parseDouble(data[i][9].toString())
                         : 0.00; // NET_WEIGHT
             } catch (NumberFormatException e) {
                 displayData[i][4] = 0.00;
@@ -229,44 +230,6 @@ public class LoanBook extends javax.swing.JPanel {
 
             displayData[i][5] = rowDays; // Calculated days
 
-            try {
-                // INTEREST_DATE_PERCENTAGE
-//                displayData[i][6] = (data[i].length > 6 && data[i][6] != null)
-//                        ? Double.parseDouble(data[i][6].toString())
-//                        : 0.00; 
-
-                double loanAmt = (displayData[i][3] instanceof Number)
-                        ? ((Number) displayData[i][3]).doubleValue()
-                        : 0.00;
-                double intAmt = (data[i].length > 6 && data[i][6] != null)
-                        ? Double.parseDouble(data[i][6].toString())
-                        : 0.00;
-                double dailyInterest = (loanAmt * intAmt / 100) / 30;
-
-                double totalInterest = dailyInterest * rowDays;
-
-                displayData[i][6] = totalInterest;
-
-            } catch (NumberFormatException e) {
-                displayData[i][6] = 0.00;
-            }
-
-            // Calculate Amount + interest
-            try {
-                double loanAmt = (displayData[i][3] instanceof Number)
-                        ? ((Number) displayData[i][3]).doubleValue()
-                        : 0.00;
-
-                double totalInterest = (displayData[i][6] instanceof Number)
-                        ? ((Number) displayData[i][6]).doubleValue()
-                        : 0.00;
-
-                displayData[i][7] = totalInterest + loanAmt;
-            } catch (Exception e) {
-                displayData[i][7] = 0.00;
-            }
-
-            displayData[i][8] = 0.00; // Current Value (placeholder)
         }
 
         DefaultTableModel model = new DefaultTableModel(displayData, columnNames) {
@@ -579,13 +542,48 @@ public class LoanBook extends javax.swing.JPanel {
         if (selectedRow >= 0 && selectedRow < completeLoanData.length) {
             Object[] rowData = completeLoanData[selectedRow];
 
-            // Map database columns to labels
-            jLabel21.setText(getStringValue(rowData, 9)); // GOLD_WEIGHT (index 8)
-            jLabel22.setText(getStringValue(rowData, 10)); // PURITY (index 9)
-            jLabel9.setText(getStringValue(rowData, 11)); // NET_WEIGHT (index 10)
-            jLabel34.setText(getStringValue(rowData, 13)); // ITEM_DETAILS (index 13)
-            jLabel27.setText(getStringValue(rowData, 14)); // GUARNATOR_NAME (index 14)
-            jLabel28.setText(getStringValue(rowData, 15)); // GUARNATOR_ADDRESS (index 15)
+            // Create a table model for the JOptionPane
+            String[] columnNames = {"Field", "Value"};
+            Object[][] data = {
+                {"1:", getStringValue(rowData, 1)},
+                {"2:", getStringValue(rowData, 2)},
+                {"3: ", getStringValue(rowData, 3)},
+                {"4: ", getStringValue(rowData, 4)},
+                {"5: ", getStringValue(rowData, 5)},
+                {"6: ", getStringValue(rowData, 6)},
+                {"7: ", getStringValue(rowData, 7)},
+                {"Purity", getStringValue(rowData, 8)},
+                {"Net Weight", getStringValue(rowData, 9)},
+                {"Gross Weight", getStringValue(rowData, 10)},
+                {"Item Details", getStringValue(rowData, 2)},
+                {"Guarantor Name", getStringValue(rowData, 14)},
+                {"Guarantor Address", getStringValue(rowData, 15)},
+                {"Documents", getStringValue(rowData, 16)},
+                {"Item Location", getStringValue(rowData, 19)},
+                {"20", getStringValue(rowData, 20)}
+            };
+
+            JTable detailTable = new JTable(data, columnNames);
+            detailTable.setEnabled(false); // Make the table non-editable
+            detailTable.setFillsViewportHeight(true);
+            detailTable.setRowHeight(25); // Set appropriate row height
+
+            // Set preferred width for columns
+            detailTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+            detailTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+
+            JScrollPane scrollPane = new JScrollPane(detailTable);
+            scrollPane.setPreferredSize(new Dimension(450, 200));
+
+            JOptionPane.showMessageDialog(this, scrollPane, "Loan Details", JOptionPane.INFORMATION_MESSAGE);
+
+            // Update labels as before
+            jLabel21.setText(getStringValue(rowData, 8)); // PURITY 
+            jLabel22.setText(getStringValue(rowData, 9)); // net weight 
+            jLabel9.setText(getStringValue(rowData, 7)); // NET_WEIGHT (index 10)
+            jLabel34.setText(getStringValue(rowData, 12)); // ITEM_DETAILS (index 13)
+            jLabel27.setText(getStringValue(rowData, 15)); // GUARNATOR_NAME (index 14)
+            jLabel28.setText(getStringValue(rowData, 14)); // GUARNATOR_ADDRESS (index 15)
             jLabel29.setText(getStringValue(rowData, 16)); // DOCUMENTS (index 16)
             jLabel30.setText(getStringValue(rowData, 19)); // ITEM_LOCATION (index 19)
 
@@ -607,10 +605,7 @@ public class LoanBook extends javax.swing.JPanel {
                 jXImageView1.repaint();
             } catch (IOException e) {
                 e.printStackTrace();
-
                 // Handle error - maybe show a placeholder or error message
-               // JOptionPane.showMessageDialog(null, "Error loading image: " + e.getMessage(),
-                //        "Error", JOptionPane.ERROR_MESSAGE);
             }
             calculateAndDisplayInterest(selectedRow);
         }
@@ -625,12 +620,12 @@ public class LoanBook extends javax.swing.JPanel {
             Object[] rowData = completeLoanData[row];
 
             // Get loan amount - using index 12 as per your structure
-            double loanAmount = Double.parseDouble(rowData[12].toString());
+            double loanAmount = Double.parseDouble(rowData[11].toString());
 
             // Get interest rate - using index 6 as per your structure
-            double interestRate = Double.parseDouble(rowData[6].toString());
+            double interestRate = Double.parseDouble(rowData[5].toString());
             // Get and parse the start date string
-            String dateString = rowData[1].toString();
+            String dateString = rowData[0].toString();
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // adjust format to match your date string
             java.util.Date parsedDate = dateFormat.parse(dateString);

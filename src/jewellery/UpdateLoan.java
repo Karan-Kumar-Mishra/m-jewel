@@ -824,7 +824,7 @@ public class UpdateLoan extends javax.swing.JFrame {
                 if (textField == jTextField17) {
                     jTextField17.setText(LocalDate.now().toString());
                 } else if (textField == jTextField18) {
-                    jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+                   // jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
                   
                 } else if (textField == jTextField26) {
                     jTextField26.setText(LocalDate.now().toString());
@@ -1081,7 +1081,7 @@ public class UpdateLoan extends javax.swing.JFrame {
     }
 
     private void jTextField18ActionPerformed(java.awt.event.ActionEvent evt) {
-        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1122,7 +1122,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         jTextField26.setText(LocalDate.now().toString());
 
         // Increment slip number
-      //  jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+      
    
     }
 
@@ -1253,7 +1253,7 @@ public class UpdateLoan extends javax.swing.JFrame {
     }
 
     private void jTextField118ActionPerformed(java.awt.event.ActionEvent evt) {
-      //  jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+     
     }
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {

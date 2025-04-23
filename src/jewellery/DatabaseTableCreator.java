@@ -14,7 +14,6 @@ public class DatabaseTableCreator {
             // SQL to create LOAN_ENTRY table
             String createLoanEntryTable = """
                 CREATE TABLE IF NOT EXISTS LOAN_ENTRY (
-                    LOAN_ID INT AUTO_INCREMENT PRIMARY KEY,
                     ENTRY_DATE DATE ,
                     SLIP_NO VARCHAR(50) ,
                     PARTY_NAME VARCHAR(100) ,

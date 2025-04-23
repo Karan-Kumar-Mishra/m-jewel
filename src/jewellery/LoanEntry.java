@@ -242,7 +242,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jLabel6.setText("GST Reports");
         jLabel7.setText("Tools");
         jLabel8.setText("Help");
-        GLOBAL_VARS.slip_number++;
+       
         jTextField17.setText(LocalDate.now().toString());
         
         jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
@@ -1202,7 +1202,7 @@ public class LoanEntry extends javax.swing.JPanel {
                 itemLocation
         );
         clearAllTextBox();
-        
+        GLOBAL_VARS.slip_number++;
         // Increment slip number
         
      
