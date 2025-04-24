@@ -1016,7 +1016,12 @@ public class DashBoardScreen extends javax.swing.JFrame {
         });
         jMenu4.add(jMenuItem9);
 
-        jMenuItem10.setText("Loan Regester");
+        jMenuItem10.setText("Loan Ledger");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem10);
 
         jMenuBar1.add(jMenu4);
@@ -1932,6 +1937,25 @@ public class DashBoardScreen extends javax.swing.JFrame {
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        // TODO add your handling code here:
+           try {
+            int index = tabbedPane.indexOfTab("Loan Book");
+            if (index == -1) {
+                LoanLedger loan_ledger = new LoanLedger();
+                tabbedPane.addTab("Loan Ledger", loan_ledger.getContentPane());
+                tabbedPane.setSelectedComponent(loan_ledger.getContentPane());
+            } else {
+                tabbedPane.setSelectedIndex(index);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error opening Loan Book:\n" + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     /**
      * @param args the command line arguments
