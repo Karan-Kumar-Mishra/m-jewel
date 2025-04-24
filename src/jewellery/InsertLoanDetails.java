@@ -49,7 +49,7 @@ public class InsertLoanDetails {
             preparedStatement.setDouble(11, Double.parseDouble(ESTIMATED_COST)); // ESTIMATED_COST
             preparedStatement.setDouble(12, Double.parseDouble(AMOUNT_PAID)); // AMOUNT_PAID
             preparedStatement.setString(13, ITEM_DETAILS); // ITEM_DETAILS
-            preparedStatement.setString(14, GUARANTOR_PHONE); // GUARNATOR_NAME
+            preparedStatement.setString(14, GUARNATOR_NAME); // GUARNATOR_NAME
             preparedStatement.setString(15, GUARNATOR_ADDRESS); // GUARNATOR_ADDRESS
             preparedStatement.setString(16, GUARANTOR_PHONE); // GUARNATOR_PHON
             preparedStatement.setString(17, DOCUMENTS); // DOCUMENTS

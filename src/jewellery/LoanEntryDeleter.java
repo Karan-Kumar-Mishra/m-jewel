@@ -20,25 +20,7 @@ public class LoanEntryDeleter {
 
         try (Connection connection = DBConnect.connect()) {
             // First confirm the loan exists
-            String checkSql = "SELECT LOAN_ID, PARTY_NAME FROM LOAN_ENTRY WHERE PARTY_NAME = ?";
-            try (PreparedStatement checkStmt = connection.prepareStatement(checkSql)) {
-                checkStmt.setString(1, partyName);
-                ResultSet rs = checkStmt.executeQuery();
-
-                if (!rs.next()) {
-                    JOptionPane.showMessageDialog(null, 
-                        "No loan found for party: " + partyName, 
-                        "Not Found", 
-                        JOptionPane.INFORMATION_MESSAGE);
-                    return false;
-                }
-
-                // Show confirmation dialog with loan details
-                int loanId = rs.getInt("LOAN_ID");
-                String foundPartyName = rs.getString("PARTY_NAME");
-                
-
-            }
+       
 
             // Proceed with deletion
             String deleteSql = "DELETE FROM LOAN_ENTRY WHERE PARTY_NAME = ?";
@@ -54,10 +36,10 @@ public class LoanEntryDeleter {
                     LOGGER.log(Level.INFO, "Deleted loan entry for party: {0}", partyName);
                     return true;
                 } else {
-                    JOptionPane.showMessageDialog(null, 
-                        "No loan was deleted for party: " + partyName, 
-                        "Warning", 
-                        JOptionPane.WARNING_MESSAGE);
+//                    JOptionPane.showMessageDialog(null, 
+//                        "No loan was deleted for party: " + partyName, 
+//                        "Warning", 
+//                        JOptionPane.WARNING_MESSAGE);
                     return false;
                 }
             }

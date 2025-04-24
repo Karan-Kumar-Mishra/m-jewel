@@ -131,7 +131,6 @@ public class UpdateLoan extends javax.swing.JFrame {
 
     public static void deleteLonaEntry(String partyname) {
         PartynameForDeletetion = partyname;
-
     }
 
     public UpdateLoan() {
