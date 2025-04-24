@@ -6,6 +6,8 @@ package jewellery;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Date;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,11 +18,53 @@ public class LoanReceipt extends javax.swing.JFrame {
     /**
      * Creates new form LoanReceipt
      */
+    private DefaultTableModel tableModel;
     public LoanReceipt() {
         initComponents();
         this.setBackground(new java.awt.Color(255, 156, 57));
         this.jButton4.setBackground(Color.red);
         this.jLabel1.setFont(new Font(jLabel1.getFont().getName(), Font.BOLD, 16));
+            // Initialize the table model with column names
+        String[] columnNames = {"Receipt No", "Account Name", "Loan Amount", "Interest Amount", "Remarks"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        jTable1.setModel(tableModel);
+        
+        // Load data from database
+        loadLoanReceiptData();
+        
+    }
+     private void loadLoanReceiptData() {
+        // Get data from database using the GetLoanReceiptData class
+        String[][] loanData = GetLoanReceiptData.getinfo();
+        
+        // Clear existing data
+        tableModel.setRowCount(0);
+        
+        // Populate the table with new data
+        for (String[] row : loanData) {
+            tableModel.addRow(row);
+        }
+        
+        // If there's data, populate the form fields with the first record
+        if (loanData.length > 0) {
+            populateFormFields(loanData[0]);
+        }
+    }
+      private void populateFormFields(String[] loanRecord) {
+        try {
+            // Set form fields based on the loan record
+            jTextField1.setText(loanRecord[0]); // SLIP_NO 
+            jComboBox2.setSelectedItem(loanRecord[1]); // party Name
+            jTextField2.setText(loanRecord[2]); // Loan Amount
+            jTextField3.setText(loanRecord[3]); // Interest Amount
+            jTextField4.setText(loanRecord[2]); // Total Amount (assuming same as loan amount)
+            
+            // Set current date
+            jDateChooser1.setDate(new Date());
+            
+        } catch (Exception e) {
+            System.err.println("Error populating form fields: " + e.getMessage());
+        }
     }
 
     /**
@@ -229,6 +273,7 @@ public class LoanReceipt extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+         
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

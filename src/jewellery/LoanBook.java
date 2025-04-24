@@ -626,7 +626,7 @@ public class LoanBook extends javax.swing.JPanel {
             // Also show the party name (from index 3)
             jLabel4.setText("Party Information: " + getStringValue(rowData, 2));
 
-            String destinationPath = "assets/" + getStringValue(rowData, 3) + "/" + "GUARNATOR_PHOTO.png";
+            String destinationPath = "assets/" + getStringValue(rowData, 2) + "/" + "GUARNATOR_PHOTO.png";
             try {
                 BufferedImage image = ImageIO.read(new File(destinationPath));
 
