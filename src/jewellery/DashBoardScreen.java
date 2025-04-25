@@ -1899,13 +1899,8 @@ public class DashBoardScreen extends javax.swing.JFrame {
             if (index == -1) {
                 LoanBook loanBook = new LoanBook();
                 // Ensure the panel is properly initialized
-                JPanel contentPane = loanBook.getContentPane();
-                if (contentPane != null) {
-                    tabbedPane.addTab("Loan Book", contentPane);
-                    tabbedPane.setSelectedComponent(contentPane);
-                } else {
-                    throw new Exception("Loan Book content pane is null");
-                }
+                tabbedPane.addTab("Loan Book", loanBook.getContentPane());
+                tabbedPane.setSelectedComponent(loanBook.getContentPane());
             } else {
                 tabbedPane.setSelectedIndex(index);
             }
@@ -1921,10 +1916,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
         // TODO add your handling code here:
         try {
-            int index = tabbedPane.indexOfTab("Loan Book");
+            int index = tabbedPane.indexOfTab("Loan Receipt");
             if (index == -1) {
                 LoanReceipt loan_receipt = new LoanReceipt();
-                // Ensure the panel is properly initialized
                 tabbedPane.addTab("Loan Receipt", loan_receipt.getContentPane());
                 tabbedPane.setSelectedComponent(loan_receipt.getContentPane());
             } else {
@@ -1941,7 +1935,7 @@ public class DashBoardScreen extends javax.swing.JFrame {
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         // TODO add your handling code here:
            try {
-            int index = tabbedPane.indexOfTab("Loan Book");
+            int index = tabbedPane.indexOfTab("Loan Ledger");
             if (index == -1) {
                 LoanLedger loan_ledger = new LoanLedger();
                 tabbedPane.addTab("Loan Ledger", loan_ledger.getContentPane());
