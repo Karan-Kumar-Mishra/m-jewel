@@ -27,7 +27,7 @@ public class GetLoanReceiptData {
                                       ResultSet.CONCUR_READ_ONLY);
             
             // 3. Execute query for specific columns
-            String sql = "SELECT SLIP_NO, PARTY_NAME, AMOUNT_PAID, INTEREST_DATE_PERCENTAGE, REMARKS FROM LOAN_ENTRY";
+            String sql = "SELECT SLIP_NO, PARTY_NAME, AMOUNT_PAID, INTEREST_DATE_PERCENTAGE, REMARKS,START_DATE  FROM LOAN_ENTRY";
             rs = stmt.executeQuery(sql);
             
             // 4. Get row count (we know column count is 5)
@@ -35,8 +35,8 @@ public class GetLoanReceiptData {
             int rowCount = rs.getRow();
             rs.beforeFirst();
             
-            // 5. Initialize result array (5 columns)
-            result = new String[rowCount][5];
+            // 5. Initialize result array (6 columns)
+            result = new String[rowCount][6];
             
             // 6. Populate result array
             int rowIndex = 0;
@@ -46,12 +46,14 @@ public class GetLoanReceiptData {
                 result[rowIndex][2] = rs.getString("AMOUNT_PAID") != null ? rs.getString("AMOUNT_PAID") : "";
                 result[rowIndex][3] = rs.getString("INTEREST_DATE_PERCENTAGE") != null ? rs.getString("INTEREST_DATE_PERCENTAGE") : "";
                 result[rowIndex][4] = rs.getString("REMARKS") != null ? rs.getString("REMARKS") : "";
+                result[rowIndex][5] = rs.getString("START_DATE") != null ? rs.getString("START_DATE") : "";
+
                 rowIndex++;
             }
             
         } catch (SQLException ex) {
             Logger.getLogger(GetLoanReceiptData.class.getName()).log(Level.SEVERE, null, ex);
-            result = new String[0][5]; // Return empty array with 5 columns on error
+            result = new String[0][6]; // Return empty array with 5 columns on error
         } finally {
             // 7. Clean up resources
             try {

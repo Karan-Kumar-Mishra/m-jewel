@@ -7,7 +7,11 @@ package jewellery;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,7 +23,9 @@ public class LoanReceipt extends javax.swing.JFrame {
      * Creates new form LoanReceipt
      */
     private DefaultTableModel tableModel;
-   
+    private String[][] allLoanData; // To store all loan data for filtering
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     public LoanReceipt() {
         initComponents();
         this.jButton4.setBackground(Color.red);
@@ -35,26 +41,65 @@ public class LoanReceipt extends javax.swing.JFrame {
         this.jLabel4.setForeground(Color.white);
         this.jLabel5.setForeground(Color.white);
         jLabel6.setForeground(Color.white);
+
+        // Add date change listener to filter data when date changes
+        jDateChooser1.addPropertyChangeListener("date", evt -> {
+            filterTableByDate();
+        });
+
         // Load data from database
         loadLoanReceiptData();
-
     }
 
     private void loadLoanReceiptData() {
         // Get data from database using the GetLoanReceiptData class
-        String[][] loanData = GetLoanReceiptData.getinfo();
+        allLoanData = GetLoanReceiptData.getinfo();
 
+        // Display all data initially
+        displayDataInTable(allLoanData);
+        // If there's data, populate the form fields with the first record
+        if (allLoanData.length > 0) {
+            populateFormFields(allLoanData[0]);
+        }
+    }
+
+    private void displayDataInTable(String[][] data) {
         // Clear existing data
         tableModel.setRowCount(0);
 
         // Populate the table with new data
-        for (String[] row : loanData) {
+        for (String[] row : data) {
             tableModel.addRow(row);
         }
+    }
 
-        // If there's data, populate the form fields with the first record
-        if (loanData.length > 0) {
-            populateFormFields(loanData[0]);
+    private void filterTableByDate() {
+        Date selectedDate = jDateChooser1.getDate();
+        if (selectedDate == null || allLoanData == null) {
+            return;
+        }
+
+        String selectedDateStr = dateFormat.format(selectedDate);
+        List<String[]> filteredData = new ArrayList<>();
+
+        for (String[] row : allLoanData) {
+            // Assuming the date is in the 6th column (index 5) - adjust if needed
+
+            if (row.length > 5 && row[5] != null) {
+                // Compare formatted date strings
+                if (row[5].equals(selectedDateStr)) {
+                    filteredData.add(row);
+                }
+            }
+        }
+
+        // Convert to array and display
+        String[][] filteredArray = filteredData.toArray(new String[0][0]);
+        displayDataInTable(filteredArray);
+
+        // Optional: Show message if no records found
+        if (filteredArray.length == 0) {
+            //  javax.swing.JOptionPane.showMessageDialog(this, "No records found for the selected date.");
         }
     }
 
@@ -286,13 +331,11 @@ public class LoanReceipt extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         DashBoardScreen.tabbedPane.remove(DashBoardScreen.tabbedPane.getSelectedComponent());
-
         dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -311,7 +354,6 @@ public class LoanReceipt extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
- 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
