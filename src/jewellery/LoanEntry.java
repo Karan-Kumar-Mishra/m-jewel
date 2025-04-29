@@ -26,7 +26,7 @@ import jewellery.DatabaseTableCreator;
 import jewellery.DBController;
 import jewellery.GLOBAL_VARS;
 import jewellery.UpdateLoan;
-
+import jewellery.TableRowCounter;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -143,6 +143,7 @@ public class LoanEntry extends javax.swing.JPanel {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
+        int slip_number=TableRowCounter.getRowCount("LOAN_ENTRY")+1;
         DatabaseTableCreator.create();
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
@@ -245,7 +246,7 @@ public class LoanEntry extends javax.swing.JPanel {
        
         jTextField17.setText(LocalDate.now().toString());
         
-        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+        jTextField18.setText(String.valueOf(slip_number));
         
 
 
@@ -1202,7 +1203,7 @@ public class LoanEntry extends javax.swing.JPanel {
                 itemLocation
         );
         clearAllTextBox();
-        GLOBAL_VARS.slip_number++;
+      //  GLOBAL_VARS.slip_number++;
         // Increment slip number
         
      
