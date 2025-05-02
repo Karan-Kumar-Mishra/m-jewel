@@ -241,7 +241,7 @@ public class LoanBook extends javax.swing.JPanel {
                         : 0.00;
                 double dailyInterest = (loanAmt * intAmt / 100) / 30;
 
-                double totalInterest = (dailyInterest * (rowDays/30));
+                double totalInterest = (dailyInterest * (rowDays));
 
                 displayData[i][6] = totalInterest;
             } catch (NumberFormatException e) {
