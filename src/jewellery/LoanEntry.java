@@ -1066,7 +1066,7 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jTextField126ActionPerformed(java.awt.event.ActionEvent evt) {
-        jTextField26.setText(LocalDate.now().toString());
+       // jTextField26.setText(LocalDate.now().toString());
     }
 
     private void jTextField22ActionPerformed(java.awt.event.ActionEvent evt) {

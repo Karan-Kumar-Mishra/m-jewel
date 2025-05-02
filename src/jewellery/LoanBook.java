@@ -56,7 +56,6 @@ import java.io.FileOutputStream;
 import java.util.Set;
 import java.util.TreeMap;
 import jewellery.LoanEntry;
-import jewellery.LoanEntryDeleter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -131,7 +130,7 @@ public class LoanBook extends javax.swing.JPanel {
     public LoanBook() {
         try {
             initComponents(); // Initialize all UI components first
-
+            
             // Initialize date chooser before adding to panel
             // Initialize data with null check
             completeLoanData = GetLoanData.get();
@@ -151,6 +150,7 @@ public class LoanBook extends javax.swing.JPanel {
             // Populate the table with data
             //          populateTable(completeLoanData);
             customizeTable(); // Customize after all components exist
+            setColumnWidths();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -357,6 +357,7 @@ public class LoanBook extends javax.swing.JPanel {
 
         // Show message if no results found
         if (filteredData.length == 0) {
+            setColumnWidths();
             JOptionPane.showMessageDialog(this,
                     "No records found before or on: " + new SimpleDateFormat("dd-MM-yyyy").format(selectedDate),
                     "No Data",
@@ -496,7 +497,7 @@ public class LoanBook extends javax.swing.JPanel {
                         loanData[19].toString() // itemLocation
                 );
                 UpdateLoan.deleteLonaEntry(loanData[2].toString());
-                LoanEntryDeleter.deleteLoanByPartyName(loanData[2].toString());
+
                 lup.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null,
