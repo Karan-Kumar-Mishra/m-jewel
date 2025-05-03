@@ -143,8 +143,9 @@ public class LoanEntry extends javax.swing.JPanel {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        int slip_number=TableRowCounter.getRowCount("LOAN_ENTRY")+1;
+        
         DatabaseTableCreator.create();
+        int slip_number=TableRowCounter.getRowCount("LOAN_ENTRY");
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();

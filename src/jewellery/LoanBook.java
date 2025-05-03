@@ -130,7 +130,7 @@ public class LoanBook extends javax.swing.JPanel {
     public LoanBook() {
         try {
             initComponents(); // Initialize all UI components first
-            
+
             // Initialize date chooser before adding to panel
             // Initialize data with null check
             completeLoanData = GetLoanData.get();
@@ -218,7 +218,7 @@ public class LoanBook extends javax.swing.JPanel {
             } catch (NumberFormatException e) {
                 displayData[i][3] = 0.00;
             }
-           
+
             try {
                 displayData[i][4] = (data[i].length > 9 && data[i][10] != null)
                         ? Double.parseDouble(data[i][10].toString())
@@ -241,8 +241,16 @@ public class LoanBook extends javax.swing.JPanel {
                         : 0.00;
                 double dailyInterest = (loanAmt * intAmt / 100) / 30;
 
-                double totalInterest = (dailyInterest * (rowDays));//mothly
-                 // double totalInterest = (dailyInterest * (rowDays)/30); dayley
+                // JOptionPane.showMessageDialog(this, "type of interest month: " + data[i][6] + " -> " + (data[i][6].toString().equals("Month"))); double totalInterest;
+                double totalInterest;
+                if ((data[i][6].toString().equals("Day"))) {
+
+                    totalInterest = (dailyInterest * (rowDays) / 30)*rowDays;// dayley 
+                } else {
+                    long month=rowDays/30;
+                    totalInterest = (dailyInterest * (rowDays))*month;//mothly  
+                }
+
                 displayData[i][6] = totalInterest;
             } catch (NumberFormatException e) {
                 displayData[i][6] = 0.0;
@@ -261,7 +269,7 @@ public class LoanBook extends javax.swing.JPanel {
             } catch (NumberFormatException e) {
                 displayData[i][7] = 0.0;
             }
-             try {
+            try {
                 //FOR current value
                 displayData[i][8] = 0.0;
             } catch (NumberFormatException e) {
@@ -613,18 +621,16 @@ public class LoanBook extends javax.swing.JPanel {
             JScrollPane scrollPane = new JScrollPane(detailTable);
             scrollPane.setPreferredSize(new Dimension(450, 200));
 
-           // JOptionPane.showMessageDialog(this, scrollPane, "Loan Details", JOptionPane.INFORMATION_MESSAGE);
-
+            // JOptionPane.showMessageDialog(this, scrollPane, "Loan Details", JOptionPane.INFORMATION_MESSAGE);
             // Update labels as before
             jLabel21.setText(getStringValue(rowData, 9)); // PURITY 
             jLabel22.setText(getStringValue(rowData, 10)); // net weight 
             jLabel9.setText(getStringValue(rowData, 8)); // NET_WEIGHT (index 10)
             jLabel34.setText(getStringValue(rowData, 13)); // ITEM_DETAILS (index 13)
-            jLabel27.setText(getStringValue(rowData, 16)); // GUARNATOR_NAME (index 14)
+            jLabel27.setText(getStringValue(rowData, 14)); // GUARNATOR_NAME (index 14)
             jLabel28.setText(getStringValue(rowData, 15)); // GUARNATOR_ADDRESS (index 15)
             jLabel29.setText(getStringValue(rowData, 17)); // DOCUMENTS (index 16)
             jLabel30.setText(getStringValue(rowData, 20)); // ITEM_LOCATION (index 19)
-
             // Also show the party name (from index 3)
             jLabel4.setText("Party Information: " + getStringValue(rowData, 2));
 
