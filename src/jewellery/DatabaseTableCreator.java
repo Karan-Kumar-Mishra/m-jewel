@@ -20,6 +20,7 @@ public class DatabaseTableCreator {
                     REMARKS VARCHAR(255),
                     START_DATE DATE,
                     INTEREST_DATE_PERCENTAGE DECIMAL(5, 2),
+                    INTREST_TYPE VARCHAR(50),
                     WEIGHT_TYPE VARCHAR(50),
                     GOLD_WEIGHT DECIMAL(10, 3),
                     PURITY DECIMAL(5, 2),

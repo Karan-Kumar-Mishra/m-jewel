@@ -148,7 +148,7 @@ public class LoanBook extends javax.swing.JPanel {
             jTable1.setModel(model);
 
             // Populate the table with data
-            //          populateTable(completeLoanData);
+            //          populateTabpopulateTablele(completeLoanData);
             customizeTable(); // Customize after all components exist
             setColumnWidths();
 
@@ -212,16 +212,16 @@ public class LoanBook extends javax.swing.JPanel {
 
             // Handle numeric values with null checks
             try {
-                displayData[i][3] = (data[i].length > 11 && data[i][11] != null)
-                        ? Double.parseDouble(data[i][11].toString())
+                displayData[i][3] = (data[i].length > 11 && data[i][12] != null)
+                        ? Double.parseDouble(data[i][12].toString())
                         : 0.00; // AMOUNT_PAID
             } catch (NumberFormatException e) {
                 displayData[i][3] = 0.00;
             }
            
             try {
-                displayData[i][4] = (data[i].length > 9 && data[i][9] != null)
-                        ? Double.parseDouble(data[i][9].toString())
+                displayData[i][4] = (data[i].length > 9 && data[i][10] != null)
+                        ? Double.parseDouble(data[i][10].toString())
                         : 0.00; // NET_WEIGHT
             } catch (NumberFormatException e) {
                 displayData[i][4] = 0.0;
@@ -234,15 +234,15 @@ public class LoanBook extends javax.swing.JPanel {
             }
             try {
                 //FOR interest amount
-                double loanAmt = (data[i].length > 11 && data[i][11] != null)
-                        ? Double.parseDouble(data[i][11].toString()) : 0.00;
+                double loanAmt = (data[i].length > 11 && data[i][12] != null)
+                        ? Double.parseDouble(data[i][12].toString()) : 0.00;
                 double intAmt = (data[i].length > 6 && data[i][5] != null)
                         ? Double.parseDouble(data[i][5].toString())
                         : 0.00;
                 double dailyInterest = (loanAmt * intAmt / 100) / 30;
 
-                double totalInterest = (dailyInterest * (rowDays));
-
+                double totalInterest = (dailyInterest * (rowDays));//mothly
+                 // double totalInterest = (dailyInterest * (rowDays)/30); dayley
                 displayData[i][6] = totalInterest;
             } catch (NumberFormatException e) {
                 displayData[i][6] = 0.0;
@@ -616,14 +616,14 @@ public class LoanBook extends javax.swing.JPanel {
            // JOptionPane.showMessageDialog(this, scrollPane, "Loan Details", JOptionPane.INFORMATION_MESSAGE);
 
             // Update labels as before
-            jLabel21.setText(getStringValue(rowData, 8)); // PURITY 
-            jLabel22.setText(getStringValue(rowData, 9)); // net weight 
-            jLabel9.setText(getStringValue(rowData, 7)); // NET_WEIGHT (index 10)
-            jLabel34.setText(getStringValue(rowData, 12)); // ITEM_DETAILS (index 13)
-            jLabel27.setText(getStringValue(rowData, 15)); // GUARNATOR_NAME (index 14)
-            jLabel28.setText(getStringValue(rowData, 14)); // GUARNATOR_ADDRESS (index 15)
-            jLabel29.setText(getStringValue(rowData, 16)); // DOCUMENTS (index 16)
-            jLabel30.setText(getStringValue(rowData, 19)); // ITEM_LOCATION (index 19)
+            jLabel21.setText(getStringValue(rowData, 9)); // PURITY 
+            jLabel22.setText(getStringValue(rowData, 10)); // net weight 
+            jLabel9.setText(getStringValue(rowData, 8)); // NET_WEIGHT (index 10)
+            jLabel34.setText(getStringValue(rowData, 13)); // ITEM_DETAILS (index 13)
+            jLabel27.setText(getStringValue(rowData, 16)); // GUARNATOR_NAME (index 14)
+            jLabel28.setText(getStringValue(rowData, 15)); // GUARNATOR_ADDRESS (index 15)
+            jLabel29.setText(getStringValue(rowData, 17)); // DOCUMENTS (index 16)
+            jLabel30.setText(getStringValue(rowData, 20)); // ITEM_LOCATION (index 19)
 
             // Also show the party name (from index 3)
             jLabel4.setText("Party Information: " + getStringValue(rowData, 2));
@@ -658,7 +658,7 @@ public class LoanBook extends javax.swing.JPanel {
             Object[] rowData = completeLoanData[row];
 
             // Get loan amount - using index 12 as per your structure
-            double loanAmount = Double.parseDouble(rowData[11].toString());
+            double loanAmount = Double.parseDouble(rowData[12].toString());
 
             // Get interest rate - using index 6 as per your structure
             double interestRate = Double.parseDouble(rowData[5].toString());

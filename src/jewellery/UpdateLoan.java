@@ -1208,6 +1208,8 @@ public class UpdateLoan extends javax.swing.JFrame {
         String startDate = jTextField26.getText().isEmpty() ? LocalDate.now().toString() : jTextField26.getText();
 
         String interestDatePercentage = jTextField1.getText().isEmpty() ? "0" : jTextField1.getText();
+         String interestType=jComboBox3.getSelectedItem().toString();
+       
         String weightType = jComboBox1.getSelectedItem() == null ? " " : jComboBox1.getSelectedItem().toString();
         String goldWeight = jTextField20.getText().isEmpty() ? "0" : jTextField20.getText();
         String purity = jTextField23.getText().isEmpty() ? "0" : jTextField23.getText();
@@ -1230,6 +1232,7 @@ public class UpdateLoan extends javax.swing.JFrame {
                 remarks,
                 startDate,
                 interestDatePercentage,
+                interestType,
                 weightType,
                 goldWeight,
                 purity,

@@ -1151,6 +1151,7 @@ public class LoanEntry extends javax.swing.JPanel {
         System.out.println("Item details => " + jTextField25.getText());
         System.out.println("start date => " + jTextField26.getText());
         System.out.println("weight type => " + jComboBox1.getSelectedItem());
+        JOptionPane.showMessageDialog(null, "int type"+jComboBox3.getSelectedItem());
 
         Logger.getLogger(DBController.class.getName()).log(Level.SEVERE, "interest date => " + jTextField1.getText());
 
@@ -1164,6 +1165,7 @@ public class LoanEntry extends javax.swing.JPanel {
         String startDate = jTextField26.getText().isEmpty() ? LocalDate.now().toString() : jTextField26.getText();
 
         String interestDatePercentage = jTextField1.getText().isEmpty() ? "0" : jTextField1.getText();
+        String interestType=jComboBox3.getSelectedItem().toString();
         String weightType = jComboBox1.getSelectedItem() == null ? " " : jComboBox1.getSelectedItem().toString();
         String goldWeight = jTextField20.getText().isEmpty() ? "0" : jTextField20.getText();
         String purity = jTextField23.getText().isEmpty() ? "0" : jTextField23.getText();
@@ -1179,7 +1181,8 @@ public class LoanEntry extends javax.swing.JPanel {
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
-
+        
+        
         InsertLoanDetails.insert(
                 entryDate,
                 slipNo,
@@ -1187,6 +1190,7 @@ public class LoanEntry extends javax.swing.JPanel {
                 remarks,
                 startDate,
                 interestDatePercentage,
+                interestType,
                 weightType,
                 goldWeight,
                 purity,
