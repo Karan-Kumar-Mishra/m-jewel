@@ -49,6 +49,7 @@ public class LoanEntry extends javax.swing.JPanel {
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
@@ -143,9 +144,9 @@ public class LoanEntry extends javax.swing.JPanel {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        
+
         DatabaseTableCreator.create();
-        int slip_number=TableRowCounter.getRowCount("LOAN_ENTRY");
+        int slip_number = TableRowCounter.getRowCount("LOAN_ENTRY");
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -244,12 +245,13 @@ public class LoanEntry extends javax.swing.JPanel {
         jLabel6.setText("GST Reports");
         jLabel7.setText("Tools");
         jLabel8.setText("Help");
-       
-        jTextField17.setText(LocalDate.now().toString());
-        
-        jTextField18.setText(String.valueOf(slip_number));
         
 
+        jTextField17.setText(LocalDate.now().toString());
+        disableAllInputs();
+
+        jTextField18.setText(String.valueOf(slip_number));
+        jTextField26.setText(LocalDate.now().toString());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
 
@@ -470,7 +472,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jButton7.setText("Refresh");
         jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 180, -1));
         jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 300, 180, -1));
-        jPanel5.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 80, 90, -1));
+        jPanel5.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 80, 90, -1));
 
         jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 160, 370, 380));
 
@@ -608,7 +610,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField17.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField17ActionPerformed(evt);
-              
+
             }
         });
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
@@ -657,7 +659,8 @@ public class LoanEntry extends javax.swing.JPanel {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 80, 90, -1));
+        jPanel5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 90, -1));
+
 
         jButton2.setText("Print");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -665,7 +668,7 @@ public class LoanEntry extends javax.swing.JPanel {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 80, 90, -1));
+        jPanel5.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 80, 90, -1));
 
         jButton3.setText("Delete");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -673,16 +676,24 @@ public class LoanEntry extends javax.swing.JPanel {
                 jButton3ActionPerformed(evt);
             }
         });
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jPanel5.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 80, 90, -1));
+        jButton4.setBackground(new java.awt.Color(255, 0, 0));
+          jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 80, 90, -1));
-
-        jButton4.setBackground(new java.awt.Color(255, 0, 0));
         jButton4.setText("Close");
-        jPanel5.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 80, 90, -1));
+        jPanel5.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 80, 90, -1));
+        jButton8 = new javax.swing.JButton();
+        jButton8.setText("New Entry");
+        jButton8.setSize(40, 10);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 80, 90, -1));
 
         //getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1060, 530));
         //pack();
@@ -700,18 +711,19 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField12.setText("");
         jTextField13.setText("");
         jTextField14.setText("");
-        jTextField17.setText("");
-        jTextField18.setText("");
+        jTextField17.setText(LocalDate.now().toString()); // Keep current date
+        jTextField18.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_ENTRY") + 1)); // New slip number
         jTextField19.setText("");
         jTextField20.setText("");
         jTextField22.setText("");
         jTextField23.setText("");
         jTextField24.setText("");
         jTextField25.setText("");
-        jTextField26.setText("");
-        jTextField17.setText(LocalDate.now().toString());
-        jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+        jTextField26.setText(LocalDate.now().toString()); // Keep current date
 
+        // Reset combo boxes to default values
+        jComboBox1.setSelectedIndex(0);
+        jComboBox3.setSelectedIndex(0);
     }
 
     private void addEnterKeyListenerToTextFields() {
@@ -816,11 +828,11 @@ public class LoanEntry extends javax.swing.JPanel {
             @Override
             public void focusGained(FocusEvent e) {
                 if (textField == jTextField17) {
-                    jTextField17.setText(LocalDate.now().toString());
+                    //    jTextField17.setText(LocalDate.now().toString());
                 } else if (textField == jTextField18) {
-                  
+
                 } else if (textField == jTextField26) {
-                    jTextField26.setText(LocalDate.now().toString());
+                    //  jTextField26.setText(LocalDate.now().toString());
                 }
             }
 
@@ -874,6 +886,84 @@ public class LoanEntry extends javax.swing.JPanel {
     public String getSelectedPartyName() {
         Object selectedItem = jComboBox2.getSelectedItem();
         return selectedItem.toString();// this function is call in ImageSelector window for store the images  
+    }
+    // Add this method to your LoanEntry class
+
+    public void disableAllInputs() {
+        // Disable all text fields
+        jTextField1.setEnabled(false);
+        jTextField2.setEnabled(false);
+        jTextField6.setEnabled(false);
+        jTextField7.setEnabled(false);
+        jTextField8.setEnabled(false);
+        jTextField9.setEnabled(false);
+        jTextField10.setEnabled(false);
+        jTextField11.setEnabled(false);
+        jTextField12.setEnabled(false);
+        jTextField13.setEnabled(false);
+        jTextField14.setEnabled(false);
+        jTextField17.setEnabled(false);
+        jTextField18.setEnabled(false);
+        jTextField19.setEnabled(false);
+        jTextField20.setEnabled(false);
+        jTextField22.setEnabled(false);
+        jTextField23.setEnabled(false);
+        jTextField24.setEnabled(false);
+        jTextField25.setEnabled(false);
+        jTextField26.setEnabled(false);
+
+        // Disable all combo boxes
+        jComboBox1.setEnabled(false);
+        jComboBox2.setEnabled(false);
+        jComboBox3.setEnabled(false);
+
+        // Disable all buttons
+        jButton1.setEnabled(false);
+        jButton2.setEnabled(false);
+        jButton3.setEnabled(false);
+       // jButton4.setEnabled(false);
+        jButton5.setEnabled(false);
+        jButton6.setEnabled(false);
+        jButton7.setEnabled(false);
+    }
+
+// You can also add a corresponding enable method if needed
+    public void enableAllInputs() {
+        // Enable all text fields
+        jTextField1.setEnabled(true);
+        jTextField2.setEnabled(true);
+        jTextField6.setEnabled(true);
+        jTextField7.setEnabled(true);
+        jTextField8.setEnabled(true);
+        jTextField9.setEnabled(true);
+        jTextField10.setEnabled(true);
+        jTextField11.setEnabled(true);
+        jTextField12.setEnabled(true);
+        jTextField13.setEnabled(true);
+        jTextField14.setEnabled(true);
+        jTextField17.setEnabled(true);
+        jTextField18.setEnabled(true);
+        jTextField19.setEnabled(true);
+        jTextField20.setEnabled(true);
+        jTextField22.setEnabled(true);
+        jTextField23.setEnabled(true);
+        jTextField24.setEnabled(true);
+        jTextField25.setEnabled(true);
+        jTextField26.setEnabled(true);
+
+        // Enable all combo boxes
+        jComboBox1.setEnabled(true);
+        jComboBox2.setEnabled(true);
+        jComboBox3.setEnabled(true);
+
+        // Enable all buttons
+        jButton1.setEnabled(true);
+        jButton2.setEnabled(true);
+        jButton3.setEnabled(true);
+        jButton4.setEnabled(true);
+        jButton5.setEnabled(true);
+        jButton6.setEnabled(true);
+        jButton7.setEnabled(true);
     }
 
     private void uploadImage() {
@@ -1041,6 +1131,34 @@ public class LoanEntry extends javax.swing.JPanel {
         frame.setVisible(true);
     }
 
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
+        // Clear all fields
+        clearAllTextBox();
+
+        // Reset the party details display
+        jLabelPartyName.setText("");
+        jLabelPartyAddress.setText("");
+        jLabelPartyCity.setText("");
+        jLabelPartyMobile.setText("");
+        jLabelPartyEmail.setText("");
+        jLabelPartyLedgerBalance.setText("");
+        jLabelPartyLastEntry.setText("");
+
+        // Set default date and slip number
+        jTextField17.setText(LocalDate.now().toString());
+        jTextField26.setText(LocalDate.now().toString());
+
+        // Increment slip number for new entry
+        int slip_number = TableRowCounter.getRowCount("LOAN_ENTRY") + 1;
+        jTextField18.setText(String.valueOf(slip_number));
+
+        // Enable all inputs (in case they were disabled)
+        enableAllInputs();
+
+        // Set focus to the first field
+        jTextField17.requestFocus();
+    }
+
     public javax.swing.JPanel getContentPane() {
         return this;
     }
@@ -1067,7 +1185,7 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jTextField126ActionPerformed(java.awt.event.ActionEvent evt) {
-       // jTextField26.setText(LocalDate.now().toString());
+
     }
 
     private void jTextField22ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1078,7 +1196,7 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jTextField18ActionPerformed(java.awt.event.ActionEvent evt) {
-     
+
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1133,6 +1251,7 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+
         System.out.println("interest date => " + jTextField1.getText());
         System.out.println("Estimated cost => " + jTextField2.getText());
         System.out.println("items location => " + jTextField6.getText());
@@ -1152,7 +1271,7 @@ public class LoanEntry extends javax.swing.JPanel {
         System.out.println("Item details => " + jTextField25.getText());
         System.out.println("start date => " + jTextField26.getText());
         System.out.println("weight type => " + jComboBox1.getSelectedItem());
-        JOptionPane.showMessageDialog(null, "int type"+jComboBox3.getSelectedItem());
+        JOptionPane.showMessageDialog(null, "int type" + jComboBox3.getSelectedItem());
 
         Logger.getLogger(DBController.class.getName()).log(Level.SEVERE, "interest date => " + jTextField1.getText());
 
@@ -1166,7 +1285,7 @@ public class LoanEntry extends javax.swing.JPanel {
         String startDate = jTextField26.getText().isEmpty() ? LocalDate.now().toString() : jTextField26.getText();
 
         String interestDatePercentage = jTextField1.getText().isEmpty() ? "0" : jTextField1.getText();
-        String interestType=jComboBox3.getSelectedItem().toString();
+        String interestType = jComboBox3.getSelectedItem().toString();
         String weightType = jComboBox1.getSelectedItem() == null ? " " : jComboBox1.getSelectedItem().toString();
         String goldWeight = jTextField20.getText().isEmpty() ? "0" : jTextField20.getText();
         String purity = jTextField23.getText().isEmpty() ? "0" : jTextField23.getText();
@@ -1178,12 +1297,11 @@ public class LoanEntry extends javax.swing.JPanel {
         String guarantorAddress = jTextField8.getText().isEmpty() ? " " : jTextField8.getText();
         String guarantorPhone = jTextField9.getText().isEmpty() ? " " : jTextField9.getText();
         String documents = jTextField10.getText().isEmpty() ? " " : jTextField10.getText();
-        
+
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
-        
-        
+
         InsertLoanDetails.insert(
                 entryDate,
                 slipNo,
@@ -1208,10 +1326,9 @@ public class LoanEntry extends javax.swing.JPanel {
                 itemLocation
         );
         clearAllTextBox();
-      //  GLOBAL_VARS.slip_number++;
+        //  GLOBAL_VARS.slip_number++;
         // Increment slip number
-        
-     
+        disableAllInputs();
     }
 
     private void jTextField23ActionPerformed(java.awt.event.ActionEvent evt) {

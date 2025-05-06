@@ -245,10 +245,10 @@ public class LoanBook extends javax.swing.JPanel {
                 double totalInterest;
                 if ((data[i][6].toString().equals("Day"))) {
 
-                    totalInterest = (dailyInterest * (rowDays) / 30)*rowDays;// dayley 
+                    totalInterest = (dailyInterest * (rowDays) / 30) * rowDays;// dayley 
                 } else {
-                    long month=rowDays/30;
-                    totalInterest = (dailyInterest * (rowDays))*month;//mothly  
+                    long month = rowDays / 30;
+                    totalInterest = (dailyInterest * (rowDays)) * month;//mothly  
                 }
 
                 displayData[i][6] = totalInterest;
@@ -489,20 +489,21 @@ public class LoanBook extends javax.swing.JPanel {
                         loanData[3].toString(), // remarks
                         loanData[4].toString(), // startDate
                         loanData[5].toString(), // interestDatePercentage
-                        loanData[6].toString(), // weightType
-                        loanData[7].toString(), // goldWeight
-                        loanData[8].toString(), // purity
-                        loanData[9].toString(), // netWeight
-                        loanData[10].toString(), // estimatedCost
-                        loanData[11].toString(), // amountPaid
-                        loanData[12].toString(), // itemDetails
-                        loanData[13].toString(), // guarantorName
-                        loanData[14].toString(), // guarantorAddress
-                        loanData[15].toString(), // guarantorPhone
-                        loanData[16].toString(), // documents
-                        loanData[17].toString(), // reminders
-                        loanData[18].toString(), // notes
-                        loanData[19].toString() // itemLocation
+                        loanData[6].toString(), //  interst type  
+                        loanData[7].toString(), // weightType 
+                        loanData[8].toString(), //goldWeight 
+                        loanData[9].toString(), // purity 
+                        loanData[10].toString(), // netWeight 
+                        loanData[11].toString(), //estimatedCost 
+                        loanData[12].toString(), //amountPaid 
+                        loanData[13].toString(), // itemDetails 
+                        loanData[14].toString(), // guarantorName 
+                        loanData[15].toString(), // guarantorAddress 
+                        loanData[16].toString(), //guarantorPhone 
+                        loanData[17].toString(), // documents 
+                        loanData[18].toString(), // reminders 
+                        loanData[19].toString(), // notes 
+                        loanData[20].toString()//itemLocation
                 );
                 UpdateLoan.deleteLonaEntry(loanData[2].toString());
 

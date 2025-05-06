@@ -1139,6 +1139,7 @@ public class UpdateLoan extends javax.swing.JFrame {
             String remarks,
             String startDate,
             String interestDatePercentage,
+            String interstType,  
             String weightType,
             String goldWeight,
             String purity,
