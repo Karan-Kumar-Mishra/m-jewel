@@ -1039,14 +1039,14 @@ int selectedrow=0;
                 String remark = null;
                 remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
                 // tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment");
-                if (getGroupName(party).equals("Bank") || getGroupName(party).equals("Customer")) {
-//                   JOptionPane.showMessageDialog(this, party+ "  running bank");
-                    tableObject tableObj = new tableObject(date, name, amount, 0.0, 0, remark, "Payment");
-                    initialTableData.add(tableObj);
-                } else {
+//                if (getGroupName(party).equals("Bank") || getGroupName(party).equals("Customer")) {
+////                   JOptionPane.showMessageDialog(this, party+ "  running bank");
+//                    tableObject tableObj = new tableObject(date, name, amount, 0.0, 0, remark, "Payment");
+//                    initialTableData.add(tableObj);
+//                } else {
                     tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment");
                     initialTableData.add(tableObj);
-                }
+     //           }
 
             }
 

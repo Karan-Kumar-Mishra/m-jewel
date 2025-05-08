@@ -15,14 +15,13 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.plaf.basic.BasicComboPopup;
-
 import jewellery.GetPartyName;
-
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.text.JTextComponent;
+import jewellery.GetLoanData;
 
 /**
  *
@@ -45,7 +44,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         this.getContentPane().setBackground(new java.awt.Color(57, 68, 76));
         partyNames = GetPartyName.get();
         // Initialize the table model with column names
-        String[] columnNames = { "Receipt No", "Account Name", "Loan Amount", "Interest Amount", "Remarks" };
+        String[] columnNames = {"Receipt No", "Account Name", "Loan Amount", "Interest Amount", "Remarks"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -64,15 +63,15 @@ public class LoanReceipt extends javax.swing.JFrame {
         this.jLabel9.setForeground(Color.white);
         jCheckBox1.setBackground(Color.white);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Credit" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Cash", "Credit"}));
         if (partyNames != null && partyNames.length > 0) {
             jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(partyNames));
         } else {
-            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No Parties Available" }));
+            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"No Parties Available"}));
         }
         configureWideComboBox(jComboBox2);
         jCheckBox2.setBackground(Color.white);
-        jComboBox2.addItem("HII I AM KARAN KUMAR MISHRA FRON DELHI");
+
         jLabel6.setForeground(Color.white);
 
         // Add date change listener to filter data when date changes
@@ -211,159 +210,159 @@ public class LoanReceipt extends javax.swing.JFrame {
         });
     }
 
-   // Add this to your existing addEnterKeyNavigation() method
-private void addEnterKeyNavigation() {
-    // Set up Enter key navigation between components
-    jDateChooser1.getComponent(0).addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jComboBox2.requestFocus();
-            }
-        }
-    });
-
-    jComboBox2.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jTextField2.requestFocus();
-            }
-        }
-    });
-
-    jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jCheckBox1.requestFocus();
-            }
-        }
-    });
-
-    jCheckBox1.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jCheckBox2.requestFocus();
-            }
-        }
-    });
-
-    jCheckBox2.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jTextField3.requestFocus();
-            }
-        }
-    });
-
-    jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jButton1.requestFocus(); // Focus on Save button
-            }
-        }
-    });
-
-    jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jButton1.doClick(); // Perform save action
-            }
-        }
-    });
-
-    jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jComboBox1.requestFocus();
-            }
-        }
-    });
-
-    jComboBox1.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jButton4.requestFocus(); // Focus on Close button
-            }
-        }
-    });
-
-    jButton4.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                jButton4.doClick(); // Perform close action
-            }
-        }
-    });
-
-    jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
-        public void keyPressed(java.awt.event.KeyEvent evt) {
-            if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                int selectedRow = jTable1.getSelectedRow();
-                if (selectedRow >= 0) {
-                    showSelectedRowData(selectedRow);
+    // Add this to your existing addEnterKeyNavigation() method
+    private void addEnterKeyNavigation() {
+        // Set up Enter key navigation between components
+        jDateChooser1.getComponent(0).addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jComboBox2.requestFocus();
                 }
             }
-        }
-    });
+        });
 
-    // Add focus traversal policy for better keyboard navigation
-    setFocusTraversalPolicy(new LayoutFocusTraversalPolicy() {
-        @Override
-        public Component getComponentAfter(Container focusCycleRoot, Component aComponent) {
-            if (aComponent == jDateChooser1.getComponent(0)) {
-                return jComboBox2;
-            } else if (aComponent == jComboBox2) {
-                return jTextField2;
-            } else if (aComponent == jTextField2) {
-                return jCheckBox1;
-            } else if (aComponent == jCheckBox1) {
-                return jCheckBox2;
-            } else if (aComponent == jCheckBox2) {
-                return jTextField3;
-            } else if (aComponent == jTextField3) {
-                return jButton1;
-            } else if (aComponent == jButton1) {
-                return jTextField1;
-            } else if (aComponent == jTextField1) {
-                return jComboBox1;
-            } else if (aComponent == jComboBox1) {
-                return jButton4;
-            } else if (aComponent == jButton4) {
-                return jTable1;
-            } else if (aComponent == jTable1) {
-                return jDateChooser1.getComponent(0);
+        jComboBox2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jTextField2.requestFocus();
+                }
             }
-            return super.getComponentAfter(focusCycleRoot, aComponent);
-        }
+        });
 
-        @Override
-        public Component getComponentBefore(Container focusCycleRoot, Component aComponent) {
-            if (aComponent == jDateChooser1.getComponent(0)) {
-                return jTable1;
-            } else if (aComponent == jComboBox2) {
-                return jDateChooser1.getComponent(0);
-            } else if (aComponent == jTextField2) {
-                return jComboBox2;
-            } else if (aComponent == jCheckBox1) {
-                return jTextField2;
-            } else if (aComponent == jCheckBox2) {
-                return jCheckBox1;
-            } else if (aComponent == jTextField3) {
-                return jCheckBox2;
-            } else if (aComponent == jButton1) {
-                return jTextField3;
-            } else if (aComponent == jTextField1) {
-                return jButton1;
-            } else if (aComponent == jComboBox1) {
-                return jTextField1;
-            } else if (aComponent == jButton4) {
-                return jComboBox1;
-            } else if (aComponent == jTable1) {
-                return jButton4;
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jCheckBox1.requestFocus();
+                }
             }
-            return super.getComponentBefore(focusCycleRoot, aComponent);
-        }
-    });
-}
+        });
+
+        jCheckBox1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jCheckBox2.requestFocus();
+                }
+            }
+        });
+
+        jCheckBox2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jTextField3.requestFocus();
+                }
+            }
+        });
+
+        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jButton1.requestFocus(); // Focus on Save button
+                }
+            }
+        });
+
+        jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jButton1.doClick(); // Perform save action
+                }
+            }
+        });
+
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jComboBox1.requestFocus();
+                }
+            }
+        });
+
+        jComboBox1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jButton4.requestFocus(); // Focus on Close button
+                }
+            }
+        });
+
+        jButton4.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    jButton4.doClick(); // Perform close action
+                }
+            }
+        });
+
+        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    int selectedRow = jTable1.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        showSelectedRowData(selectedRow);
+                    }
+                }
+            }
+        });
+
+        // Add focus traversal policy for better keyboard navigation
+        setFocusTraversalPolicy(new LayoutFocusTraversalPolicy() {
+            @Override
+            public Component getComponentAfter(Container focusCycleRoot, Component aComponent) {
+                if (aComponent == jDateChooser1.getComponent(0)) {
+                    return jComboBox2;
+                } else if (aComponent == jComboBox2) {
+                    return jTextField2;
+                } else if (aComponent == jTextField2) {
+                    return jCheckBox1;
+                } else if (aComponent == jCheckBox1) {
+                    return jCheckBox2;
+                } else if (aComponent == jCheckBox2) {
+                    return jTextField3;
+                } else if (aComponent == jTextField3) {
+                    return jButton1;
+                } else if (aComponent == jButton1) {
+                    return jTextField1;
+                } else if (aComponent == jTextField1) {
+                    return jComboBox1;
+                } else if (aComponent == jComboBox1) {
+                    return jButton4;
+                } else if (aComponent == jButton4) {
+                    return jTable1;
+                } else if (aComponent == jTable1) {
+                    return jDateChooser1.getComponent(0);
+                }
+                return super.getComponentAfter(focusCycleRoot, aComponent);
+            }
+
+            @Override
+            public Component getComponentBefore(Container focusCycleRoot, Component aComponent) {
+                if (aComponent == jDateChooser1.getComponent(0)) {
+                    return jTable1;
+                } else if (aComponent == jComboBox2) {
+                    return jDateChooser1.getComponent(0);
+                } else if (aComponent == jTextField2) {
+                    return jComboBox2;
+                } else if (aComponent == jCheckBox1) {
+                    return jTextField2;
+                } else if (aComponent == jCheckBox2) {
+                    return jCheckBox1;
+                } else if (aComponent == jTextField3) {
+                    return jCheckBox2;
+                } else if (aComponent == jButton1) {
+                    return jTextField3;
+                } else if (aComponent == jTextField1) {
+                    return jButton1;
+                } else if (aComponent == jComboBox1) {
+                    return jTextField1;
+                } else if (aComponent == jButton4) {
+                    return jComboBox1;
+                } else if (aComponent == jTable1) {
+                    return jButton4;
+                }
+                return super.getComponentBefore(focusCycleRoot, aComponent);
+            }
+        });
+    }
 
     private void showSelectedRowData(int rowIndex) {
         // Temporarily remove the date change listener
@@ -519,7 +518,7 @@ private void addEnterKeyNavigation() {
         });
 
         jComboBox1.setModel(
-                new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+                new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -552,14 +551,14 @@ private void addEnterKeyNavigation() {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {
-                        { null, null, null, null },
-                        { null, null, null, null },
-                        { null, null, null, null },
-                        { null, null, null, null }
+                new Object[][]{
+                    {null, null, null, null},
+                    {null, null, null, null},
+                    {null, null, null, null},
+                    {null, null, null, null}
                 },
-                new String[] {
-                        "Title 1", "Title 2", "Title 3", "Title 4"
+                new String[]{
+                    "Title 1", "Title 2", "Title 3", "Title 4"
                 }));
         jScrollPane1.setViewportView(jTable1);
 
