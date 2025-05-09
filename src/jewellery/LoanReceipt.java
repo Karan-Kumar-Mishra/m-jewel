@@ -20,8 +20,17 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.text.JTextComponent;
 import jewellery.GetLoanData;
+import jewellery.helper.outstandingAnalysisHelper;
 
 /**
  *
@@ -32,10 +41,17 @@ public class LoanReceipt extends javax.swing.JFrame {
     /*
      * Creates new form LoanReceipt
      */
+    int selectedrow = 0;
+    Vector<String> banks;
     private DefaultTableModel tableModel;
+    private final List<Object> accountNames = new ArrayList<>();
     private String[][] allLoanData; // To store all loan data for filtering
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private String[] partyNames;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JScrollPane spTblPartyNameSuggestionsContainer;
+    private javax.swing.JTable tblPartyNameSuggestions;
+    private final DefaultTableModel partyNameSuggestionsTableModel;
 
     public LoanReceipt() {
         initComponents();
@@ -62,21 +78,29 @@ public class LoanReceipt extends javax.swing.JFrame {
         this.jLabel8.setForeground(Color.white);
         this.jLabel9.setForeground(Color.white);
         jCheckBox1.setBackground(Color.white);
+        partyNameSuggestionsTableModel = (DefaultTableModel) tblPartyNameSuggestions.getModel();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Cash", "Credit"}));
-        if (partyNames != null && partyNames.length > 0) {
-            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(partyNames));
-        } else {
-            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"No Parties Available"}));
-        }
-        configureWideComboBox(jComboBox2);
-        jCheckBox2.setBackground(Color.white);
 
         jLabel6.setForeground(Color.white);
 
         // Add date change listener to filter data when date changes
         jDateChooser1.addPropertyChangeListener("date", evt -> {
             filterTableByDate();
+        });
+        txtPartyName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPartyNameFocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPartyNameFocusLost(evt);
+            }
+        });
+        txtPartyName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPartyNameKeyReleased(evt);
+            }
         });
 
         // Add selection listener to the table
@@ -91,277 +115,133 @@ public class LoanReceipt extends javax.swing.JFrame {
                 }
             }
         });
+        tblPartyNameSuggestions.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    int selectedRow = tblPartyNameSuggestions.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        txtPartyName.setText(tblPartyNameSuggestions.getValueAt(selectedRow, 0).toString().trim());
+                        jPopupMenu1.setVisible(false);
+                        txtPartyName.requestFocus();
+                    }
+                }
+            }
+        });
+
+        tblPartyNameSuggestions.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    int selectedRow = tblPartyNameSuggestions.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        txtPartyName.setText(tblPartyNameSuggestions.getValueAt(selectedRow, 0).toString().trim());
+                        jPopupMenu1.setVisible(false);
+                        txtPartyName.requestFocus();
+                    }
+                } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    jPopupMenu1.setVisible(false);
+                    txtPartyName.requestFocus();
+                }
+            }
+        });
 
         // Add key listeners for Enter key navigation
-        addEnterKeyNavigation();
-
         // Load data from database
         // loadLoanReceiptData();
         clearTextbox();
     }
 
-    private void configureWideComboBox(JComboBox<String> comboBox) {
-        // Calculate width based on the longest item
-        int maxWidth = 100;
-        FontMetrics metrics = comboBox.getFontMetrics(comboBox.getFont());
-        for (int i = 0; i < comboBox.getItemCount(); i++) {
-            String item = comboBox.getItemAt(i);
-            if (item != null) {
-                maxWidth = Math.max(maxWidth, metrics.stringWidth(item));
-            }
+    private void fetchAccountNames() {
+        if (!DBController.isDatabaseConnected()) {
+            DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
+                    DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
         }
-        // Add some padding (20 pixels on each side)
-        int preferredWidth = Math.min(Math.max(maxWidth + 40, 200), 1000); // Min 200, max 600
 
-        // Set prototype display value and preferred size
-        comboBox.setPrototypeDisplayValue(""); // Clear any previous prototype
-        comboBox.setPreferredSize(new Dimension(preferredWidth, comboBox.getPreferredSize().height));
+        List<Object> account_names = DBController.executeQuery("SELECT accountname FROM account");
 
-        // Make it editable for auto-complete
-        comboBox.setEditable(true);
-
-        // Improved Auto-complete functionality
-        comboBox.getEditor().getEditorComponent().addKeyListener(new KeyAdapter() {
-            private boolean shouldHidePopup = false;
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER || e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    shouldHidePopup = true;
-                } else {
-                    shouldHidePopup = false;
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (shouldHidePopup) {
-                    comboBox.setPopupVisible(false);
-                    return;
-                }
-
-                String text = ((JTextComponent) comboBox.getEditor().getEditorComponent()).getText();
-                if (!text.isEmpty()) {
-                    DefaultComboBoxModel<String> model = (DefaultComboBoxModel<String>) comboBox.getModel();
-                    model.removeAllElements();
-
-                    for (int i = 0; i < comboBox.getItemCount(); i++) {
-                        String item = comboBox.getItemAt(i);
-                        if (item != null && item.toLowerCase().contains(text.toLowerCase())) {
-                            model.addElement(item);
-                        }
-                    }
-
-                    if (model.getSize() > 0) {
-                        comboBox.showPopup();
-                        ((JTextComponent) comboBox.getEditor().getEditorComponent()).setText(text);
-                        comboBox.setSelectedIndex(-1); // Clear selection to allow typing
-                    } else {
-                        comboBox.hidePopup();
-                    }
-                } else {
-                    comboBox.hidePopup();
-                }
-            }
+        account_names.forEach((accountName) -> {
+            accountNames.add(accountName.toString());
         });
+    }
 
-        // Add tooltips
-        comboBox.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value,
-                    int index, boolean isSelected, boolean cellHasFocus) {
-                JLabel label = (JLabel) super.getListCellRendererComponent(
-                        list, value, index, isSelected, cellHasFocus);
-                if (value != null) {
-                    label.setToolTipText(value.toString());
-                    // Optional: Add ellipsis for very long text
-                    String text = value.toString();
-                    if (metrics.stringWidth(text) > preferredWidth - 20) {
-                        text = text.substring(0, Math.min(20, text.length())) + "...";
-                        label.setText(text);
-                    }
-                }
-                return label;
-            }
-        });
+    private void txtPartyNameFocusGained(java.awt.event.FocusEvent evt) {
+        txtPartyName.setBackground(new Color(245, 230, 66));
+        selectedrow = 0;
+    }
 
-        // Add general tooltip for the combo box
-        comboBox.setToolTipText("Type to search or select a party");
+    private void txtPartyNameFocusLost(java.awt.event.FocusEvent evt) {
+        txtPartyName.setBackground(Color.white);
+        jPopupMenu1.setVisible(false);
+    }
 
-        // Improve popup width
-        comboBox.addPopupMenuListener(new PopupMenuListener() {
-            @Override
-            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-                JComboBox<?> cb = (JComboBox<?>) e.getSource();
-                BasicComboPopup popup = (BasicComboPopup) cb.getAccessibleContext().getAccessibleChild(0);
-                JList<?> list = popup.getList();
-                popup.setPreferredSize(new Dimension(
-                        preferredWidth,
-                        popup.getPreferredSize().height));
-            }
+    private void populateSuggestionsTableFromDatabase(DefaultTableModel suggestionsTable, String query) {
+        if (!DBController.isDatabaseConnected()) {
+            DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
+                    DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
+        }
 
-            @Override
-            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-            }
+        List<List<Object>> suggestions = DBController.getDataFromTable(query);
 
-            @Override
-            public void popupMenuCanceled(PopupMenuEvent e) {
+        suggestionsTable.setRowCount(0);
+
+        suggestions.forEach((suggestion) -> {
+            try {
+                suggestionsTable.addRow(new Object[]{
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                    (suggestion.get(2) == null) ? "NULL" : outstandingAnalysisHelper.fillTableInDateGivenParty(String.valueOf(suggestion.get(0))),});
+            } catch (ParseException ex) {
+                Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
 
-    // Add this to your existing addEnterKeyNavigation() method
-    private void addEnterKeyNavigation() {
-        // Set up Enter key navigation between components
-        jDateChooser1.getComponent(0).addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jComboBox2.requestFocus();
-                }
-            }
-        });
-
-        jComboBox2.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jTextField2.requestFocus();
-                }
-            }
-        });
-
-        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jCheckBox1.requestFocus();
-                }
-            }
-        });
-
-        jCheckBox1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jCheckBox2.requestFocus();
-                }
-            }
-        });
-
-        jCheckBox2.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jTextField3.requestFocus();
-                }
-            }
-        });
-
-        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jButton1.requestFocus(); // Focus on Save button
-                }
-            }
-        });
-
-        jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jButton1.doClick(); // Perform save action
-                }
-            }
-        });
-
-        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jComboBox1.requestFocus();
-                }
-            }
-        });
-
-        jComboBox1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jButton4.requestFocus(); // Focus on Close button
-                }
-            }
-        });
-
-        jButton4.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    jButton4.doClick(); // Perform close action
-                }
-            }
-        });
-
-        jTable1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    int selectedRow = jTable1.getSelectedRow();
-                    if (selectedRow >= 0) {
-                        showSelectedRowData(selectedRow);
+    private void txtPartyNameKeyReleased(java.awt.event.KeyEvent evt) {
+        // TODO add your handling code here:
+        fetchAccountNames();
+        if (!(accountNames == null || accountNames.isEmpty())) {
+            switch (evt.getKeyCode()) {
+                case java.awt.event.KeyEvent.VK_BACK_SPACE:
+                    jPopupMenu1.setVisible(false);
+                    break;
+                case KeyEvent.VK_ENTER:
+                    // txttotalamt.requestFocusInWindow();
+                    break;
+                case KeyEvent.VK_DOWN:
+                    tblPartyNameSuggestions.requestFocus();
+                    if (selectedrow == 0) {
+                        tblPartyNameSuggestions.setRowSelectionInterval(0, 0);
+                        selectedrow++;
+                    } else {
+                        if (tblPartyNameSuggestions.getSelectedRow() < tblPartyNameSuggestions.getRowCount() - 1) {
+                            tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() + 1, tblPartyNameSuggestions.getSelectedRow() + 1);
+                        }
                     }
-                }
-            }
-        });
+                    txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
 
-        // Add focus traversal policy for better keyboard navigation
-        setFocusTraversalPolicy(new LayoutFocusTraversalPolicy() {
-            @Override
-            public Component getComponentAfter(Container focusCycleRoot, Component aComponent) {
-                if (aComponent == jDateChooser1.getComponent(0)) {
-                    return jComboBox2;
-                } else if (aComponent == jComboBox2) {
-                    return jTextField2;
-                } else if (aComponent == jTextField2) {
-                    return jCheckBox1;
-                } else if (aComponent == jCheckBox1) {
-                    return jCheckBox2;
-                } else if (aComponent == jCheckBox2) {
-                    return jTextField3;
-                } else if (aComponent == jTextField3) {
-                    return jButton1;
-                } else if (aComponent == jButton1) {
-                    return jTextField1;
-                } else if (aComponent == jTextField1) {
-                    return jComboBox1;
-                } else if (aComponent == jComboBox1) {
-                    return jButton4;
-                } else if (aComponent == jButton4) {
-                    return jTable1;
-                } else if (aComponent == jTable1) {
-                    return jDateChooser1.getComponent(0);
-                }
-                return super.getComponentAfter(focusCycleRoot, aComponent);
-            }
+                    break;
+                case KeyEvent.VK_UP:
+                    tblPartyNameSuggestions.requestFocus();
 
-            @Override
-            public Component getComponentBefore(Container focusCycleRoot, Component aComponent) {
-                if (aComponent == jDateChooser1.getComponent(0)) {
-                    return jTable1;
-                } else if (aComponent == jComboBox2) {
-                    return jDateChooser1.getComponent(0);
-                } else if (aComponent == jTextField2) {
-                    return jComboBox2;
-                } else if (aComponent == jCheckBox1) {
-                    return jTextField2;
-                } else if (aComponent == jCheckBox2) {
-                    return jCheckBox1;
-                } else if (aComponent == jTextField3) {
-                    return jCheckBox2;
-                } else if (aComponent == jButton1) {
-                    return jTextField3;
-                } else if (aComponent == jTextField1) {
-                    return jButton1;
-                } else if (aComponent == jComboBox1) {
-                    return jTextField1;
-                } else if (aComponent == jButton4) {
-                    return jComboBox1;
-                } else if (aComponent == jTable1) {
-                    return jButton4;
-                }
-                return super.getComponentBefore(focusCycleRoot, aComponent);
+                    if (tblPartyNameSuggestions.getSelectedRow() > 0) {
+                        tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1, tblPartyNameSuggestions.getSelectedRow() - 1);
+                    }
+
+                    txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
+
+                    break;
+                default:
+                    EventQueue.invokeLater(() -> {
+                        jPopupMenu1.setVisible(true);
+
+                        populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel, "SELECT accountname, "
+                                + "state, dueamt FROM " + DatabaseCredentials.ACCOUNT_TABLE
+                                + " WHERE accountname LIKE " + "'" + txtPartyName.getText() + "%'");
+                    });
+                    break;
             }
-        });
+        }
     }
 
     private void showSelectedRowData(int rowIndex) {
@@ -449,7 +329,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         try {
             // Set form fields based on the loan record
             jTextField1.setText(loanRecord[0]); // SLIP_NO
-            jComboBox2.setSelectedItem(loanRecord[1]); // party Name
+            txtPartyName.setText(loanRecord[1]); // party Name
             jTextField2.setText(loanRecord[2]); // Loan Amount
             jTextField3.setText(loanRecord[4]); // Remarks
             jTextField4.setText(loanRecord[2]); // Total Amount
@@ -470,6 +350,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
+        txtPartyName.setText("");
     }
 
     /**
@@ -485,7 +366,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jTextField1 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+
         jTextField2 = new javax.swing.JTextField();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
@@ -494,6 +375,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jTextField4 = new javax.swing.JTextField();
+        txtPartyName = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -505,7 +387,31 @@ public class LoanReceipt extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        txtPartyName = new javax.swing.JTextField();
+        spTblPartyNameSuggestionsContainer = new javax.swing.JScrollPane();
+        tblPartyNameSuggestions = new javax.swing.JTable();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
 
+        // Set up the table model for suggestions
+        tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Party Name", "State", "Due Amt"}
+        ) {
+            boolean[] canEdit = new boolean[]{false, false, false};
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        tblPartyNameSuggestions.setRowHeight(20);
+        tblPartyNameSuggestions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
+        jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
+        jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
+        jPopupMenu1.setLocation(txtPartyName.getX() + 6, txtPartyName.getY() + 70);
+
+        spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
+        jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("LOAN RECEIPT");
@@ -621,7 +527,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jComboBox2,
+                                                        .addComponent(txtPartyName,
                                                                 javax.swing.GroupLayout.PREFERRED_SIZE, 210,
                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addGroup(layout.createSequentialGroup()
@@ -775,7 +681,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                                                                         false)
                                                                         .addGroup(layout.createParallelGroup(
                                                                                 javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                .addComponent(jComboBox2,
+                                                                                .addComponent(txtPartyName,
                                                                                         javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -889,7 +795,7 @@ public class LoanReceipt extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -906,5 +812,8 @@ public class LoanReceipt extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField txtPartyName;
+    private javax.swing.JComboBox<String> PAYMENTMODE;
+
     // End of variables declaration
 }

@@ -340,6 +340,11 @@ public class PaymentScreen extends javax.swing.JFrame {
                 txtPartyNameFocusLost(evt);
             }
         });
+        txtPartyName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPartyNameActionPerformed(evt);
+            }
+        });
         txtPartyName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtPartyNameKeyPressed(evt);
@@ -543,7 +548,7 @@ public class PaymentScreen extends javax.swing.JFrame {
             .addGroup(pnlParentLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1152, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1158, Short.MAX_VALUE)
                     .addGroup(pnlParentLayout.createSequentialGroup()
                         .addGroup(pnlParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlParentLayout.createSequentialGroup()
@@ -647,7 +652,7 @@ public class PaymentScreen extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-private void fetchAccountNames() {
+    private void fetchAccountNames() {
         if (!DBController.isDatabaseConnected()) {
             DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
                     DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
@@ -840,8 +845,8 @@ private void fetchAccountNames() {
             int recpno = Integer.parseInt(txtreceipt.getText());
             String name = txtPartyName.getText();
             double dueamt = Double.parseDouble(txtdueamt.getText());
-            
-            double dis ;
+
+            double dis;
             if (!txtdiscountamt.getText().trim().isEmpty()) {
                 dis = Double.parseDouble(txtdiscountamt.getText());
             } else {
@@ -893,7 +898,7 @@ private void fetchAccountNames() {
                 JFrame f1 = new JFrame();
                 int reply = JOptionPane.showConfirmDialog(f1, "Do you want a Print Preview ?", "Select Print", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION) {
-                    int bill_no = recpno-1;
+                    int bill_no = recpno - 1;
                     printx(bill_no);
                 }
 
@@ -1048,7 +1053,7 @@ private void fetchAccountNames() {
         Map<String, Object> parameters = new HashMap<>();
         Connection connection = DBConnect.connect();
         try {
-            
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(jDateChooser1.getDate());
             String query = "select * from payments where date='" + date + "' AND Receiptno='" + recpno + "'";
@@ -1148,9 +1153,8 @@ private void fetchAccountNames() {
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void txtreceiptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtreceiptActionPerformed
-         
-           
-        
+
+
     }//GEN-LAST:event_txtreceiptActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
@@ -1235,27 +1239,31 @@ private void fetchAccountNames() {
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
             String name = txtPartyName.getText();
             double dueAmount = 0.0;
-        try {
-            Connection c = DBConnect.connect();
-            Statement s = c.createStatement();
-            ResultSet rs = s.executeQuery("SELECT dueamt FROM account WHERE accountname = '" + name + "';");
-            if (rs.next()) {
-                dueAmount = rs.getDouble("dueamt");
+            try {
+                Connection c = DBConnect.connect();
+                Statement s = c.createStatement();
+                ResultSet rs = s.executeQuery("SELECT dueamt FROM account WHERE accountname = '" + name + "';");
+                if (rs.next()) {
+                    dueAmount = rs.getDouble("dueamt");
+                }
+                c.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        txtdueamt.setText(String.valueOf(dueAmount));
-           
+            txtdueamt.setText(String.valueOf(dueAmount));
+
         }
     }//GEN-LAST:event_txtPartyNameKeyPressed
 
     private void txtreceiptKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtreceiptKeyReleased
-       if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             txtPartyName.requestFocusInWindow();
         }
     }//GEN-LAST:event_txtreceiptKeyReleased
+
+    private void txtPartyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPartyNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPartyNameActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
