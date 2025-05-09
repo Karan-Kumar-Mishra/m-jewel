@@ -60,7 +60,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         this.getContentPane().setBackground(new java.awt.Color(57, 68, 76));
         partyNames = GetPartyName.get();
         // Initialize the table model with column names
-        String[] columnNames = {"Receipt No", "Account Name", "Loan Amount", "Interest Amount", "Remarks"};
+        String[] columnNames = { "Receipt No", "Account Name", "Loan Amount", "Interest Amount", "Remarks" };
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -68,6 +68,7 @@ public class LoanReceipt extends javax.swing.JFrame {
             }
         };
         jTable1.setModel(tableModel);
+        jDateChooser1.setDate(new Date());
         this.jLabel1.setForeground(Color.white);
         this.jLabel2.setForeground(Color.white);
         this.jLabel3.setForeground(Color.white);
@@ -80,7 +81,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         jCheckBox1.setBackground(Color.white);
         partyNameSuggestionsTableModel = (DefaultTableModel) tblPartyNameSuggestions.getModel();
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Cash", "Credit"}));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Credit" }));
 
         jLabel6.setForeground(Color.white);
 
@@ -88,6 +89,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         jDateChooser1.addPropertyChangeListener("date", evt -> {
             filterTableByDate();
         });
+        jDateChooser1.setSize(5, 5);
         txtPartyName.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtPartyNameFocusGained(evt);
@@ -148,7 +150,6 @@ public class LoanReceipt extends javax.swing.JFrame {
 
         // Add key listeners for Enter key navigation
         // Load data from database
-        // loadLoanReceiptData();
         clearTextbox();
     }
 
@@ -158,7 +159,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                     DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
         }
 
-        List<Object> account_names = DBController.executeQuery("SELECT accountname FROM account");
+        List<Object> account_names = DBController.executeQuery("SELECT PARTY_NAME FROM LOAN_ENTRY");
 
         account_names.forEach((accountName) -> {
             accountNames.add(accountName.toString());
@@ -187,10 +188,12 @@ public class LoanReceipt extends javax.swing.JFrame {
 
         suggestions.forEach((suggestion) -> {
             try {
-                suggestionsTable.addRow(new Object[]{
-                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                    (suggestion.get(2) == null) ? "NULL" : outstandingAnalysisHelper.fillTableInDateGivenParty(String.valueOf(suggestion.get(0))),});
+                suggestionsTable.addRow(new Object[] {
+                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                        (suggestion.get(2) == null) ? "NULL"
+                                : outstandingAnalysisHelper
+                                        .fillTableInDateGivenParty(String.valueOf(suggestion.get(0))), });
             } catch (ParseException ex) {
                 Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -215,29 +218,33 @@ public class LoanReceipt extends javax.swing.JFrame {
                         selectedrow++;
                     } else {
                         if (tblPartyNameSuggestions.getSelectedRow() < tblPartyNameSuggestions.getRowCount() - 1) {
-                            tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() + 1, tblPartyNameSuggestions.getSelectedRow() + 1);
+                            tblPartyNameSuggestions.setRowSelectionInterval(
+                                    tblPartyNameSuggestions.getSelectedRow() + 1,
+                                    tblPartyNameSuggestions.getSelectedRow() + 1);
                         }
                     }
-                    txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
+                    txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0)
+                            .toString().trim());
 
                     break;
                 case KeyEvent.VK_UP:
                     tblPartyNameSuggestions.requestFocus();
 
                     if (tblPartyNameSuggestions.getSelectedRow() > 0) {
-                        tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1, tblPartyNameSuggestions.getSelectedRow() - 1);
+                        tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1,
+                                tblPartyNameSuggestions.getSelectedRow() - 1);
                     }
 
-                    txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
+                    txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0)
+                            .toString().trim());
 
                     break;
                 default:
                     EventQueue.invokeLater(() -> {
                         jPopupMenu1.setVisible(true);
 
-                        populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel, "SELECT accountname, "
-                                + "state, dueamt FROM " + DatabaseCredentials.ACCOUNT_TABLE
-                                + " WHERE accountname LIKE " + "'" + txtPartyName.getText() + "%'");
+                        populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel, "SELECT PARTY_NAME, "
+                                + "ITEM_DETAILS, AMOUNT_PAID FROM LOAN_ENTRY ");
                     });
                     break;
             }
@@ -270,28 +277,6 @@ public class LoanReceipt extends javax.swing.JFrame {
         // Restore the date change listener
         for (java.beans.PropertyChangeListener listener : listeners) {
             jDateChooser1.addPropertyChangeListener("date", listener);
-        }
-    }
-
-    private void loadLoanReceiptData() {
-        // Get data from database using the GetLoanReceiptData class
-        allLoanData = GetLoanReceiptData.getinfo();
-
-        // Display all data initially
-        displayDataInTable(allLoanData);
-        // If there's data, populate the form fields with the first record
-        if (allLoanData.length > 0) {
-            populateFormFields(allLoanData[0]);
-        }
-    }
-
-    private void displayDataInTable(String[][] data) {
-        // Clear existing data
-        tableModel.setRowCount(0);
-
-        // Populate the table with new data
-        for (String[] row : data) {
-            tableModel.addRow(row);
         }
     }
 
@@ -364,9 +349,10 @@ public class LoanReceipt extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
+
         jTextField1 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
-
+        jDateChooser1.setDate(new Date());
         jTextField2 = new javax.swing.JTextField();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
@@ -394,10 +380,9 @@ public class LoanReceipt extends javax.swing.JFrame {
 
         // Set up the table model for suggestions
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{"Party Name", "State", "Due Amt"}
-        ) {
-            boolean[] canEdit = new boolean[]{false, false, false};
+                new Object[][] {},
+                new String[] { "Party Name", "item", "Amount" }) {
+            boolean[] canEdit = new boolean[] { false, false, false };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
@@ -424,7 +409,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         });
 
         jComboBox1.setModel(
-                new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+                new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -457,14 +442,14 @@ public class LoanReceipt extends javax.swing.JFrame {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null}
+                new Object[][] {
+                        { null, null, null, null },
+                        { null, null, null, null },
+                        { null, null, null, null },
+                        { null, null, null, null }
                 },
-                new String[]{
-                    "Title 1", "Title 2", "Title 3", "Title 4"
+                new String[] {
+                        "Title 1", "Title 2", "Title 3", "Title 4"
                 }));
         jScrollPane1.setViewportView(jTable1);
 
@@ -589,7 +574,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                                                                         javax.swing.GroupLayout.PREFERRED_SIZE))
                                                         .addGroup(layout.createSequentialGroup()
                                                                 .addComponent(jDateChooser1,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 156,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 130,
                                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(18, 18, 18)
                                                                 .addGroup(layout.createParallelGroup(
@@ -638,7 +623,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(jLabel5)
-                                                .addGap(39, 39, 39))
+                                                .addGap(30, 30, 30))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -649,7 +634,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                                                                         javax.swing.GroupLayout.Alignment.LEADING)
                                                                         .addComponent(jDateChooser1,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                36,
+                                                                                20,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                         .addGroup(layout.createParallelGroup(
                                                                                 javax.swing.GroupLayout.Alignment.BASELINE)
@@ -714,11 +699,6 @@ public class LoanReceipt extends javax.swing.JFrame {
         pack();
     }// </editor-fold>
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "Save Successfully ! ");
-    }
-
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         DashBoardScreen.tabbedPane.remove(DashBoardScreen.tabbedPane.getSelectedComponent());
@@ -732,13 +712,146 @@ public class LoanReceipt extends javax.swing.JFrame {
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
-
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
     }
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            // 1. Get all data from form fields
+            String receiptNo = jTextField1.getText().trim();
+            String partyName = txtPartyName.getText().trim();
+            String loanAmountStr = jTextField2.getText().trim();
+            String interestAmountStr = jCheckBox2.isSelected() ? jTextField2.getText().trim() : "0";
+            String remarks = jTextField3.getText().trim();
+            String totalAmountStr = jTextField4.getText().trim();
+            Date transactionDate = jDateChooser1.getDate();
+            String paymentMode = jComboBox1.getSelectedItem().toString();
+            boolean isLoanAmount = jCheckBox1.isSelected();
+            boolean isInterestAmount = jCheckBox2.isSelected();
+
+            // 2. Validate required fields
+            if (partyName.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter Account Name", "Error", JOptionPane.ERROR_MESSAGE);
+                txtPartyName.requestFocus();
+                return;
+            }
+
+            if (loanAmountStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter Amount", "Error", JOptionPane.ERROR_MESSAGE);
+                jTextField2.requestFocus();
+                return;
+            }
+
+            if (transactionDate == null) {
+                JOptionPane.showMessageDialog(this, "Please select a valid date", "Error", JOptionPane.ERROR_MESSAGE);
+                jDateChooser1.requestFocus();
+                return;
+            }
+
+            // 3. Parse numeric values with proper error handling
+            double loanAmount = 0;
+            double interestAmount = 0;
+            double totalAmount = 0;
+
+            try {
+                loanAmount = Double.parseDouble(loanAmountStr);
+                if (!totalAmountStr.isEmpty()) {
+                    totalAmount = Double.parseDouble(totalAmountStr);
+                }
+
+                if (isInterestAmount) {
+                    interestAmount = Double.parseDouble(interestAmountStr);
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Please enter valid numeric values for amounts",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // 4. Prepare data for display or database operation
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = dateFormat.format(transactionDate);
+
+            // 5. Show confirmation with all collected data
+            String confirmationMessage = "Please confirm the following details:\n\n"
+                    + "Receipt No: " + (receiptNo.isEmpty() ? "[New Entry]" : receiptNo) + "\n"
+                    + "Party Name: " + partyName + "\n"
+                    + "Transaction Date: " + formattedDate + "\n"
+                    + "Payment Mode: " + paymentMode + "\n"
+                    + "Loan Amount: " + loanAmount + "\n"
+                    + "Interest Amount: " + interestAmount + "\n"
+                    + "Total Amount: " + totalAmount + "\n"
+                    + "Remarks: " + remarks + "\n\n"
+                    + "Do you want to save this entry?";
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    confirmationMessage,
+                    "Confirm Save",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // 6. Add data to the table
+                String[] newRow = {
+                        receiptNo.isEmpty() ? "[New Entry]" : receiptNo,
+                        partyName,
+                        String.valueOf(loanAmount),
+                        String.valueOf(interestAmount),
+                        remarks
+                };
+                tableModel.addRow(newRow); // Directly add to table model
+
+                // 7. Optionally save to database (if implemented)
+                // Example: DBController.saveLoanReceipt(receiptNo, partyName, loanAmount,
+                // interestAmount, remarks, formattedDate, paymentMode);
+                // 8. Show success message
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Data saved successfully!\n\n" + confirmationMessage.replace("Please confirm", "Saved"),
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                // 9. Clear form after adding
+                clearTextbox();
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error saving data: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void displayDataInTable(String[][] data) {
+        // Clear existing data
+        tableModel.setRowCount(0);
+
+        // Ensure data exists
+        if (data == null || data.length == 0) {
+            return;
+        }
+
+        // Add all rows that have enough columns
+        for (String[] row : data) {
+            // Create a new row with 5 columns, filling with empty strings if needed
+            Object[] tableRow = new Object[5];
+            for (int i = 0; i < 5; i++) {
+                tableRow[i] = (i < row.length && row[i] != null) ? row[i] : "";
+            }
+            tableModel.addRow(tableRow);
+        }
+
+        // Force table to update its view
+        tableModel.fireTableDataChanged();
+        jTable1.revalidate();
+        jTable1.repaint();
+    }
+
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
         try {
             // Debug: Print current values
             System.out.println("jTextField2 value: " + jTextField2.getText());
@@ -747,7 +860,6 @@ public class LoanReceipt extends javax.swing.JFrame {
             // Get and clean input - preserve decimal points
             String amountText = jTextField2.getText().trim().replaceAll("[^0-9.]", "");
             String totalText = jTextField4.getText().trim().replaceAll("[^0-9.]", "");
-            JOptionPane.showMessageDialog(this, "value=> " + jTextField2.getText());
 
             if (amountText.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid amount!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -771,13 +883,36 @@ public class LoanReceipt extends javax.swing.JFrame {
             // Debug confirmation
             System.out.println("Calculation: " + totalAmount + " - " + amount + " = " + newAmount);
 
+            // Ask for confirmation to add to table
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Do you want to add this transaction to the table?",
+                    "Confirm Addition",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Prepare data for the table (match table structure)
+                String[] newRow = {
+                        jTextField1.getText().trim().isEmpty() ? "[New Entry]" : jTextField1.getText().trim(), // Receipt
+                                                                                                               // No
+                        txtPartyName.getText().trim(), // Account Name
+                        amountText, // Loan Amount
+                        jCheckBox2.isSelected() ? amountText : "0", // Interest Amount
+                        jTextField3.getText().trim() // Remarks
+                };
+
+                // Add the row to the table
+                tableModel.addRow(newRow);
+
+                // Optional: Clear fields after adding
+                clearTextbox();
+            }
+
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
                     "Invalid number format!\nPlease enter a valid number.",
                     "Input Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace(); // Debug the exact error
         }
-
     }
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {
