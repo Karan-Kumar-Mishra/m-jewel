@@ -60,13 +60,14 @@ public class LoanReceipt extends javax.swing.JFrame {
         this.getContentPane().setBackground(new java.awt.Color(57, 68, 76));
         partyNames = GetPartyName.get();
         // Initialize the table model with column names
-        String[] columnNames = {"Receipt No", "Account Name", "Loan Amount", "Interest Amount", "Remarks"};
+        String[] columnNames = { "Receipt No", "Account Name", "Loan Amount", "Interest Amount", "Remarks" };
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
+        setupEnterKeyNavigation();
         jTable1.setModel(tableModel);
         jDateChooser1.setDate(new Date());
         this.jLabel1.setForeground(Color.white);
@@ -81,7 +82,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         jCheckBox1.setBackground(Color.white);
         partyNameSuggestionsTableModel = (DefaultTableModel) tblPartyNameSuggestions.getModel();
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Cash", "Credit"}));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Credit" }));
 
         jLabel6.setForeground(Color.white);
 
@@ -153,6 +154,53 @@ public class LoanReceipt extends javax.swing.JFrame {
         clearTextbox();
     }
 
+    // Add this method to your LoanReceipt class
+    private void setupEnterKeyNavigation() {
+        // Create a list of components in the desired navigation order
+        java.util.List<Component> navigationOrder = new ArrayList<>();
+        navigationOrder.add(jDateChooser1.getDateEditor().getUiComponent());
+        navigationOrder.add(jTextField1); // Receipt No
+        navigationOrder.add(jComboBox1); // Payment Mode
+        navigationOrder.add(txtPartyName); // Account Name
+        navigationOrder.add(jTextField2); // Amount
+        navigationOrder.add(jCheckBox1); // Loan Amt checkbox
+        navigationOrder.add(jCheckBox2); // Int Amt checkbox
+        navigationOrder.add(jTextField3); // Remarks
+        navigationOrder.add(jButton1); // Save button
+        navigationOrder.add(jButton2); // Delete button
+        navigationOrder.add(jButton3); // Print button
+        navigationOrder.add(jButton4); // Close button
+
+        // Add KeyListener to each component
+        for (Component comp : navigationOrder) {
+            comp.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        int currentIndex = navigationOrder.indexOf(e.getComponent());
+                        if (currentIndex < navigationOrder.size() - 1) {
+                            navigationOrder.get(currentIndex + 1).requestFocusInWindow();
+                        } else {
+                            // If we're at the last component, loop back to the first
+                            navigationOrder.get(0).requestFocusInWindow();
+                        }
+
+                        // Special case for checkboxes - toggle their state on ENTER
+                        if (e.getComponent() instanceof JCheckBox) {
+                            JCheckBox checkBox = (JCheckBox) e.getComponent();
+                            checkBox.setSelected(!checkBox.isSelected());
+                        }
+
+                        // Special case for buttons - trigger their action
+                        if (e.getComponent() instanceof JButton) {
+                            ((JButton) e.getComponent()).doClick();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     private void fetchAccountNames() {
         if (!DBController.isDatabaseConnected()) {
             DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
@@ -190,10 +238,10 @@ public class LoanReceipt extends javax.swing.JFrame {
             try {
                 // Fix: Use the correct column index for loan amount (assuming it's index 2)
                 String loanAmount = (suggestion.get(2) == null) ? "0" : suggestion.get(2).toString();
-                suggestionsTable.addRow(new Object[]{
-                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
-                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
-                    loanAmount // Directly use the loan amount from the query result
+                suggestionsTable.addRow(new Object[] {
+                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
+                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
+                        loanAmount // Directly use the loan amount from the query result
                 });
             } catch (Exception ex) {
                 Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -243,7 +291,8 @@ public class LoanReceipt extends javax.swing.JFrame {
                 default:
                     EventQueue.invokeLater(() -> {
                         jPopupMenu1.setVisible(true);
-                        populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel, "SELECT PARTY_NAME, ITEM_DETAILS, AMOUNT_PAID FROM LOAN_ENTRY ");
+                        populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel,
+                                "SELECT PARTY_NAME, ITEM_DETAILS, AMOUNT_PAID FROM LOAN_ENTRY ");
                     });
                     break;
             }
@@ -379,9 +428,9 @@ public class LoanReceipt extends javax.swing.JFrame {
 
         // Set up the table model for suggestions
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{"Party Name", "item", "Amount"}) {
-            boolean[] canEdit = new boolean[]{false, false, false};
+                new Object[][] {},
+                new String[] { "Party Name", "item", "Amount" }) {
+            boolean[] canEdit = new boolean[] { false, false, false };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
@@ -408,7 +457,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         });
 
         jComboBox1.setModel(
-                new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+                new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -441,14 +490,14 @@ public class LoanReceipt extends javax.swing.JFrame {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null}
+                new Object[][] {
+                        { null, null, null, null },
+                        { null, null, null, null },
+                        { null, null, null, null },
+                        { null, null, null, null }
                 },
-                new String[]{
-                    "Title 1", "Title 2", "Title 3", "Title 4"
+                new String[] {
+                        "Title 1", "Title 2", "Title 3", "Title 4"
                 }));
         jScrollPane1.setViewportView(jTable1);
 
@@ -794,11 +843,11 @@ public class LoanReceipt extends javax.swing.JFrame {
             if (confirm == JOptionPane.YES_OPTION) {
                 // 6. Add data to the table
                 String[] newRow = {
-                    receiptNo.isEmpty() ? "[New Entry]" : receiptNo,
-                    partyName,
-                    String.valueOf(loanAmount),
-                    String.valueOf(interestAmount),
-                    remarks
+                        receiptNo.isEmpty() ? "[New Entry]" : receiptNo,
+                        partyName,
+                        String.valueOf(loanAmount),
+                        String.valueOf(interestAmount),
+                        remarks
                 };
                 tableModel.addRow(newRow); // Directly add to table model
 
@@ -892,12 +941,12 @@ public class LoanReceipt extends javax.swing.JFrame {
             if (confirm == JOptionPane.YES_OPTION) {
                 // Prepare data for the table (match table structure)
                 String[] newRow = {
-                    jTextField1.getText().trim().isEmpty() ? "[New Entry]" : jTextField1.getText().trim(), // Receipt
-                    // No
-                    txtPartyName.getText().trim(), // Account Name
-                    amountText, // Loan Amount
-                    jCheckBox2.isSelected() ? amountText : "0", // Interest Amount
-                    jTextField3.getText().trim() // Remarks
+                        jTextField1.getText().trim().isEmpty() ? "[New Entry]" : jTextField1.getText().trim(), // Receipt
+                        // No
+                        txtPartyName.getText().trim(), // Account Name
+                        amountText, // Loan Amount
+                        jCheckBox2.isSelected() ? amountText : "0", // Interest Amount
+                        jTextField3.getText().trim() // Remarks
                 };
 
                 // Add the row to the table
