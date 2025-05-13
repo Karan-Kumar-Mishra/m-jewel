@@ -37,8 +37,21 @@ public class DatabaseTableCreator {
                     ITEM_LOCATION VARCHAR(40)
                 )
             """;
+            String createReceiptTable = """
+                CREATE TABLE IF NOT EXISTS LOAN_RECEIPT (
+                    RECEIPT_NO VARCHAR(50),
+                    PARTY_NAME VARCHAR(100) NOT NULL,
+                    LOAN_AMOUNT DECIMAL(15,2),
+                    INTREST_AMOUNT DECIMAL(15,2),
+                    REMARKS VARCHAR(255),
+                    TRANSACTION_DATE DATE,
+                    PAYMENT_MODE VARCHAR(50),
+                    PRIMARY KEY (RECEIPT_NO)
+                )
+            """;
 
             statement.execute(createLoanEntryTable);
+            statement.execute(createReceiptTable);
 
             Logger.getLogger(DatabaseTableCreator.class.getName()).log(Level.INFO, "LOAN_ENTRY table created successfully.");
         } catch (Exception e) {
