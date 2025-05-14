@@ -536,8 +536,6 @@ public class LeisureTable extends javax.swing.JFrame {
         }
     }
 
-    
-
     public void filter1(String Query) {
 
         TableRowSorter<TableModel> rowSorter = new TableRowSorter<>(jTable1.getModel());
@@ -699,7 +697,7 @@ public class LeisureTable extends javax.swing.JFrame {
             accountNames.add(accountName.toString());
         });
     }
-int selectedrow=0;
+    int selectedrow = 0;
     private void txtPartyNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPartyNameKeyReleased
         fetchAccountNames();
         if (!(accountNames == null || accountNames.isEmpty())) {
@@ -707,31 +705,31 @@ int selectedrow=0;
                 case java.awt.event.KeyEvent.VK_BACK_SPACE:
                     pmPartyNameSuggestionsPopup.setVisible(false);
                     break;
-                     case KeyEvent.VK_DOWN:
-                tblPartyNameSuggestions.requestFocus();
-                if (selectedrow == 0) {
-                    tblPartyNameSuggestions.setRowSelectionInterval(0, 0);
-                    selectedrow++;
-                } else {
-                    if (tblPartyNameSuggestions.getSelectedRow() < tblPartyNameSuggestions.getRowCount() - 1) {
-                        tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() + 1, tblPartyNameSuggestions.getSelectedRow() + 1);
+                case KeyEvent.VK_DOWN:
+                    tblPartyNameSuggestions.requestFocus();
+                    if (selectedrow == 0) {
+                        tblPartyNameSuggestions.setRowSelectionInterval(0, 0);
+                        selectedrow++;
+                    } else {
+                        if (tblPartyNameSuggestions.getSelectedRow() < tblPartyNameSuggestions.getRowCount() - 1) {
+                            tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() + 1, tblPartyNameSuggestions.getSelectedRow() + 1);
+                        }
                     }
-                }
-                txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
+                    txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
 
-                break;
-            case KeyEvent.VK_UP:
-                tblPartyNameSuggestions.requestFocus();
+                    break;
+                case KeyEvent.VK_UP:
+                    tblPartyNameSuggestions.requestFocus();
 
-                if (tblPartyNameSuggestions.getSelectedRow() > 0) {
-                    tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1, tblPartyNameSuggestions.getSelectedRow() - 1);
-                }
+                    if (tblPartyNameSuggestions.getSelectedRow() > 0) {
+                        tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1, tblPartyNameSuggestions.getSelectedRow() - 1);
+                    }
 
-                txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
+                    txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
 
-                break;
+                    break;
                 case KeyEvent.VK_ENTER:
-                       pmPartyNameSuggestionsPopup.setVisible(false);
+                    pmPartyNameSuggestionsPopup.setVisible(false);
                     break;
                 default:
                     EventQueue.invokeLater(() -> {
@@ -897,9 +895,9 @@ int selectedrow=0;
                             stmttt.close();
                             tableObject tableObj = new tableObject(date, partyName, 0.0, 0.0, 1, remark + ", " + (netamount), "Sale");
                             initialTableData.add(tableObj);
-                            if(money1!=0&& money2!=0){
-                            tableObject tableObj1 = new tableObject(date, partyName, 0.0, Double.parseDouble(df.format((int) netamount - money1 - money2 - exchangeAmt)), 1, remark + "," + netamount, "Sale");
-                            initialTableData.add(tableObj1);
+                            if (money1 != 0 && money2 != 0) {
+                                tableObject tableObj1 = new tableObject(date, partyName, 0.0, Double.parseDouble(df.format((int) netamount - money1 - money2 - exchangeAmt)), 1, remark + "," + netamount, "Sale");
+                                initialTableData.add(tableObj1);
                             }
                         } else {
                             tableObject tableObj = new tableObject(date, partyName, 0.0, netamount - receivedamt - exchangeAmt, 1, remark + "," + netamount, "Sale");
@@ -1040,13 +1038,13 @@ int selectedrow=0;
                 remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
                 // tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment");
 //                if (getGroupName(party).equals("Bank") || getGroupName(party).equals("Customer")) {
-////                   JOptionPane.showMessageDialog(this, party+ "  running bank");
+                ////                   JOptionPane.showMessageDialog(this, party+ "  running bank");
 //                    tableObject tableObj = new tableObject(date, name, amount, 0.0, 0, remark, "Payment");
 //                    initialTableData.add(tableObj);
 //                } else {
                     tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment");
-                    initialTableData.add(tableObj);
-     //           }
+                initialTableData.add(tableObj);
+                //           }
 
             }
 
@@ -1133,16 +1131,16 @@ int selectedrow=0;
                     if (i.creditOrDebit == 0) // credit
                     {
                         if (balance <= 0) {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, i.debit, String.format("%.2f", -balance) + " Cr"});
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit,(int) i.debit, String.format("%.2f", -balance) + " Cr"});
                         } else {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, i.debit, String.format("%.2f", balance) + " Dr"});
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int)i.debit, String.format("%.2f", balance) + " Dr"});
                         }
 
                     } else {
                         if (balance <= 0) {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, i.debit, String.format("%.2f", -balance) + " Cr"});
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int)i.debit, String.format("%.2f", -balance) + " Cr"});
                         } else {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, i.debit, String.format("%.2f", balance) + " Dr"});
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit,(int)i.debit, String.format("%.2f", balance) + " Dr"});
                         }
                     }
                 }
@@ -1268,7 +1266,7 @@ int selectedrow=0;
 //        if (ok) {
 //            try {
 //                job.print();
-////                logger.info("reached");
+         ////                logger.info("reached");
 //            } catch (PrinterException ex) {
 //                ex.printStackTrace();
 //            }
@@ -1403,7 +1401,7 @@ int selectedrow=0;
     }//GEN-LAST:event_jLabel6MouseClicked
 
     private void txtPartyNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPartyNameFocusGained
-selectedrow=0;        // TODO add your handling code here:
+        selectedrow = 0;        // TODO add your handling code here:
     }//GEN-LAST:event_txtPartyNameFocusGained
 
     private void OpBalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OpBalActionPerformed

@@ -269,8 +269,7 @@ public class LoanReceipt extends javax.swing.JFrame {
             displayDataInTable(allLoanData);
 
             // Filter by current date
-          //  filterTableByDate();
-
+            //  filterTableByDate();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                     "Error loading loan receipt data: " + e.getMessage(),
@@ -306,6 +305,7 @@ public class LoanReceipt extends javax.swing.JFrame {
     }
 
     private void txtPartyNameKeyReleased(java.awt.event.KeyEvent evt) {
+      
         // TODO add your handling code here:
         fetchAccountNames();
         if (!(accountNames == null || accountNames.isEmpty())) {
@@ -968,6 +968,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         }
         jTextField1.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_RECEIPT") + 1));
         loadLoanReceiptData();
+
     }
 
     private void displayDataInTable(String[][] data) {
@@ -1074,7 +1075,6 @@ public class LoanReceipt extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox<String> jComboBox1;
-
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
