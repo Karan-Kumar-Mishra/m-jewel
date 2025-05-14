@@ -59,7 +59,7 @@ public class LoanReceipt extends javax.swing.JFrame {
     public LoanReceipt() {
         DatabaseTableCreator.create();
         initComponents();
-       
+
         this.jButton4.setBackground(Color.red);
         this.jLabel1.setFont(new Font(jLabel1.getFont().getName(), Font.BOLD, 16));
         this.getContentPane().setBackground(new java.awt.Color(57, 68, 76));
@@ -158,6 +158,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         // Load data from database
         clearTextbox();
         jTextField1.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_RECEIPT") + 1));
+        loadLoanReceiptData();
     }
 
     // Add this method to your LoanReceipt class
@@ -228,6 +229,55 @@ public class LoanReceipt extends javax.swing.JFrame {
     private void txtPartyNameFocusLost(java.awt.event.FocusEvent evt) {
         txtPartyName.setBackground(Color.white);
         jPopupMenu1.setVisible(false);
+    }
+
+    private void loadLoanReceiptData() {
+        try {
+            // Connect to database if not already connected
+            if (!DBController.isDatabaseConnected()) {
+                DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
+                        DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
+            }
+
+            // Query to get all loan receipt data
+            String query = "SELECT RECEIPT_NO, PARTY_NAME, LOAN_AMOUNT, INTREST_AMOUNT, REMARKS, TRANSACTION_DATE "
+                    + "FROM LOAN_RECEIPT ORDER BY RECEIPT_NO ASC, RECEIPT_NO DESC";
+
+            // Execute query using getDataFromTableforcompany()
+            List<List<Object>> results = DBController.getDataFromTable(query);
+
+            // Check if results are null (error occurred)
+            if (results == null) {
+                JOptionPane.showMessageDialog(this,
+                        "Error loading loan receipt data: No data returned",
+                        "Database Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Convert results to 2D array for easier handling
+            allLoanData = new String[results.size()][6]; // 6 columns in our query
+
+            for (int i = 0; i < results.size(); i++) {
+                List<Object> row = results.get(i);
+                for (int j = 0; j < row.size(); j++) {
+                    allLoanData[i][j] = (row.get(j) == null) ? "" : row.get(j).toString();
+                }
+            }
+
+            // Display data in table
+            displayDataInTable(allLoanData);
+
+            // Filter by current date
+          //  filterTableByDate();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error loading loan receipt data: " + e.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
     }
 
     private void populateSuggestionsTableFromDatabase(DefaultTableModel suggestionsTable, String query) {
@@ -431,7 +481,6 @@ public class LoanReceipt extends javax.swing.JFrame {
         spTblPartyNameSuggestionsContainer = new javax.swing.JScrollPane();
         tblPartyNameSuggestions = new javax.swing.JTable();
         jPopupMenu1 = new javax.swing.JPopupMenu();
-        
 
         // Set up the table model for suggestions
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
@@ -918,6 +967,7 @@ public class LoanReceipt extends javax.swing.JFrame {
             e.printStackTrace();
         }
         jTextField1.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_RECEIPT") + 1));
+        loadLoanReceiptData();
     }
 
     private void displayDataInTable(String[][] data) {
