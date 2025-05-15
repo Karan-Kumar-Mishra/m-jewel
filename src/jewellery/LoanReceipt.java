@@ -446,6 +446,9 @@ public class LoanReceipt extends javax.swing.JFrame {
         jTextField3.setText("");
         jTextField4.setText("");
         txtPartyName.setText("");
+        jCheckBox1.setSelected(false);
+        jCheckBox2.setSelected(false);
+
     }
 
     /**
@@ -828,11 +831,11 @@ public class LoanReceipt extends javax.swing.JFrame {
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-//        if (jCheckBox1.isSelected() && jCheckBox1.isSelected()) {
-//            JOptionPane.showMessageDialog(null, "Please select one option in loan adjustment not both!");
-//            return;
-//        }
-        if (!jCheckBox1.isSelected() && !jCheckBox1.isSelected()) {
+        if (jCheckBox1.isSelected() && jCheckBox2.isSelected()) {
+            JOptionPane.showMessageDialog(null, "Please select one option in loan adjustment not both!");
+            return;
+        }
+        if (!jCheckBox1.isSelected() && !jCheckBox2.isSelected()) {
             JOptionPane.showMessageDialog(null, "Please select one option in loan adjustment !");
             return;
         }
@@ -840,7 +843,7 @@ public class LoanReceipt extends javax.swing.JFrame {
             // 1. Get all data from form fields
             String receiptNo = jTextField1.getText().trim();
             String partyName = txtPartyName.getText().trim();
-            String loanAmountStr = jTextField2.getText().trim();
+            String loanAmountStr = jCheckBox1.isSelected() ? jTextField2.getText().trim() : "0";
             String interestAmountStr = jCheckBox2.isSelected() ? jTextField2.getText().trim() : "0";
             String remarks = jTextField3.getText().trim();
             String totalAmountStr = jTextField4.getText().trim();
@@ -1007,7 +1010,6 @@ public class LoanReceipt extends javax.swing.JFrame {
                 if (jCheckBox1.isSelected()) {
                     amountPaid = amountPaid - Double.parseDouble(loanAmountStr);
                     DBController.executeQueryUpdate("UPDATE LOAN_ENTRY SET AMOUNT_PAID='" + amountPaid + "' WHERE PARTY_NAME ='" + partyName + "';");
-                
                 }
                 if (jCheckBox2.isSelected()) {
                     //PENDING FOR INTEREST AMOUNT 
@@ -1108,9 +1110,6 @@ public class LoanReceipt extends javax.swing.JFrame {
 
             // Debug confirmation
             System.out.println("Calculation: " + totalAmount + " - " + amount + " = " + newAmount);
-
-        
-
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
