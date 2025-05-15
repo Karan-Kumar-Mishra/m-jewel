@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
@@ -34,6 +35,7 @@ import jewellery.helper.outstandingAnalysisHelper;
 import jewellery.DBController;
 import jewellery.DatabaseTableCreator;
 import jewellery.TableRowCounter;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -293,6 +295,7 @@ public class LoanReceipt extends javax.swing.JFrame {
             try {
                 // Fix: Use the correct column index for loan amount (assuming it's index 2)
                 String loanAmount = (suggestion.get(2) == null) ? "0" : suggestion.get(2).toString();
+
                 suggestionsTable.addRow(new Object[]{
                     (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
                     (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
@@ -305,7 +308,7 @@ public class LoanReceipt extends javax.swing.JFrame {
     }
 
     private void txtPartyNameKeyReleased(java.awt.event.KeyEvent evt) {
-      
+
         // TODO add your handling code here:
         fetchAccountNames();
         if (!(accountNames == null || accountNames.isEmpty())) {
@@ -315,6 +318,9 @@ public class LoanReceipt extends javax.swing.JFrame {
                     break;
                 case KeyEvent.VK_ENTER:
                     // txttotalamt.requestFocusInWindow();
+                    TableModel model = tblPartyNameSuggestions.getModel();
+                    JOptionPane.showMessageDialog(null, "" + model.getValueAt(1, 1));
+
                     break;
                 case KeyEvent.VK_DOWN:
                     tblPartyNameSuggestions.requestFocus();
@@ -931,6 +937,81 @@ public class LoanReceipt extends javax.swing.JFrame {
                 dataValues.add(paymentMode);
 
                 boolean insertSuccess = DBController.insertDataIntoTable("LOAN_RECEIPT", columnNames, dataValues);
+
+                // Execute the query
+                List<Object> result = DBController.executeQuery("SELECT AMOUNT_PAID ,INTEREST_DATE_PERCENTAGE,INTREST_TYPE,START_DATE   FROM LOAN_ENTRY WHERE PARTY_NAME='" + partyName + "'");
+
+                double amountPaid = 0.0; // Default value if no results found
+                double INTEREST_DATE_PERCENTAGE = 0.0;
+                String INTREST_TYPE = "";
+                String dateString = "";
+
+                if (!result.isEmpty()) {
+                    try {
+                        // Get the first result (assuming one row returned)
+                        Object value = result.get(0);
+                        Object value2 = result.get(1);
+                        Object value3 = result.get(2);
+                        Object value4 = result.get(3);
+
+                        // Handle different possible number types
+                        if (value instanceof Number) {
+                            amountPaid = ((Number) value).doubleValue();
+                            INTEREST_DATE_PERCENTAGE = ((Number) value2).doubleValue();
+                            INTREST_TYPE = value3.toString();
+                            dateString = value4.toString();
+
+                        } else if (value != null) {
+                            // Try parsing if it's a string
+                            amountPaid = Double.parseDouble(value.toString());
+                        }
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null,
+                                "Error converting AMOUNT_PAID to number: " + e.getMessage(),
+                                "Data Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+
+                // Now you can use amountPaid as a double
+//                JOptionPane.showMessageDialog(null, "amount is= " + amountPaid
+//                        + "INTEREST_DATE_PERCENTAGE = " + INTEREST_DATE_PERCENTAGE
+//                        + "INTREST_TYPE =" + INTREST_TYPE
+//                        + " dateString =" + dateString
+//                );
+
+                double dailyInterest = (amountPaid * INTEREST_DATE_PERCENTAGE / 100) / 30;
+                double totalInterest;
+                long rowDays = 0;
+
+                SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");//calculate the days
+                java.util.Date parsedDate = dateFormat1.parse(dateString);
+                java.sql.Date startDate = new java.sql.Date(parsedDate.getTime());
+                rowDays = (System.currentTimeMillis() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+
+                
+                
+                if (INTREST_TYPE.equals("Day")) {
+                    totalInterest = (dailyInterest * (rowDays) / 30) * rowDays;// dayley 
+                } else {
+                    long month = rowDays / 30;
+                    totalInterest = (dailyInterest * (rowDays)) * month;//mothly  
+                }
+                
+                //getting adjsment type
+                if(jCheckBox1.isSelected())
+                {
+                 amountPaid = amountPaid- Double.parseDouble(loanAmountStr);
+                 DBController.executeQuery("UPDATE LOAN_ENTRY SET AMOUNT_PAID='"+amountPaid+"' WHERE PARTY_NAME ='"+partyName+"';");
+                 JOptionPane.showMessageDialog(null,"final loam amount is => "+amountPaid);
+                }
+                if(jCheckBox1.isSelected())
+                {
+                    //PENDING FOR INTEREST AMOUNT 
+                }
+                
+                
+                
 
                 if (insertSuccess) {
                     JOptionPane.showMessageDialog(

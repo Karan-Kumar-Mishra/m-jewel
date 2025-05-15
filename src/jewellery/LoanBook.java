@@ -244,7 +244,6 @@ public class LoanBook extends javax.swing.JPanel {
                 // JOptionPane.showMessageDialog(this, "type of interest month: " + data[i][6] + " -> " + (data[i][6].toString().equals("Month"))); double totalInterest;
                 double totalInterest;
                 if ((data[i][6].toString().equals("Day"))) {
-
                     totalInterest = (dailyInterest * (rowDays) / 30) * rowDays;// dayley 
                 } else {
                     long month = rowDays / 30;
