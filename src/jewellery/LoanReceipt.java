@@ -828,6 +828,14 @@ public class LoanReceipt extends javax.swing.JFrame {
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+//        if (jCheckBox1.isSelected() && jCheckBox1.isSelected()) {
+//            JOptionPane.showMessageDialog(null, "Please select one option in loan adjustment not both!");
+//            return;
+//        }
+        if (!jCheckBox1.isSelected() && !jCheckBox1.isSelected()) {
+            JOptionPane.showMessageDialog(null, "Please select one option in loan adjustment !");
+            return;
+        }
         try {
             // 1. Get all data from form fields
             String receiptNo = jTextField1.getText().trim();
@@ -979,7 +987,6 @@ public class LoanReceipt extends javax.swing.JFrame {
 //                        + "INTREST_TYPE =" + INTREST_TYPE
 //                        + " dateString =" + dateString
 //                );
-
                 double dailyInterest = (amountPaid * INTEREST_DATE_PERCENTAGE / 100) / 30;
                 double totalInterest;
                 long rowDays = 0;
@@ -989,29 +996,22 @@ public class LoanReceipt extends javax.swing.JFrame {
                 java.sql.Date startDate = new java.sql.Date(parsedDate.getTime());
                 rowDays = (System.currentTimeMillis() - startDate.getTime()) / (1000 * 60 * 60 * 24);
 
-                
-                
                 if (INTREST_TYPE.equals("Day")) {
                     totalInterest = (dailyInterest * (rowDays) / 30) * rowDays;// dayley 
                 } else {
                     long month = rowDays / 30;
                     totalInterest = (dailyInterest * (rowDays)) * month;//mothly  
                 }
-                
+
                 //getting adjsment type
-                if(jCheckBox1.isSelected())
-                {
-                 amountPaid = amountPaid- Double.parseDouble(loanAmountStr);
-                 DBController.executeQuery("UPDATE LOAN_ENTRY SET AMOUNT_PAID='"+amountPaid+"' WHERE PARTY_NAME ='"+partyName+"';");
-                 JOptionPane.showMessageDialog(null,"final loam amount is => "+amountPaid);
+                if (jCheckBox1.isSelected()) {
+                    amountPaid = amountPaid - Double.parseDouble(loanAmountStr);
+                    DBController.executeQueryUpdate("UPDATE LOAN_ENTRY SET AMOUNT_PAID='" + amountPaid + "' WHERE PARTY_NAME ='" + partyName + "';");
+                
                 }
-                if(jCheckBox1.isSelected())
-                {
+                if (jCheckBox2.isSelected()) {
                     //PENDING FOR INTEREST AMOUNT 
                 }
-                
-                
-                
 
                 if (insertSuccess) {
                     JOptionPane.showMessageDialog(
@@ -1109,29 +1109,8 @@ public class LoanReceipt extends javax.swing.JFrame {
             // Debug confirmation
             System.out.println("Calculation: " + totalAmount + " - " + amount + " = " + newAmount);
 
-            // Ask for confirmation to add to table
-            int confirm = JOptionPane.showConfirmDialog(this,
-                    "Do you want to add this transaction to the table?",
-                    "Confirm Addition",
-                    JOptionPane.YES_NO_OPTION);
+        
 
-            if (confirm == JOptionPane.YES_OPTION) {
-                // Prepare data for the table (match table structure)
-                String[] newRow = {
-                    jTextField1.getText().trim().isEmpty() ? "[New Entry]" : jTextField1.getText().trim(), // Receipt
-                    // No
-                    txtPartyName.getText().trim(), // Account Name
-                    amountText, // Loan Amount
-                    jCheckBox2.isSelected() ? amountText : "0", // Interest Amount
-                    jTextField3.getText().trim() // Remarks
-                };
-
-                // Add the row to the table
-                tableModel.addRow(newRow);
-
-                // Optional: Clear fields after adding
-                clearTextbox();
-            }
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this,
