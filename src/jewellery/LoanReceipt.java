@@ -243,7 +243,7 @@ public class LoanReceipt extends javax.swing.JFrame {
 
             // Query to get all loan receipt data
             String query = "SELECT RECEIPT_NO, PARTY_NAME, LOAN_AMOUNT, INTREST_AMOUNT, REMARKS, TRANSACTION_DATE "
-                    + "FROM LOAN_RECEIPT ORDER BY RECEIPT_NO ASC, RECEIPT_NO DESC";
+                    + "FROM LOAN_RECEIPT;";
 
             // Execute query using getDataFromTableforcompany()
             List<List<Object>> results = DBController.getDataFromTable(query);
@@ -1013,6 +1013,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                 }
                 if (jCheckBox2.isSelected()) {
                     //PENDING FOR INTEREST AMOUNT 
+                    // the int amt is not store in db it calculate while m-jewel is running ...
                 }
 
                 if (insertSuccess) {

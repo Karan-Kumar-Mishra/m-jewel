@@ -3,8 +3,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package jewellery;
+
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import jewellery.DBController;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import java.text.SimpleDateFormat;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 
 /**
  *
@@ -15,8 +31,18 @@ public class LoanLedger extends javax.swing.JFrame {
     /**
      * Creates new form LoanLedger
      */
+    int selectedrow = 0;
+    private javax.swing.JScrollPane spTblPartyNameSuggestionsContainer;
+    private javax.swing.JTable tblPartyNameSuggestions;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private DefaultTableModel partyNameSuggestionsTableModel;
+    private final List<Object> accountNames = new ArrayList<>();
+
     public LoanLedger() {
         initComponents();
+        initCustomComponents();
+        addEvents();
+        setupEnterKeyNavigation();
         this.getContentPane().setBackground(new java.awt.Color(57, 68, 76));
         jLabel1.setForeground(Color.white);
         jLabel2.setForeground(Color.white);
@@ -27,6 +53,247 @@ public class LoanLedger extends javax.swing.JFrame {
         jLabel7.setForeground(Color.white);
         jButton3.setBackground(Color.red);
         jLabel1.setFont(new Font(jLabel1.getFont().getName(), Font.BOLD, 16));
+
+    }
+
+    private void setupEnterKeyNavigation() {
+        // Create a list of components in the desired navigation order
+        java.util.List<Component> navigationOrder = new ArrayList<>();
+        navigationOrder.add(jTextField7); // Account Name
+        navigationOrder.add(jDateChooser1.getDateEditor().getUiComponent());
+        navigationOrder.add(jDateChooser2.getDateEditor().getUiComponent());
+        //navigationOrder.add(jTextField1); // Receipt No
+
+        // navigationOrder.add(jTextField2); // Amount
+        navigationOrder.add(jTextField3); // Remarks
+        navigationOrder.add(jButton1); // Save button
+        navigationOrder.add(jButton2); // Delete button
+        navigationOrder.add(jButton3); // Print button
+
+        // Add KeyListener to each component
+        for (Component comp : navigationOrder) {
+            comp.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                        int currentIndex = navigationOrder.indexOf(e.getComponent());
+                        if (currentIndex < navigationOrder.size() - 1) {
+                            navigationOrder.get(currentIndex + 1).requestFocusInWindow();
+                        } else {
+                            // If we're at the last component, loop back to the first
+                            navigationOrder.get(0).requestFocusInWindow();
+                        }
+
+                        // Special case for checkboxes - toggle their state on ENTER
+                        if (e.getComponent() instanceof JCheckBox) {
+                            JCheckBox checkBox = (JCheckBox) e.getComponent();
+                            checkBox.setSelected(!checkBox.isSelected());
+                        }
+
+                        // Special case for buttons - trigger their action
+                        if (e.getComponent() instanceof JButton) {
+                            ((JButton) e.getComponent()).doClick();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    public void initCustomComponents() {
+        this.jTextField7.setText("");
+        this.jTextField6.setText("");
+        this.jTextField1.setText("");
+        this.jTextField2.setText("");
+        this.jTextField3.setText("");
+        this.jTextField4.setText("");
+        this.jTextField5.setText("");
+        
+        tblPartyNameSuggestions = new javax.swing.JTable();
+        tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Party Name", "item", "Amount"}) {
+            boolean[] canEdit = new boolean[]{false, false, false};
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        partyNameSuggestionsTableModel = (DefaultTableModel) tblPartyNameSuggestions.getModel();
+
+        // Initialize popup menu and suggestion table
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        spTblPartyNameSuggestionsContainer = new javax.swing.JScrollPane();
+
+// Configure the table
+        spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
+        jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
+        tblPartyNameSuggestions.setRowHeight(20);
+        tblPartyNameSuggestions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
+        jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
+
+        jPopupMenu1.setLocation(jTextField7.getX() + 6, jTextField7.getY() + 70);
+
+        spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
+        jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "Date ", "Party name", "Amount", "Remarks"
+                }
+        ));
+    }
+
+    public void addEvents() {
+
+        jTextField7.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtPartyNameFocusGained(evt);
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPartyNameFocusLost(evt);
+            }
+        });
+        jTextField7.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPartyNameKeyReleased(evt);
+            }
+        });
+        tblPartyNameSuggestions.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) {
+                    int selectedRow = tblPartyNameSuggestions.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        jTextField7.setText(tblPartyNameSuggestions.getValueAt(selectedRow, 0).toString().trim());
+                        jPopupMenu1.setVisible(false);
+                        jTextField7.requestFocus();
+                    }
+                }
+            }
+        });
+        tblPartyNameSuggestions.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                    int selectedRow = tblPartyNameSuggestions.getSelectedRow();
+                    if (selectedRow >= 0) {
+                        jTextField7.setText(tblPartyNameSuggestions.getValueAt(selectedRow, 0).toString().trim());
+                        jPopupMenu1.setVisible(false);
+                        jTextField7.requestFocus();
+                    }
+                } else if (evt.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    jPopupMenu1.setVisible(false);
+                    jTextField7.requestFocus();
+                }
+            }
+        });
+    }
+
+    private void txtPartyNameFocusGained(java.awt.event.FocusEvent evt) {
+        jTextField7.setBackground(new Color(245, 230, 66));
+        selectedrow = 0;
+    }
+
+    private void txtPartyNameFocusLost(java.awt.event.FocusEvent evt) {
+        jTextField7.setBackground(Color.white);
+        jPopupMenu1.setVisible(false);
+    }
+
+    private void fetchAccountNames() {
+        if (!DBController.isDatabaseConnected()) {
+            DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
+                    DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
+        }
+
+        List<Object> account_names = DBController.executeQuery("SELECT PARTY_NAME FROM LOAN_ENTRY");
+
+        account_names.forEach((accountName) -> {
+            accountNames.add(accountName.toString());
+        });
+    }
+
+    private void populateSuggestionsTableFromDatabase(DefaultTableModel suggestionsTable, String query) {
+        if (!DBController.isDatabaseConnected()) {
+            DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
+                    DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
+        }
+
+        List<List<Object>> suggestions = DBController.getDataFromTable(query);
+
+        suggestionsTable.setRowCount(0);
+
+        suggestions.forEach((suggestion) -> {
+            try {
+                // Fix: Use the correct column index for loan amount (assuming it's index 2)
+                String loanAmount = (suggestion.get(2) == null) ? "0" : suggestion.get(2).toString();
+
+                suggestionsTable.addRow(new Object[]{
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
+                    loanAmount // Directly use the loan amount from the query result
+                });
+            } catch (Exception ex) {
+                Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+    }
+
+    private void txtPartyNameKeyReleased(java.awt.event.KeyEvent evt) {
+
+        // TODO add your handling code here:
+        fetchAccountNames();
+        if (!(accountNames == null || accountNames.isEmpty())) {
+            switch (evt.getKeyCode()) {
+                case java.awt.event.KeyEvent.VK_BACK_SPACE:
+                    jPopupMenu1.setVisible(false);
+                    break;
+                case KeyEvent.VK_ENTER:
+                    // txttotalamt.requestFocusInWindow();
+                    TableModel model = tblPartyNameSuggestions.getModel();
+                    JOptionPane.showMessageDialog(null, "" + model.getValueAt(1, 1));
+
+                    break;
+                case KeyEvent.VK_DOWN:
+                    tblPartyNameSuggestions.requestFocus();
+                    if (selectedrow == 0) {
+                        tblPartyNameSuggestions.setRowSelectionInterval(0, 0);
+                        selectedrow++;
+                    } else {
+                        if (tblPartyNameSuggestions.getSelectedRow() < tblPartyNameSuggestions.getRowCount() - 1) {
+                            tblPartyNameSuggestions.setRowSelectionInterval(
+                                    tblPartyNameSuggestions.getSelectedRow() + 1,
+                                    tblPartyNameSuggestions.getSelectedRow() + 1);
+                        }
+                    }
+                    jTextField7.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0)
+                            .toString().trim());
+
+                    break;
+                case KeyEvent.VK_UP:
+                    tblPartyNameSuggestions.requestFocus();
+
+                    if (tblPartyNameSuggestions.getSelectedRow() > 0) {
+                        tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1,
+                                tblPartyNameSuggestions.getSelectedRow() - 1);
+                    }
+
+                    jTextField7.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0)
+                            .toString().trim());
+
+                    break;
+                default:
+                    EventQueue.invokeLater(() -> {
+                        jPopupMenu1.setVisible(true);
+                        populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel,
+                                "SELECT PARTY_NAME, ITEM_DETAILS, AMOUNT_PAID FROM LOAN_ENTRY ");
+                    });
+                    break;
+            }
+        }
     }
 
     /**
@@ -39,7 +306,6 @@ public class LoanLedger extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jDateChooser2 = new com.toedter.calendar.JDateChooser();
         jButton1 = new javax.swing.JButton();
@@ -59,12 +325,11 @@ public class LoanLedger extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jTextField7 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("LOAN LEDGER");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButton1.setText("OK");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -116,6 +381,11 @@ public class LoanLedger extends javax.swing.JFrame {
         jTextField5.setText("jTextField5");
 
         jTextField6.setText("jTextField6");
+        jTextField6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField6ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Total Dr.");
 
@@ -129,6 +399,13 @@ public class LoanLedger extends javax.swing.JFrame {
 
         jLabel7.setText("Balance");
 
+        jTextField7.setText("jTextField7");
+        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -136,14 +413,14 @@ public class LoanLedger extends javax.swing.JFrame {
             .addComponent(jScrollPane1)
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(100, 100, 100)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField7))
                 .addGap(32, 32, 32)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -183,12 +460,9 @@ public class LoanLedger extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -197,7 +471,10 @@ public class LoanLedger extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
                             .addComponent(jButton2)
-                            .addComponent(jButton3))))
+                            .addComponent(jButton3)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(14, 14, 14)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -224,6 +501,68 @@ public class LoanLedger extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        // Get dates from date choosers
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String startDate = sdf.format(jDateChooser1.getDate());
+            String endDate = sdf.format(jDateChooser2.getDate());
+
+            // Validate dates
+            if (jDateChooser1.getDate() == null || jDateChooser2.getDate() == null) {
+                JOptionPane.showMessageDialog(null, "Please select both start and end dates.");
+                return;
+            }
+            // Construct query
+            String query = "SELECT START_DATE, PARTY_NAME, AMOUNT_PAID, REMARKS FROM LOAN_ENTRY "
+                    + "WHERE START_DATE BETWEEN '" + startDate + "' AND '" + endDate + "'";
+
+            // Ensure database connection
+            if (!DBController.isDatabaseConnected()) {
+                DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
+                        DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
+            }
+
+            // Fetch data
+            List<List<Object>> loanData = DBController.getDataFromTable(query);
+            DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+            tableModel.setRowCount(0);
+            if (loanData != null) {
+                for (List<Object> row : loanData) {
+                    tableModel.addRow(new Object[]{
+                        row.get(0) != null ? row.get(0).toString() : "",
+                        row.get(1) != null ? row.get(1).toString() : "",
+                        row.get(2) != null ? row.get(2).toString() : "0",
+                        row.get(3) != null ? row.get(3).toString() : ""
+                    });
+                }
+            }
+
+            // Update summary fields (example calculation)
+            double totalDr = 0.0;
+            double totalCr = 0.0;
+            for (List<Object> row : loanData) {
+                try {
+                    double amount = Double.parseDouble(row.get(2).toString());
+                    if (amount > 0) {
+                        totalDr += amount;
+                    } else {
+                        totalCr += Math.abs(amount);
+                    }
+                } catch (NumberFormatException e) {
+                    // Skip invalid amounts
+                }
+            }
+
+            jTextField1.setText(String.format("%.2f", totalDr));
+            jTextField2.setText(String.format("%.2f", totalCr));
+            jTextField3.setText(String.format("%.2f", totalDr - totalCr));
+            // You can set jTextField4,5,6 similarly if needed for other calculations
+            // You can set jTextField4,5,6 similarly if needed for other calculations
+
+        } catch (Exception ex) {
+            Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error fetching data: " + ex.getMessage());
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
@@ -240,16 +579,22 @@ public class LoanLedger extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField7ActionPerformed
+
+    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6ActionPerformed
+
     /**
      * @param args the command line arguments
      */
-  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JComboBox<String> jComboBox1;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
@@ -267,5 +612,6 @@ public class LoanLedger extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables
 }
