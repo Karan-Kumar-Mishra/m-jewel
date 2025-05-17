@@ -108,7 +108,7 @@ public class LoanLedger extends javax.swing.JFrame {
         this.jTextField3.setText("");
         this.jTextField4.setText("");
         this.jTextField5.setText("");
-        
+
         tblPartyNameSuggestions = new javax.swing.JTable();
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
@@ -141,7 +141,7 @@ public class LoanLedger extends javax.swing.JFrame {
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
                 new String[]{
-                    "Date ", "Party name", "Amount", "Remarks"
+                    "Date ", "Party name", "Debit", "Credit", "Balance", "Remarks"
                 }
         ));
     }
@@ -498,7 +498,17 @@ public class LoanLedger extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    private double getInterestAmt(String partyname)
+    {
+        String credit_amount_query = "select SUM(LOAN_AMOUNT + INTREST_AMOUNT) as TOTAL_AMOUNT from LOAN_RECEIPT where PARTY_NAME='"+partyname+"' ";
+            double totalcreditAmount = 0.0;
+            try {
+                totalcreditAmount = ((Number) DBController.getDataFromTable(credit_amount_query).get(0).get(0)).doubleValue();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return totalcreditAmount;
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         // Get dates from date choosers
@@ -523,6 +533,7 @@ public class LoanLedger extends javax.swing.JFrame {
             }
 
             // Fetch data
+            
             List<List<Object>> loanData = DBController.getDataFromTable(query);
             DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
             tableModel.setRowCount(0);
@@ -532,7 +543,11 @@ public class LoanLedger extends javax.swing.JFrame {
                         row.get(0) != null ? row.get(0).toString() : "",
                         row.get(1) != null ? row.get(1).toString() : "",
                         row.get(2) != null ? row.get(2).toString() : "0",
+                        
+                        getInterestAmt(row.get(1).toString()) ,
+                        Double.parseDouble(row.get(2).toString())-getInterestAmt(row.get(1).toString()) ,
                         row.get(3) != null ? row.get(3).toString() : ""
+
                     });
                 }
             }
