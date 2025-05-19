@@ -56,10 +56,12 @@ import java.io.FileOutputStream;
 import java.util.Set;
 import java.util.TreeMap;
 import jewellery.LoanEntry;
+import jewellery.DBController;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import jewellery.GetInterestAmount;
 
 public class LoanBook extends javax.swing.JPanel {
 
@@ -129,6 +131,7 @@ public class LoanBook extends javax.swing.JPanel {
 
     public LoanBook() {
         try {
+        
             initComponents(); // Initialize all UI components first
 
             // Initialize date chooser before adding to panel
@@ -233,24 +236,29 @@ public class LoanBook extends javax.swing.JPanel {
                 displayData[i][5] = 0.0;
             }
             try {
+                
+
                 //FOR interest amount
                 double loanAmt = (data[i].length > 11 && data[i][12] != null)
                         ? Double.parseDouble(data[i][12].toString()) : 0.00;
                 double intAmt = (data[i].length > 6 && data[i][5] != null)
                         ? Double.parseDouble(data[i][5].toString())
                         : 0.00;
+
                 double dailyInterest = (loanAmt * intAmt / 100) / 30;
 
-                // JOptionPane.showMessageDialog(this, "type of interest month: " + data[i][6] + " -> " + (data[i][6].toString().equals("Month"))); double totalInterest;
                 double totalInterest;
                 if ((data[i][6].toString().equals("Day"))) {
                     totalInterest = (dailyInterest * (rowDays) / 30) * rowDays;// dayley 
+
                 } else {
                     long month = rowDays / 30;
                     totalInterest = (dailyInterest * (rowDays)) * month;//mothly  
                 }
 
-                displayData[i][6] = totalInterest;
+              
+
+                displayData[i][6] = GetInterestAmount.getInterestAmount(data[i][2].toString());
             } catch (NumberFormatException e) {
                 displayData[i][6] = 0.0;
             }

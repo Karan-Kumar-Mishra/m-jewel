@@ -498,88 +498,102 @@ public class LoanLedger extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private double getInterestAmt(String partyname)
-    {
-        String credit_amount_query = "select SUM(LOAN_AMOUNT + INTREST_AMOUNT) as TOTAL_AMOUNT from LOAN_RECEIPT where PARTY_NAME='"+partyname+"' ";
-            double totalcreditAmount = 0.0;
-            try {
-                totalcreditAmount = ((Number) DBController.getDataFromTable(credit_amount_query).get(0).get(0)).doubleValue();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return totalcreditAmount;
-    }
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        // Get dates from date choosers
+    private double getInterestAmt(String partyname) {
+        String credit_amount_query = "select SUM(LOAN_AMOUNT + INTREST_AMOUNT) as TOTAL_AMOUNT from LOAN_RECEIPT where PARTY_NAME='" + partyname + "' ";
+        double totalcreditAmount = 0.0;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String startDate = sdf.format(jDateChooser1.getDate());
-            String endDate = sdf.format(jDateChooser2.getDate());
-
-            // Validate dates
-            if (jDateChooser1.getDate() == null || jDateChooser2.getDate() == null) {
-                JOptionPane.showMessageDialog(null, "Please select both start and end dates.");
-                return;
-            }
-            // Construct query
-            String query = "SELECT START_DATE, PARTY_NAME, AMOUNT_PAID, REMARKS FROM LOAN_ENTRY "
-                    + "WHERE START_DATE BETWEEN '" + startDate + "' AND '" + endDate + "'";
-
-            // Ensure database connection
-            if (!DBController.isDatabaseConnected()) {
-                DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
-                        DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
-            }
-
-            // Fetch data
-            
-            List<List<Object>> loanData = DBController.getDataFromTable(query);
-            DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
-            tableModel.setRowCount(0);
-            if (loanData != null) {
-                for (List<Object> row : loanData) {
-                    tableModel.addRow(new Object[]{
-                        row.get(0) != null ? row.get(0).toString() : "",
-                        row.get(1) != null ? row.get(1).toString() : "",
-                        row.get(2) != null ? row.get(2).toString() : "0",
-                        
-                        getInterestAmt(row.get(1).toString()) ,
-                        Double.parseDouble(row.get(2).toString())-getInterestAmt(row.get(1).toString()) ,
-                        row.get(3) != null ? row.get(3).toString() : ""
-
-                    });
-                }
-            }
-
-            // Update summary fields (example calculation)
-            double totalDr = 0.0;
-            double totalCr = 0.0;
-            for (List<Object> row : loanData) {
-                try {
-                    double amount = Double.parseDouble(row.get(2).toString());
-                    if (amount > 0) {
-                        totalDr += amount;
-                    } else {
-                        totalCr += Math.abs(amount);
-                    }
-                } catch (NumberFormatException e) {
-                    // Skip invalid amounts
-                }
-            }
-
-            jTextField1.setText(String.format("%.2f", totalDr));
-            jTextField2.setText(String.format("%.2f", totalCr));
-            jTextField3.setText(String.format("%.2f", totalDr - totalCr));
-            // You can set jTextField4,5,6 similarly if needed for other calculations
-            // You can set jTextField4,5,6 similarly if needed for other calculations
-
-        } catch (Exception ex) {
-            Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Error fetching data: " + ex.getMessage());
+            totalcreditAmount = ((Number) DBController.getDataFromTable(credit_amount_query).get(0).get(0)).doubleValue();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+        return totalcreditAmount;
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    try {
+        // Validate dates
+        if (jDateChooser1.getDate() == null || jDateChooser2.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Please select both start and end dates.");
+            return;
+        }
+         
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String startDate = sdf.format(jDateChooser1.getDate());
+        String endDate = sdf.format(jDateChooser2.getDate());
+     
 
+        // Construct query
+        String query = "SELECT START_DATE, PARTY_NAME, AMOUNT_PAID, REMARKS FROM LOAN_ENTRY "
+                + "WHERE START_DATE BETWEEN '" + startDate + "' AND '" + endDate + "'";
+
+        // Ensure database connection
+        if (!DBController.isDatabaseConnected()) {
+            DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
+                    DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
+        }
+
+        // Fetch data
+        List<List<Object>> loanData = DBController.getDataFromTable(query);
+        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel.setRowCount(0); // Clear existing data
+
+        if (loanData == null || loanData.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No loan data found for the selected period!");
+            return;
+        }
+
+        // Debug: Show first row data
+        System.out.println("First row data: " + loanData.get(0));
+
+        // Add data to table
+        for (List<Object> row : loanData) {
+            try {
+                String partyName = row.get(1) != null ? row.get(1).toString() : "";
+                double amountPaid = row.get(2) != null ? Double.parseDouble(row.get(2).toString()) : 0.0;
+                double interestAmount = getInterestAmt(partyName);
+                
+                tableModel.addRow(new Object[]{
+                    row.get(0) != null ? row.get(0).toString() : "",
+                    partyName,
+                    amountPaid,
+                    interestAmount,
+                    amountPaid - interestAmount,
+                    row.get(3) != null ? row.get(3).toString() : ""
+                });
+            } catch (Exception e) {
+                Logger.getLogger(LoanLedger.class.getName()).log(Level.WARNING, "Error processing row", e);
+                continue; // Skip problematic rows
+            }
+        }
+
+        // Calculate totals
+        double totalDr = 0.0;
+        double totalCr = 0.0;
+        for (List<Object> row : loanData) {
+            try {
+                double amount = row.get(2) != null ? Double.parseDouble(row.get(2).toString()) : 0.0;
+                if (amount > 0) {
+                    totalDr += amount;
+                } else {
+                    totalCr += Math.abs(amount);
+                }
+            } catch (NumberFormatException e) {
+                Logger.getLogger(LoanLedger.class.getName()).log(Level.WARNING, "Invalid amount format", e);
+            }
+        }
+
+        // Update summary fields
+        jTextField1.setText(String.format("%.2f", totalDr));
+        jTextField2.setText(String.format("%.2f", totalCr));
+        jTextField3.setText(String.format("%.2f", totalDr - totalCr));
+
+        JOptionPane.showMessageDialog(this, "Data loaded successfully!");
+
+    } catch (Exception ex) {
+        Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error in jButton1ActionPerformed", ex);
+        JOptionPane.showMessageDialog(this, "Error fetching data: " + ex.getMessage(), 
+            "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
