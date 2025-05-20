@@ -36,6 +36,7 @@ import jewellery.DBController;
 import jewellery.DatabaseTableCreator;
 import jewellery.TableRowCounter;
 import java.text.SimpleDateFormat;
+import jewellery.GetInterestAmount;
 
 /**
  *
@@ -982,6 +983,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                                 "Data Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
+                    GetInterestAmount.updateLoan(partyName);
                 }
 
                 // Now you can use amountPaid as a double
