@@ -15,7 +15,8 @@ public class InsertLoanDetails {
             String PURITY, String NET_WEIGHT, String ESTIMATED_COST, String AMOUNT_PAID,
             String ITEM_DETAILS, String GUARNATOR_NAME, String GUARNATOR_ADDRESS,
             String GUARANTOR_PHONE,
-            String DOCUMENTS, String REMINDERS, String NOTES, String ITEM_LOCATION) {
+            String DOCUMENTS, String REMINDERS, String NOTES, String ITEM_LOCATION,
+            String INTEREST_AMOUNT) {
 
         String insertSQL = """
     INSERT INTO LOAN_ENTRY ( 
@@ -25,8 +26,8 @@ public class InsertLoanDetails {
         PURITY, NET_WEIGHT, ESTIMATED_COST, AMOUNT_PAID,
         ITEM_DETAILS, GUARNATOR_NAME, GUARNATOR_ADDRESS,
         GUARANTOR_PHONE,
-        DOCUMENTS, REMINDERS, NOTES, ITEM_LOCATION) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        DOCUMENTS, REMINDERS, NOTES, ITEM_LOCATION,INTEREST_AMOUNT) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
 """;
 
         try (Connection connection = DBConnect.connect(); PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
@@ -57,7 +58,7 @@ public class InsertLoanDetails {
             preparedStatement.setString(19, REMINDERS); // REMINDERS
             preparedStatement.setString(20, NOTES); // NOTES
             preparedStatement.setString(21, ITEM_LOCATION); // ITEM_LOCATION
-
+            preparedStatement.setString(22, INTEREST_AMOUNT); //INTEREST_AMOUNT
             // Execute the insert statement
             int rowsInserted = preparedStatement.executeUpdate();
             if (rowsInserted > 0) {

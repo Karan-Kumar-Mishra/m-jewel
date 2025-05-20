@@ -71,7 +71,7 @@ public class GetInterestAmount {
 
             // Calculate interest
             double dailyInterest = (loanAmt * intAmt / 100) / 30;
-         
+
             if (interestType.equals("Day")) {
                 totalInterest = (dailyInterest * (rowDays) / 30) * rowDays; // Daily
 
@@ -79,6 +79,17 @@ public class GetInterestAmount {
                 long month = rowDays / 30;
                 totalInterest = (dailyInterest * rowDays) * month; // Monthly
             }
+
+            totalInterest = totalInterest - getTotalInterest(partyName);
+
+            double updated_amount = 0.0;
+            if (totalInterest <= 0) {
+                // now substract forn loan amount
+                updated_amount = loanAmt - Math.abs(totalInterest);
+                DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set AMOUNT_PAID=" + updated_amount + " where PARTY_NAME='" + partyName + "';");
+                totalInterest = 0;
+            }
+            DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set INTEREST_AMOUNT=" + totalInterest + " where PARTY_NAME='" + partyName + "';");
 
             return totalInterest;
 
@@ -89,14 +100,4 @@ public class GetInterestAmount {
         }
     }
 
-    public static void updateLoan(String partyName) {
-        totalInterest = getInterestAmount("");
-        totalInterest = totalInterest - getTotalInterest(partyName);
-        if (totalInterest < 0) {
-            // now substract forn loan amount
-            double updated_amount = loanAmt - Math.abs(totalInterest);
-            DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set AMOUNT_PAID=" + updated_amount + " where PARTY_NAME='" + partyName + "';");
-            totalInterest = 0;
-        }
-    }
 }

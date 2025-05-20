@@ -34,7 +34,8 @@ public class DatabaseTableCreator {
                     DOCUMENTS VARCHAR(50),
                     REMINDERS VARCHAR(50),
                     NOTES VARCHAR(40),
-                    ITEM_LOCATION VARCHAR(40)
+                    ITEM_LOCATION VARCHAR(40),
+                    INTEREST_AMOUNT VARCHAR(40)
                 )
             """;
             String createReceiptTable = """
@@ -53,6 +54,7 @@ public class DatabaseTableCreator {
             statement.execute(createLoanEntryTable);
             statement.execute(createReceiptTable);
 
+      
             Logger.getLogger(DatabaseTableCreator.class.getName()).log(Level.INFO, "LOAN_ENTRY table created successfully.");
         } catch (Exception e) {
             e.printStackTrace();

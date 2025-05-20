@@ -62,6 +62,21 @@ public class LoanReceipt extends javax.swing.JFrame {
     public LoanReceipt() {
         DatabaseTableCreator.create();
         initComponents();
+        try {
+            Connection cd = DBConnect.connect();
+            Statement stmet;
+            stmet = cd.createStatement();
+            ResultSet rs1 = stmet.executeQuery("SELECT accountname FROM account WHERE grp='Bank'");
+            jComboBox1.removeAllItems();
+            banks = new Vector<>();
+            banks.add("Cash");
+
+            while (rs1.next()) {
+                banks.add(rs1.getString("accountname"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ReceiptScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         this.jButton4.setBackground(Color.red);
         this.jLabel1.setFont(new Font(jLabel1.getFont().getName(), Font.BOLD, 16));
@@ -90,8 +105,16 @@ public class LoanReceipt extends javax.swing.JFrame {
         jCheckBox1.setBackground(Color.white);
         partyNameSuggestionsTableModel = (DefaultTableModel) tblPartyNameSuggestions.getModel();
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Cash", "Credit"}));
-
+        jComboBox1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                PAYMENTMODEFocusGained(evt);
+            }
+        });
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PAYMENTMODEActionPerformed(evt);
+            }
+        });
         jLabel6.setForeground(Color.white);
 
         // Add date change listener to filter data when date changes
@@ -162,6 +185,34 @@ public class LoanReceipt extends javax.swing.JFrame {
         clearTextbox();
         jTextField1.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_RECEIPT") + 1));
         loadLoanReceiptData();
+    }
+
+    private void PAYMENTMODEFocusGained(java.awt.event.FocusEvent evt) {
+        // TODO add your handling code here:
+        try {
+
+            Connection cd = DBConnect.connect();
+            Statement stmet;
+            stmet = cd.createStatement();
+            ResultSet rs1 = stmet.executeQuery("SELECT accountname FROM account WHERE grp='Bank'");
+            jComboBox1.removeAllItems();
+            banks = new Vector<>();
+            banks.add("Cash");
+
+            while (rs1.next()) {
+                banks.add(rs1.getString("accountname"));
+//                JOptionPane.showMessageDialog(this, rs1.getString("accountname"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ReceiptScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(banks);
+        jComboBox1.setModel(model);
+    }
+
+    private void PAYMENTMODEActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+
     }
 
     // Add this method to your LoanReceipt class
@@ -463,7 +514,8 @@ public class LoanReceipt extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
-
+        banks = new Vector<>();
+        banks.add("Cash");
         jTextField1 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         jDateChooser1.setDate(new Date());
@@ -521,14 +573,8 @@ public class LoanReceipt extends javax.swing.JFrame {
                 jTextField1ActionPerformed(evt);
             }
         });
-
-        jComboBox1.setModel(
-                new javax.swing.DefaultComboBoxModel<>(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(banks);
+        jComboBox1.setModel(model);
 
         jTextField2.setText("jTextField2");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -983,7 +1029,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                                 "Data Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
-                    GetInterestAmount.updateLoan(partyName);
+                    GetInterestAmount.getInterestAmount(partyName);
                 }
 
                 // Now you can use amountPaid as a double
@@ -1154,7 +1200,7 @@ public class LoanReceipt extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField txtPartyName;
-    private javax.swing.JComboBox<String> PAYMENTMODE;
+   
 
     // End of variables declaration
 }

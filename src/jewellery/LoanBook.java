@@ -258,7 +258,7 @@ public class LoanBook extends javax.swing.JPanel {
 
               
 
-                displayData[i][6] = GetInterestAmount.getInterestAmount(data[i][2].toString());
+                displayData[i][6] = totalInterest;
             } catch (NumberFormatException e) {
                 displayData[i][6] = 0.0;
             }

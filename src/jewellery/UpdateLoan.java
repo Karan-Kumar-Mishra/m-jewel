@@ -1247,7 +1247,8 @@ public class UpdateLoan extends javax.swing.JFrame {
                 documents,
                 reminders,
                 notes,
-                itemLocation
+                itemLocation,
+                "0.0"
         );
         clearAllTextBox();
     }

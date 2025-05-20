@@ -1323,7 +1323,8 @@ public class LoanEntry extends javax.swing.JPanel {
                 documents,
                 reminders,
                 notes,
-                itemLocation
+                itemLocation,
+                "0.0" //intrest amount
         );
         clearAllTextBox();
         //  GLOBAL_VARS.slip_number++;
