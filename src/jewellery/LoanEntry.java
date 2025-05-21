@@ -17,16 +17,6 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import jewellery.InsertLoanEntry;
-import jewellery.GetPartyName;
-import jewellery.getPartyDetailInLoan;
-import jewellery.InsertLoanDetails;
-import jewellery.DBConnect;
-import jewellery.DatabaseTableCreator;
-import jewellery.DBController;
-import jewellery.GLOBAL_VARS;
-import jewellery.UpdateLoan;
-import jewellery.TableRowCounter;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -37,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import jewellery.GetInterestAmount;
 
 public class LoanEntry extends javax.swing.JPanel {
 
@@ -138,13 +129,11 @@ public class LoanEntry extends javax.swing.JPanel {
 
         // Set layout manager for the panel
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 530)); // Add jPanel5 with constraints
-
+        add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1400, 1000)); // Add jPanel5 with constraints
     }
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-
         DatabaseTableCreator.create();
         int slip_number = TableRowCounter.getRowCount("LOAN_ENTRY");
         buttonGroup1 = new javax.swing.ButtonGroup();
@@ -226,6 +215,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
 
         jLabelPartyName = new javax.swing.JLabel();
         jLabelPartyAddress = new javax.swing.JLabel();
@@ -245,7 +235,6 @@ public class LoanEntry extends javax.swing.JPanel {
         jLabel6.setText("GST Reports");
         jLabel7.setText("Tools");
         jLabel8.setText("Help");
-        
 
         jTextField17.setText(LocalDate.now().toString());
         disableAllInputs();
@@ -289,7 +278,7 @@ public class LoanEntry extends javax.swing.JPanel {
                                         .addComponent(jLabel8)))
         );
         jPanel5.setBackground(new java.awt.Color(57, 68, 76));
-        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout()); // Ensure jPanel5 also uses Absolute Layout
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Serif", 1, 18));
         jLabel2.setForeground(new java.awt.Color(255, 204, 0));
@@ -451,28 +440,29 @@ public class LoanEntry extends javax.swing.JPanel {
         jPanel3.add(jTextField13, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 180, -1));
         jPanel3.add(jTextField14, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 180, -1));
 
-        jButton5.setText("Add item's Images");
-
+        jButton5.setText("Add Item's Images");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
+        jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 180, -1));
+
+        jButton6.setText("Add Guarantor Image");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 180, -1));
+
+        jButton1.setText("Save");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
-        jButton6.setText("Add Guarantor Image");
-        jButton7.setText("Refresh");
-        jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 180, -1));
-        jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 300, 180, -1));
-        jPanel5.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 80, 90, -1));
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 320, 180, -1));
 
         jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 160, 370, 380));
 
@@ -610,7 +600,6 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField17.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField17ActionPerformed(evt);
-
             }
         });
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
@@ -653,15 +642,6 @@ public class LoanEntry extends javax.swing.JPanel {
 
         jPanel5.add(jTextField19, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 130, 300, -1));
 
-        jButton1.setText("Save");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, 90, -1));
-
-
         jButton2.setText("Print");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -677,15 +657,24 @@ public class LoanEntry extends javax.swing.JPanel {
             }
         });
         jPanel5.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 80, 90, -1));
+
         jButton4.setBackground(new java.awt.Color(255, 0, 0));
-          jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
         jButton4.setText("Close");
         jPanel5.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 80, 90, -1));
-        jButton8 = new javax.swing.JButton();
+
+        jButton7.setText("Refresh");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        jPanel5.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 80, 90, -1));
+
         jButton8.setText("New Entry");
         jButton8.setSize(40, 10);
         jButton8.addActionListener(new java.awt.event.ActionListener() {
@@ -694,9 +683,6 @@ public class LoanEntry extends javax.swing.JPanel {
             }
         });
         jPanel5.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 80, 90, -1));
-
-        //getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 1060, 530));
-        //pack();
     }
 
     private void clearAllTextBox() {
@@ -711,17 +697,16 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField12.setText("");
         jTextField13.setText("");
         jTextField14.setText("");
-        jTextField17.setText(LocalDate.now().toString()); // Keep current date
-        jTextField18.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_ENTRY") + 1)); // New slip number
+        jTextField17.setText(LocalDate.now().toString());
+        jTextField18.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_ENTRY") + 1));
         jTextField19.setText("");
         jTextField20.setText("");
         jTextField22.setText("");
         jTextField23.setText("");
         jTextField24.setText("");
         jTextField25.setText("");
-        jTextField26.setText(LocalDate.now().toString()); // Keep current date
+        jTextField26.setText(LocalDate.now().toString());
 
-        // Reset combo boxes to default values
         jComboBox1.setSelectedIndex(0);
         jComboBox3.setSelectedIndex(0);
     }
@@ -838,7 +823,6 @@ public class LoanEntry extends javax.swing.JPanel {
 
             @Override
             public void focusLost(FocusEvent e) {
-                // Calculate net weight when focus is lost on relevant fields
                 if (e.getSource() == jTextField20 || e.getSource() == jTextField23 || e.getSource() == jTextField1) {
                     calculateNetWeight();
                 }
@@ -849,7 +833,6 @@ public class LoanEntry extends javax.swing.JPanel {
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {
         Object selectedItem = jComboBox2.getSelectedItem();
         System.out.println("Selected party: " + selectedItem.toString());
-        //  setVisible(true);
         String details[] = getPartyDetailInLoan.get(selectedItem.toString());
 
         jLabelPartyName.setText(details[0]);
@@ -860,37 +843,29 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void calculateNetWeight() {
-        // Check if all required fields are filled and valid
         if (jTextField20.getText().trim().isEmpty()
                 || jTextField23.getText().trim().isEmpty()
                 || jTextField1.getText().trim().isEmpty()) {
-            // If any field is empty, do not calculate net weight
             return;
         }
 
         try {
-            // Parse the input values
             double goldWeight = Double.parseDouble(jTextField20.getText());
             double purity = Double.parseDouble(jTextField23.getText());
             double interest = Double.parseDouble(jTextField1.getText());
-            // Perform the calculation
             double netWeight = goldWeight * (purity / 100);
-            // Update the net weight field
-            jTextField22.setText(String.format("%.4f", netWeight)); // Format to 4 decimal places
+            jTextField22.setText(String.format("%.4f", netWeight));
         } catch (NumberFormatException e) {
-            // If parsing fails, show an error message
             JOptionPane.showMessageDialog(this, "Please enter valid numbers for gold weight, purity, and interest.", "Input Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public String getSelectedPartyName() {
         Object selectedItem = jComboBox2.getSelectedItem();
-        return selectedItem.toString();// this function is call in ImageSelector window for store the images  
+        return selectedItem.toString();
     }
-    // Add this method to your LoanEntry class
 
     public void disableAllInputs() {
-        // Disable all text fields
         jTextField1.setEnabled(false);
         jTextField2.setEnabled(false);
         jTextField6.setEnabled(false);
@@ -912,24 +887,19 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField25.setEnabled(false);
         jTextField26.setEnabled(false);
 
-        // Disable all combo boxes
         jComboBox1.setEnabled(false);
         jComboBox2.setEnabled(false);
         jComboBox3.setEnabled(false);
 
-        // Disable all buttons
         jButton1.setEnabled(false);
         jButton2.setEnabled(false);
         jButton3.setEnabled(false);
-       // jButton4.setEnabled(false);
         jButton5.setEnabled(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
     }
 
-// You can also add a corresponding enable method if needed
     public void enableAllInputs() {
-        // Enable all text fields
         jTextField1.setEnabled(true);
         jTextField2.setEnabled(true);
         jTextField6.setEnabled(true);
@@ -951,12 +921,10 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField25.setEnabled(true);
         jTextField26.setEnabled(true);
 
-        // Enable all combo boxes
         jComboBox1.setEnabled(true);
         jComboBox2.setEnabled(true);
         jComboBox3.setEnabled(true);
 
-        // Enable all buttons
         jButton1.setEnabled(true);
         jButton2.setEnabled(true);
         jButton3.setEnabled(true);
@@ -981,19 +949,15 @@ public class LoanEntry extends javax.swing.JPanel {
         if (selectedFile != null) {
             String filePath = selectedDirectory + selectedFile;
 
-            // Create images folder if it doesn't exist
             Object selectedItem = jComboBox2.getSelectedItem();
             File imagesFolder = new File("assets/" + selectedItem.toString());
             if (!imagesFolder.exists()) {
-                imagesFolder.mkdirs(); // Changed to mkdirs() in case parent directories don't exist
+                imagesFolder.mkdirs();
             }
 
-            // Copy the selected file to the images folder
             try {
                 Path sourcePath = Paths.get(filePath);
                 Path destinationPath = Paths.get("assets/" + selectedItem.toString(), "GUARNATOR_PHOTO.png");
-
-                // Handle duplicate by always replacing (as per your requirement)
                 Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
                 imageListModel.addElement(destinationPath.toString());
             } catch (Exception e) {
@@ -1008,7 +972,6 @@ public class LoanEntry extends javax.swing.JPanel {
         javax.swing.JFrame frame = new javax.swing.JFrame();
         frame.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        // Override default close operation
         frame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -1017,45 +980,36 @@ public class LoanEntry extends javax.swing.JPanel {
             }
         });
 
-        // Create components
         DefaultListModel<String> imageListModel = new DefaultListModel<>();
         JList<String> imageList = new JList<>(imageListModel);
         JButton uploadButton = new JButton("Upload Image");
         JButton closeButton = new JButton("Close");
         JLabel imageLabel = new JLabel();
-        int[] imageNumber = {0}; // Using array to make it effectively final for lambda
+        int[] imageNumber = {0};
 
-        // Set up the image label
         imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setVerticalAlignment(JLabel.CENTER);
 
-        // Create a panel for the left side (list and buttons)
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setBorder(BorderFactory.createTitledBorder("Image List"));
 
-        // Add the list to a scroll pane
         JScrollPane listScrollPane = new JScrollPane(imageList);
         leftPanel.add(listScrollPane, BorderLayout.CENTER);
 
-        // Create a panel for buttons (upload and close)
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonPanel.add(uploadButton);
         buttonPanel.add(closeButton);
         leftPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Create a panel for the right side (image display)
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.setBorder(BorderFactory.createTitledBorder("Selected Image"));
         rightPanel.add(imageLabel, BorderLayout.CENTER);
 
-        // Add both panels to the main frame
         frame.getContentPane().setLayout(new GridLayout(1, 2));
         frame.getContentPane().add(leftPanel);
         frame.getContentPane().add(rightPanel);
 
-        // Add action listeners
         uploadButton.addActionListener(e -> {
-            // Upload image functionality
             FileDialog fileDialog = new FileDialog((Frame) null, "Select an Image", FileDialog.LOAD);
             fileDialog.setFilenameFilter((dir, name)
                     -> name.endsWith(".jpg") || name.endsWith(".jpeg")
@@ -1092,7 +1046,6 @@ public class LoanEntry extends javax.swing.JPanel {
 
         imageList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
-                // Display selected image functionality
                 String selectedImagePath = imageList.getSelectedValue();
                 if (selectedImagePath != null) {
                     ImageIcon imageIcon = new ImageIcon(selectedImagePath);
@@ -1114,7 +1067,6 @@ public class LoanEntry extends javax.swing.JPanel {
             }
         });
 
-        // Set look and feel
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -1126,16 +1078,13 @@ public class LoanEntry extends javax.swing.JPanel {
             // java.util.logging.Logger.getLogger(ImageSelectorSingleFunction.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        // Show the frame
         frame.pack();
         frame.setVisible(true);
     }
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
-        // Clear all fields
         clearAllTextBox();
 
-        // Reset the party details display
         jLabelPartyName.setText("");
         jLabelPartyAddress.setText("");
         jLabelPartyCity.setText("");
@@ -1144,18 +1093,14 @@ public class LoanEntry extends javax.swing.JPanel {
         jLabelPartyLedgerBalance.setText("");
         jLabelPartyLastEntry.setText("");
 
-        // Set default date and slip number
         jTextField17.setText(LocalDate.now().toString());
         jTextField26.setText(LocalDate.now().toString());
 
-        // Increment slip number for new entry
         int slip_number = TableRowCounter.getRowCount("LOAN_ENTRY") + 1;
         jTextField18.setText(String.valueOf(slip_number));
 
-        // Enable all inputs (in case they were disabled)
         enableAllInputs();
 
-        // Set focus to the first field
         jTextField17.requestFocus();
     }
 
@@ -1165,7 +1110,6 @@ public class LoanEntry extends javax.swing.JPanel {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         setVisible(true);
-        JOptionPane.showMessageDialog(null, "Button clicked!");
     }
 
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1185,7 +1129,6 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jTextField126ActionPerformed(java.awt.event.ActionEvent evt) {
-
     }
 
     private void jTextField22ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1196,14 +1139,12 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jTextField18ActionPerformed(java.awt.event.ActionEvent evt) {
-
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
-
         ImageSelector();
     }
 
@@ -1220,10 +1161,8 @@ public class LoanEntry extends javax.swing.JPanel {
             jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"No Parties Available"}));
         }
 
-        // Clear all fields
         clearAllTextBox();
 
-        // Reset the party details display
         jLabelPartyName.setText("");
         jLabelPartyAddress.setText("");
         jLabelPartyCity.setText("");
@@ -1232,26 +1171,21 @@ public class LoanEntry extends javax.swing.JPanel {
         jLabelPartyLedgerBalance.setText("");
         jLabelPartyLastEntry.setText("");
 
-        // Set default date
         jTextField17.setText(LocalDate.now().toString());
         jTextField26.setText(LocalDate.now().toString());
-
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
         javax.swing.JTabbedPane tabbedPane = (javax.swing.JTabbedPane) this.getParent();
         if (tabbedPane != null) {
-            // Remove this tab
             tabbedPane.remove(this);
         }
-        // TODO add your handling code here:
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-
         System.out.println("interest date => " + jTextField1.getText());
         System.out.println("Estimated cost => " + jTextField2.getText());
         System.out.println("items location => " + jTextField6.getText());
@@ -1271,12 +1205,10 @@ public class LoanEntry extends javax.swing.JPanel {
         System.out.println("Item details => " + jTextField25.getText());
         System.out.println("start date => " + jTextField26.getText());
         System.out.println("weight type => " + jComboBox1.getSelectedItem());
-        JOptionPane.showMessageDialog(null, "int type" + jComboBox3.getSelectedItem());
 
         Logger.getLogger(DBController.class.getName()).log(Level.SEVERE, "interest date => " + jTextField1.getText());
 
         Object selectedItem = jComboBox2.getSelectedItem();
-        //jTextField17.getText()
 
         String entryDate = jTextField17.getText();
         String slipNo = jTextField18.getText().isEmpty() ? " " : jTextField18.getText();
@@ -1324,11 +1256,10 @@ public class LoanEntry extends javax.swing.JPanel {
                 reminders,
                 notes,
                 itemLocation,
-                "0.0" //intrest amount
+                "0.0"
         );
+        GetInterestAmount.getInterestAmount(partyName);
         clearAllTextBox();
-        //  GLOBAL_VARS.slip_number++;
-        // Increment slip number
         disableAllInputs();
     }
 
@@ -1336,10 +1267,8 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     private void jTextField118ActionPerformed(java.awt.event.ActionEvent evt) {
-
     }
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {
     }
-
 }
