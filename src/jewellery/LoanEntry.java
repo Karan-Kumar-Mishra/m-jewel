@@ -457,6 +457,8 @@ public class LoanEntry extends javax.swing.JPanel {
         jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 180, -1));
 
         jButton1.setText("Save");
+        jButton1.setBackground(Color.blue);
+        jButton1.setForeground(Color.white);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -642,7 +644,7 @@ public class LoanEntry extends javax.swing.JPanel {
 
         jPanel5.add(jTextField19, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 130, 300, -1));
 
-        jButton2.setText("Print");
+        jButton2.setText("New Enter");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -675,11 +677,11 @@ public class LoanEntry extends javax.swing.JPanel {
         });
         jPanel5.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 80, 90, -1));
 
-        jButton8.setText("New Entry");
+        jButton8.setText("Print");
         jButton8.setSize(40, 10);
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+               
             }
         });
         jPanel5.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 80, 90, -1));
@@ -892,11 +894,12 @@ public class LoanEntry extends javax.swing.JPanel {
         jComboBox3.setEnabled(false);
 
         jButton1.setEnabled(false);
-        jButton2.setEnabled(false);
+      ///  jButton2.setEnabled(false);
         jButton3.setEnabled(false);
         jButton5.setEnabled(false);
         jButton6.setEnabled(false);
         jButton7.setEnabled(false);
+        jButton8.setEnabled(false);
     }
 
     public void enableAllInputs() {
@@ -932,6 +935,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jButton5.setEnabled(true);
         jButton6.setEnabled(true);
         jButton7.setEnabled(true);
+        jButton8.setEnabled(true);
     }
 
     private void uploadImage() {
@@ -1082,7 +1086,7 @@ public class LoanEntry extends javax.swing.JPanel {
         frame.setVisible(true);
     }
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
         clearAllTextBox();
 
         jLabelPartyName.setText("");
@@ -1141,8 +1145,6 @@ public class LoanEntry extends javax.swing.JPanel {
     private void jTextField18ActionPerformed(java.awt.event.ActionEvent evt) {
     }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-    }
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
         ImageSelector();

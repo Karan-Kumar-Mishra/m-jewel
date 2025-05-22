@@ -62,6 +62,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import jewellery.GetInterestAmount;
+import static jewellery.GetInterestAmount.totalInterest;
 
 public class LoanBook extends javax.swing.JPanel {
 
@@ -258,8 +259,10 @@ public class LoanBook extends javax.swing.JPanel {
 
               
 
-                //displayData[i][6] = totalInterest;
+               // displayData[i][6] = totalInterest;
                 displayData[i][6] = data[i][21];
+               // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set INTEREST_AMOUNT=" + totalInterest + " where PARTY_NAME='" + data[i][2] + "';");
+
             } catch (NumberFormatException e) {
                 displayData[i][6] = 0.0;
             }
@@ -339,8 +342,8 @@ public class LoanBook extends javax.swing.JPanel {
                 .filter(row -> {
                     try {
                         // The date to compare is in the original data at index 1 (START_DATE)
-                        Object dateObj = row[1];
-
+                        Object dateObj = row[0];
+                         JOptionPane.showMessageDialog(this,"db date for compare=> "+row[0]);
                         if (dateObj == null) {
                             return false;
                         }
