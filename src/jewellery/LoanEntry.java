@@ -451,7 +451,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jButton6.setText("Add Guarantor Image");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                jButton6ActionPerformed(evt); 
             }
         });
         jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 180, -1));
@@ -459,6 +459,9 @@ public class LoanEntry extends javax.swing.JPanel {
         jButton1.setText("Save");
         jButton1.setBackground(Color.blue);
         jButton1.setForeground(Color.white);
+        jButton1.setFont(new Font("Serif", Font.PLAIN, 18));
+            
+            
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);

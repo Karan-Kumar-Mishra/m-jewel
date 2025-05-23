@@ -260,7 +260,8 @@ public class LoanBook extends javax.swing.JPanel {
               
 
                // displayData[i][6] = totalInterest;
-                displayData[i][6] = data[i][21];
+               
+                displayData[i][6] = Double.parseDouble(data[i][21].toString());
                // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set INTEREST_AMOUNT=" + totalInterest + " where PARTY_NAME='" + data[i][2] + "';");
 
             } catch (NumberFormatException e) {
@@ -276,7 +277,7 @@ public class LoanBook extends javax.swing.JPanel {
                         ? ((Number) displayData[i][6]).doubleValue()
                         : 0.00;
 
-                displayData[i][7] = totalInterest + loanAmt;
+                displayData[i][7] =  Double.parseDouble(data[i][21].toString()) + loanAmt;
             } catch (NumberFormatException e) {
                 displayData[i][7] = 0.0;
             }
@@ -343,7 +344,6 @@ public class LoanBook extends javax.swing.JPanel {
                     try {
                         // The date to compare is in the original data at index 1 (START_DATE)
                         Object dateObj = row[0];
-                         JOptionPane.showMessageDialog(this,"db date for compare=> "+row[0]);
                         if (dateObj == null) {
                             return false;
                         }

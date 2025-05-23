@@ -24,6 +24,7 @@ import jewellery.DBConnect;
 import jewellery.DatabaseTableCreator;
 import jewellery.DBController;
 import jewellery.GLOBAL_VARS;
+import jewellery.GetInterestAmount;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -1226,6 +1227,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
         LoanEntryDeleter.deleteLoanByPartyName(PartynameForDeletetion);
+        Double interestAmt=GetInterestAmount.getTotalInterest(partyName);
         InsertLoanDetails.insert(
                 entryDate,
                 slipNo,
@@ -1248,8 +1250,9 @@ public class UpdateLoan extends javax.swing.JFrame {
                 reminders,
                 notes,
                 itemLocation,
-                "0.0"
+                interestAmt.toString()
         );
+         GetInterestAmount.getInterestAmount(partyName);
         clearAllTextBox();
     }
 

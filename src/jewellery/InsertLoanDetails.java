@@ -67,9 +67,20 @@ public class InsertLoanDetails {
             }
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(null, "Invalid date or number format: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error adding loan details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        catch (java.sql.SQLException e) {
+            if (e.getErrorCode() == 23505) {
+                JOptionPane.showMessageDialog(null,
+                        "A loan entry with this Party name. already exists. Please use a different Party name.",
+                        "Party is already exists",
+                        JOptionPane.ERROR_MESSAGE);
+            } else {
+                // Handle other SQL exceptions
+                String errorDetails = "SQL Error adding loan details: " + e.getMessage()
+                        + "\nSQL State: " + e.getSQLState()
+                        + "\nError Code: " + e.getErrorCode();
+                JOptionPane.showMessageDialog(null, errorDetails, "SQL Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }
