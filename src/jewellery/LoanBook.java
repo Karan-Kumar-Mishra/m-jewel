@@ -81,6 +81,7 @@ public class LoanBook extends javax.swing.JPanel {
     };
     private Object[][] completeLoanData;
     public String paths = "";
+    long rowDays = 0;
 
     class DateRenderer extends DefaultTableCellRenderer {
 
@@ -132,7 +133,7 @@ public class LoanBook extends javax.swing.JPanel {
 
     public LoanBook() {
         try {
-        
+
             initComponents(); // Initialize all UI components first
 
             // Initialize date chooser before adding to panel
@@ -196,7 +197,6 @@ public class LoanBook extends javax.swing.JPanel {
             }
 
             // Calculate days for this row
-            long rowDays = 0;
             try {
                 if (data[i][1] != null) { // START_DATE is at index 1
                     String dateString = data[i][0].toString();
@@ -237,7 +237,6 @@ public class LoanBook extends javax.swing.JPanel {
                 displayData[i][5] = 0.0;
             }
             try {
-                
 
                 //FOR interest amount
                 double loanAmt = (data[i].length > 11 && data[i][12] != null)
@@ -257,12 +256,10 @@ public class LoanBook extends javax.swing.JPanel {
                     totalInterest = (dailyInterest * (rowDays)) * month;//mothly  
                 }
 
-              
-
-               // displayData[i][6] = totalInterest;
-               
-                displayData[i][6] = Double.parseDouble(data[i][21].toString());
-               // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set INTEREST_AMOUNT=" + totalInterest + " where PARTY_NAME='" + data[i][2] + "';");
+                // displayData[i][6] = totalInterest;
+                displayData[i][6] =GetInterestAmount.getInterestAmount(data[i][2].toString());
+                        
+                // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set INTEREST_AMOUNT=" + totalInterest + " where PARTY_NAME='" + data[i][2] + "';");
 
             } catch (NumberFormatException e) {
                 displayData[i][6] = 0.0;
@@ -277,7 +274,7 @@ public class LoanBook extends javax.swing.JPanel {
                         ? ((Number) displayData[i][6]).doubleValue()
                         : 0.00;
 
-                displayData[i][7] =  Double.parseDouble(data[i][21].toString()) + loanAmt;
+                displayData[i][7] = Double.parseDouble(data[i][21].toString()) + loanAmt;
             } catch (NumberFormatException e) {
                 displayData[i][7] = 0.0;
             }
@@ -688,12 +685,11 @@ public class LoanBook extends javax.swing.JPanel {
             java.sql.Date startDate = new java.sql.Date(parsedDate.getTime());
 
             // Calculate days between start date and current date
-            long days = (System.currentTimeMillis() - startDate.getTime()) / (1000 * 60 * 60 * 24);
-
             // Calculate interest values
             double dailyInterest = (loanAmount * interestRate / 100) / 30;
             double monthlyInterest = loanAmount * interestRate / 100;
-            double totalInterest = dailyInterest * days;
+            long month = rowDays / 30;
+            double totalInterest = (dailyInterest * rowDays) * month;
 
             // Format values with 2 decimal places
             DecimalFormat df = new DecimalFormat("#,##0.00");

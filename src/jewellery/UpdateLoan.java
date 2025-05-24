@@ -1050,7 +1050,7 @@ public class UpdateLoan extends javax.swing.JFrame {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         setVisible(true);
-        JOptionPane.showMessageDialog(null, "Button clicked!");
+       // JOptionPane.showMessageDialog(null, "Button clicked!");
     }
 
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1210,7 +1210,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         String startDate = jTextField26.getText().isEmpty() ? LocalDate.now().toString() : jTextField26.getText();
 
         String interestDatePercentage = jTextField1.getText().isEmpty() ? "0" : jTextField1.getText();
-         String interestType=jComboBox3.getSelectedItem().toString();
+        String interestType=jComboBox3.getSelectedItem().toString();
        
         String weightType = jComboBox1.getSelectedItem() == null ? " " : jComboBox1.getSelectedItem().toString();
         String goldWeight = jTextField20.getText().isEmpty() ? "0" : jTextField20.getText();
@@ -1252,7 +1252,7 @@ public class UpdateLoan extends javax.swing.JFrame {
                 itemLocation,
                 interestAmt.toString()
         );
-         GetInterestAmount.getInterestAmount(partyName);
+        GetInterestAmount.getInterestAmount(partyName);
         clearAllTextBox();
     }
 

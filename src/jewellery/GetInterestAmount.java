@@ -67,19 +67,19 @@ public class GetInterestAmount {
             Date currentDate = new Date();
 
             // Calculate days
-            long rowDays = (currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+            long rowDays = (System.currentTimeMillis() - startDate.getTime()) / (1000 * 60 * 60 * 24);
 
             // Calculate interest
             double dailyInterest = (loanAmt * intAmt / 100) / 30;
-
+            // JOptionPane.showMessageDialog(null, "dailyinterest  is=> " + dailyInterest);
             if (interestType.equals("Day")) {
-                totalInterest = (dailyInterest * (rowDays) / 30) * rowDays; // Daily
+                totalInterest = (dailyInterest * (rowDays) / 30) * rowDays;// Daily
 
             } else {
                 long month = rowDays / 30;
                 totalInterest = (dailyInterest * rowDays) * month; // Monthly
             }
-
+          //  JOptionPane.showMessageDialog(null, "total interest  is=> " + getTotalInterest(partyName));
             totalInterest = totalInterest - getTotalInterest(partyName);
 
             double updated_amount = 0.0;
@@ -88,9 +88,11 @@ public class GetInterestAmount {
                 updated_amount = loanAmt - Math.abs(totalInterest);
                 DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set AMOUNT_PAID=" + updated_amount + " where PARTY_NAME='" + partyName + "';");
                 totalInterest = 0;
-            }
-            DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set INTEREST_AMOUNT=" + totalInterest + " where PARTY_NAME='" + partyName + "';");
+            } else {
 
+              //  JOptionPane.showMessageDialog(null, "dailyinterest  is=> " + totalInterest);
+                DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set INTEREST_AMOUNT=" + totalInterest + " where PARTY_NAME='" + partyName + "';");
+            }
             return totalInterest;
 
         } catch (Exception e) {
