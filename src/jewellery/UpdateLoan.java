@@ -4,6 +4,9 @@
  */
 package jewellery;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -13,9 +16,7 @@ import java.sql.DriverManager;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+
 import jewellery.InsertLoanEntry;
 import jewellery.GetPartyName;
 import jewellery.getPartyDetailInLoan;
@@ -824,8 +825,8 @@ public class UpdateLoan extends javax.swing.JFrame {
                 if (textField == jTextField17) {
                     jTextField17.setText(LocalDate.now().toString());
                 } else if (textField == jTextField18) {
-                   // jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
-                  
+                    // jTextField18.setText(String.valueOf(GLOBAL_VARS.slip_number));
+
                 } else if (textField == jTextField26) {
                     jTextField26.setText(LocalDate.now().toString());
                 }
@@ -1050,7 +1051,7 @@ public class UpdateLoan extends javax.swing.JFrame {
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         setVisible(true);
-       // JOptionPane.showMessageDialog(null, "Button clicked!");
+        // JOptionPane.showMessageDialog(null, "Button clicked!");
     }
 
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1122,8 +1123,6 @@ public class UpdateLoan extends javax.swing.JFrame {
         jTextField26.setText(LocalDate.now().toString());
 
         // Increment slip number
-      
-   
     }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -1140,7 +1139,7 @@ public class UpdateLoan extends javax.swing.JFrame {
             String remarks,
             String startDate,
             String interestDatePercentage,
-            String interstType,  
+            String interstType,
             String weightType,
             String goldWeight,
             String purity,
@@ -1210,8 +1209,8 @@ public class UpdateLoan extends javax.swing.JFrame {
         String startDate = jTextField26.getText().isEmpty() ? LocalDate.now().toString() : jTextField26.getText();
 
         String interestDatePercentage = jTextField1.getText().isEmpty() ? "0" : jTextField1.getText();
-        String interestType=jComboBox3.getSelectedItem().toString();
-       
+        String interestType = jComboBox3.getSelectedItem().toString();
+
         String weightType = jComboBox1.getSelectedItem() == null ? " " : jComboBox1.getSelectedItem().toString();
         String goldWeight = jTextField20.getText().isEmpty() ? "0" : jTextField20.getText();
         String purity = jTextField23.getText().isEmpty() ? "0" : jTextField23.getText();
@@ -1226,8 +1225,16 @@ public class UpdateLoan extends javax.swing.JFrame {
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
+        List<Object> result = DBController.executeQuery("select INTEREST_AMOUNT from LOAN_ENTRY where PARTY_NAME = '" + partyName + "';");
+
         LoanEntryDeleter.deleteLoanByPartyName(PartynameForDeletetion);
-        Double interestAmt=GetInterestAmount.getTotalInterest(partyName);
+
+        String interestAmount = "0"; // Default value if no result is found
+
+        if (result != null && !result.isEmpty()) {
+            Object interestObj = result.get(0);
+            interestAmount = (interestObj != null) ? interestObj.toString() : "0";
+        }
         InsertLoanDetails.insert(
                 entryDate,
                 slipNo,
@@ -1250,9 +1257,9 @@ public class UpdateLoan extends javax.swing.JFrame {
                 reminders,
                 notes,
                 itemLocation,
-                interestAmt.toString()
+                interestAmount
         );
-        GetInterestAmount.getInterestAmount(partyName);
+        GetInterestAmount.updateAllInterestAmounts();
         clearAllTextBox();
     }
 
@@ -1260,7 +1267,7 @@ public class UpdateLoan extends javax.swing.JFrame {
     }
 
     private void jTextField118ActionPerformed(java.awt.event.ActionEvent evt) {
-     
+
     }
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {

@@ -1263,7 +1263,7 @@ public class LoanEntry extends javax.swing.JPanel {
                 itemLocation,
                 "0.0"
         );
-        GetInterestAmount.getInterestAmount(partyName);
+        GetInterestAmount.updateAllInterestAmounts();
         clearAllTextBox();
         disableAllInputs();
     }

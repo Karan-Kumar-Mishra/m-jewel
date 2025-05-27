@@ -1,105 +1,155 @@
 package jewellery;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
+import jewellery.DBController;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class GetInterestAmount {
 
-    public static double loanAmt;
-    public static double totalInterest;
+    public static BigDecimal RECEIPT_totalLoanAmount = BigDecimal.ZERO;
+    public static BigDecimal RECEIPT_totalInterestAmount = BigDecimal.ZERO;
 
-    public static double getTotalInterest(String partyName) {
-        try {
-            // Query the database for all receipts of the given party
-            String query = "SELECT INTREST_AMOUNT FROM LOAN_RECEIPT WHERE PARTY_NAME = '" + partyName + "'";
-            List<List<Object>> result = DBController.getDataFromTable(query);
+    public static void calculateTotalLoanAndInterest() {
+        List<Object> queryResult = DBController.executeQuery(
+                "SELECT LOAN_AMOUNT, INTREST_AMOUNT FROM LOAN_RECEIPT "
+        );
 
-            // Check if data was found
-            if (result == null || result.isEmpty()) {
-                return 0.0; // No receipts found for the party
-            }
+        // Each row has 2 columns (LOAN_AMOUNT, INTREST_AMOUNT)
+        int columnsPerRow = 2;
+        int rowCount = queryResult.size() / columnsPerRow;
 
-            // Sum the interest amounts
-            double totalInterest = 0.0;
-            for (List<Object> row : result) {
-                // INTREST_AMOUNT is the first column in the query result (index 0)
-                if (row.get(0) != null) {
-                    totalInterest += Double.parseDouble(row.get(0).toString());
-                }
-            }
+        if (rowCount > 0) {
+            // Get the last row
+            int lastRowIndex = (rowCount - 1) * columnsPerRow;
 
-            return totalInterest;
-
-        } catch (Exception e) {
-            System.err.println("Error calculating total interest for party " + partyName + ": " + e.getMessage());
-            return 0.0;
+            // Parse loan amount and interest amount from last row
+            RECEIPT_totalLoanAmount = parseBigDecimal(queryResult.get(lastRowIndex));
+            RECEIPT_totalInterestAmount = parseBigDecimal(queryResult.get(lastRowIndex + 1));
+        } else {
+            // No rows found, reset to zero
+            RECEIPT_totalLoanAmount = BigDecimal.ZERO;
+            RECEIPT_totalInterestAmount = BigDecimal.ZERO;
         }
+
+        BigDecimal grandTotal = RECEIPT_totalLoanAmount.add(RECEIPT_totalInterestAmount);
+
+        // Display results
+        String message = String.format(
+                "Loan Amount: %s%n"
+                + "Interest Amount: %s%n"
+                + "Grand Total: %s",
+                RECEIPT_totalLoanAmount.toString(),
+                RECEIPT_totalInterestAmount.toString(),
+                grandTotal.toString()
+        );
+
+        // JOptionPane.showMessageDialog(null, message, "Loan Receipt Summary", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static double getInterestAmount(String partyName) {
-        try {
-            // Query the database for loan data of the given party
-            String query = "SELECT START_DATE, INTEREST_DATE_PERCENTAGE , INTREST_TYPE , AMOUNT_PAID "
-                    + "FROM LOAN_ENTRY WHERE PARTY_NAME  = '" + partyName + "'";
-            List<List<Object>> result = DBController.getDataFromTable(query);
+    public static void updateAllInterestAmounts() {
+        Double totalInterest = 0.0;
+        Date startDate = new Date();
+        double interestDatePercentage = 0.0;
+        String interestType = "month";
+        double amountPaid = 0.0;
+        double interestAmount = 0.0;
+        String partyName = "";
 
-            // Check if data was found
-            if (result == null || result.isEmpty()) {
-                throw new Exception("Party name not found: " + partyName);
-            }
+        List<Object> queryResult = DBController.executeQuery(
+                "SELECT START_DATE, INTEREST_DATE_PERCENTAGE, INTREST_TYPE, AMOUNT_PAID, INTEREST_AMOUNT, PARTY_NAME FROM LOAN_ENTRY"
+        );
 
-            // Get the first matching record
-            List<Object> rowData = result.get(0);
+        // Each row has 6 columns
+        int columnsPerRow = 6;
+        int rowCount = queryResult.size() / columnsPerRow;
 
-            // Extract required fields
-            String startDateStr = rowData.get(0) != null ? rowData.get(0).toString() : "";
-            double intAmt = rowData.get(1) != null ? Double.parseDouble(rowData.get(1).toString()) : 0.00;
-            String interestType = rowData.get(2) != null ? rowData.get(2).toString() : "Month";
-            loanAmt = rowData.get(3) != null ? Double.parseDouble(rowData.get(3).toString()) : 0.00;
+        for (int i = 0; i < rowCount; i++) {
+            int baseIndex = i * columnsPerRow;
 
-            // Parse start date
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date startDate = dateFormat.parse(startDateStr);
+            // 1. Parse START_DATE (safe casting)
+            startDate = (Date) queryResult.get(baseIndex);
 
-            // Current date (May 19, 2025)
-            Date currentDate = new Date();
+            // 2. Parse numeric fields (handle both String and BigDecimal)
+            interestDatePercentage = parseNumber(queryResult.get(baseIndex + 1));
+            amountPaid = parseNumber(queryResult.get(baseIndex + 3));
+            interestAmount = parseNumber(queryResult.get(baseIndex + 4));
 
-            // Calculate days
+            // 3. Parse String fields
+            interestType = (String) queryResult.get(baseIndex + 2);
+            partyName = (String) queryResult.get(baseIndex + 5);
+
+            // Calculate days between now and start date
             long rowDays = (System.currentTimeMillis() - startDate.getTime()) / (1000 * 60 * 60 * 24);
 
             // Calculate interest
-            double dailyInterest = (loanAmt * intAmt / 100) / 30;
-            // JOptionPane.showMessageDialog(null, "dailyinterest  is=> " + dailyInterest);
-            if (interestType.equals("Day")) {
-                totalInterest = (dailyInterest * (rowDays) / 30) * rowDays;// Daily
+            double dailyInterest = (amountPaid * interestDatePercentage / 100) / 30;
 
+            if (interestType.equalsIgnoreCase("Day")) {
+                totalInterest += (dailyInterest * rowDays); // Daily interest
             } else {
-                long month = rowDays / 30;
-                totalInterest = (dailyInterest * rowDays) * month; // Monthly
+                long months = rowDays / 30;
+                totalInterest += (dailyInterest * 30 * months); // Monthly interest
             }
-          //  JOptionPane.showMessageDialog(null, "total interest  is=> " + getTotalInterest(partyName));
-            totalInterest = totalInterest - getTotalInterest(partyName);
 
-            double updated_amount = 0.0;
-            if (totalInterest <= 0) {
-                // now substract forn loan amount
-                updated_amount = loanAmt - Math.abs(totalInterest);
-                DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set AMOUNT_PAID=" + updated_amount + " where PARTY_NAME='" + partyName + "';");
-                totalInterest = 0;
-            } else {
+            calculateTotalLoanAndInterest();
+            BigDecimal finalInterestAmount = BigDecimal.ZERO;
 
-              //  JOptionPane.showMessageDialog(null, "dailyinterest  is=> " + totalInterest);
-                DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set INTEREST_AMOUNT=" + totalInterest + " where PARTY_NAME='" + partyName + "';");
+            finalInterestAmount = BigDecimal.valueOf(totalInterest).subtract(RECEIPT_totalInterestAmount);
+
+            BigDecimal finalLoanAmount = BigDecimal.valueOf(amountPaid).subtract(RECEIPT_totalLoanAmount);
+
+            if (finalInterestAmount.doubleValue() <= 0) {
+                finalLoanAmount = finalLoanAmount.subtract(finalInterestAmount.abs());
+                finalInterestAmount = BigDecimal.ZERO;
+                LocalDate currentDate = LocalDate.now();
+
+                // Define the desired format
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                String formattedDate = currentDate.format(formatter);
+                DBController.executeQueryUpdate("update  LOAN_ENTRY SET START_DATE ='" + formattedDate + "'  where PARTY_NAME = '" + partyName + "' ;  ");
             }
-            return totalInterest;
+            DBController.executeQueryUpdate("update  LOAN_ENTRY SET INTEREST_AMOUNT='" + finalInterestAmount + "' ,AMOUNT_PAID='" + finalLoanAmount + "' where PARTY_NAME = '" + partyName + "' ;  ");
+            JOptionPane.showMessageDialog(null, "Total Interest: " + finalInterestAmount + " loan amount :" + finalLoanAmount);
 
-        } catch (Exception e) {
-            System.err.println("Error calculating interest for party " + partyName + ": " + e.getMessage());
-            JOptionPane.showMessageDialog(null, "error amount is=> " + totalInterest);
-            return 0.0;
+        }
+
+    }
+
+    // Helper method to safely parse numbers (String or BigDecimal)
+    private static double parseNumber(Object value) {
+        if (value instanceof BigDecimal) {
+            return ((BigDecimal) value).doubleValue();
+        } else if (value instanceof String) {
+            return Double.parseDouble((String) value);
+        } else if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        } else {
+            throw new IllegalArgumentException("Cannot parse number from: " + value);
         }
     }
 
+    private static BigDecimal parseBigDecimal(Object value) {
+        if (value == null) {
+            return BigDecimal.ZERO;
+        }
+        if (value instanceof BigDecimal) {
+            return (BigDecimal) value;
+        }
+        if (value instanceof Number) {
+            return BigDecimal.valueOf(((Number) value).doubleValue());
+        }
+        if (value instanceof String) {
+            try {
+                return new BigDecimal((String) value);
+            } catch (NumberFormatException e) {
+                return BigDecimal.ZERO;
+            }
+        }
+        return BigDecimal.ZERO;
+    }
 }

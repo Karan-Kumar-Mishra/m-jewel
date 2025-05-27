@@ -559,7 +559,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
         jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
         jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
-        jPopupMenu1.setLocation(txtPartyName.getX() + 6, txtPartyName.getY() + 70);
+        jPopupMenu1.setLocation(txtPartyName.getX() + 6, txtPartyName.getY() + 250);
 
         spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
         jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
@@ -971,11 +971,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                 };
                 tableModel.addRow(newRow); // Directly add to table model
 
-                // 7. Optionally save to database (if implemented)
-                // Example: DBController.saveLoanReceipt(receiptNo, partyName, loanAmount,
-                // interestAmount, remarks, formattedDate, paymentMode);
-                // 8. Show success message
-                // In your jButton1ActionPerformed method:
+                // Prepare data for database insertion
                 List<Object> columnNames = new ArrayList<>();
                 columnNames.add("RECEIPT_NO");
                 columnNames.add("PARTY_NAME");
@@ -988,39 +984,35 @@ public class LoanReceipt extends javax.swing.JFrame {
                 List<Object> dataValues = new ArrayList<>();
                 dataValues.add(receiptNo.isEmpty() ? null : receiptNo);
                 dataValues.add(partyName);
-                dataValues.add(Double.parseDouble(loanAmountStr)); // As decimal
-                dataValues.add(Double.parseDouble(interestAmountStr)); // As decimal
+                dataValues.add(Double.parseDouble(loanAmountStr));
+                dataValues.add(Double.parseDouble(interestAmountStr));
                 dataValues.add(remarks);
-                dataValues.add(formattedDate); // yyyy-MM-dd format
+                dataValues.add(formattedDate);
                 dataValues.add(paymentMode);
 
                 boolean insertSuccess = DBController.insertDataIntoTable("LOAN_RECEIPT", columnNames, dataValues);
 
-                // Execute the query
-                List<Object> result = DBController.executeQuery("SELECT AMOUNT_PAID ,INTEREST_DATE_PERCENTAGE,INTREST_TYPE,START_DATE   FROM LOAN_ENTRY WHERE PARTY_NAME='" + partyName + "'");
+                // Get loan details for interest calculation
+                List<Object> result = DBController.executeQuery("SELECT AMOUNT_PAID ,INTEREST_DATE_PERCENTAGE,INTREST_TYPE,START_DATE FROM LOAN_ENTRY WHERE PARTY_NAME='" + partyName + "'");
 
-                double amountPaid = 0.0; // Default value if no results found
+                double amountPaid = 0.0;
                 double INTEREST_DATE_PERCENTAGE = 0.0;
                 String INTREST_TYPE = "";
                 String dateString = "";
 
                 if (!result.isEmpty()) {
                     try {
-                        // Get the first result (assuming one row returned)
                         Object value = result.get(0);
                         Object value2 = result.get(1);
                         Object value3 = result.get(2);
                         Object value4 = result.get(3);
 
-                        // Handle different possible number types
                         if (value instanceof Number) {
                             amountPaid = ((Number) value).doubleValue();
                             INTEREST_DATE_PERCENTAGE = ((Number) value2).doubleValue();
                             INTREST_TYPE = value3.toString();
                             dateString = value4.toString();
-
                         } else if (value != null) {
-                            // Try parsing if it's a string
                             amountPaid = Double.parseDouble(value.toString());
                         }
                     } catch (NumberFormatException e) {
@@ -1029,41 +1021,37 @@ public class LoanReceipt extends javax.swing.JFrame {
                                 "Data Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
-                    GetInterestAmount.getInterestAmount(partyName);
+                    GetInterestAmount.updateAllInterestAmounts();
                 }
 
-                // Now you can use amountPaid as a double
-//                JOptionPane.showMessageDialog(null, "amount is= " + amountPaid
-//                        + "INTEREST_DATE_PERCENTAGE = " + INTEREST_DATE_PERCENTAGE
-//                        + "INTREST_TYPE =" + INTREST_TYPE
-//                        + " dateString =" + dateString
-//                );
+                // Calculate interest
                 double dailyInterest = (amountPaid * INTEREST_DATE_PERCENTAGE / 100) / 30;
                 double totalInterest;
                 long rowDays = 0;
 
-                SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");//calculate the days
+                SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
                 java.util.Date parsedDate = dateFormat1.parse(dateString);
                 java.sql.Date startDate = new java.sql.Date(parsedDate.getTime());
                 rowDays = (System.currentTimeMillis() - startDate.getTime()) / (1000 * 60 * 60 * 24);
 
                 if (INTREST_TYPE.equals("Day")) {
-                    totalInterest = (dailyInterest * (rowDays) / 30) * rowDays;// dayley 
+                    totalInterest = (dailyInterest * (rowDays) / 30) * rowDays;
                 } else {
                     long month = rowDays / 30;
-                    totalInterest = (dailyInterest * (rowDays)) * month;//mothly  
+                    totalInterest = (dailyInterest * (rowDays)) * month;
                 }
 
-                //getting adjsment type
+                // Update loan amount if checkbox is selected
                 if (jCheckBox1.isSelected()) {
                     amountPaid = amountPaid - Double.parseDouble(loanAmountStr);
-                    DBController.executeQueryUpdate("UPDATE LOAN_ENTRY SET AMOUNT_PAID='" + amountPaid + "' WHERE PARTY_NAME ='" + partyName + "';");
+                    // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY SET AMOUNT_PAID='" + amountPaid + "' WHERE PARTY_NAME ='" + partyName + "';");
                 }
                 if (jCheckBox2.isSelected()) {
-                    //PENDING FOR INTEREST AMOUNT 
-                    // the int amt is not store in db it calculate while m-jewel is running ...
+                    // PENDING FOR INTEREST AMOUNT 
+                    // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY SET INTEREST_AMOUNT='" + interestAmountStr + "' WHERE PARTY_NAME ='" + partyName + "';");
                 }
 
+                // Show success message only once
                 if (insertSuccess) {
                     JOptionPane.showMessageDialog(
                             this,
@@ -1080,14 +1068,6 @@ public class LoanReceipt extends javax.swing.JFrame {
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Data saved successfully!\n\n" + confirmationMessage.replace("Please confirm", "Saved"),
-                        "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
-
-                // 9. Clear form after adding
-                clearTextbox();
             }
 
         } catch (Exception e) {
@@ -1100,7 +1080,6 @@ public class LoanReceipt extends javax.swing.JFrame {
         }
         jTextField1.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_RECEIPT") + 1));
         loadLoanReceiptData();
-
     }
 
     private void displayDataInTable(String[][] data) {
@@ -1200,7 +1179,6 @@ public class LoanReceipt extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField txtPartyName;
-   
 
     // End of variables declaration
 }

@@ -62,7 +62,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import jewellery.GetInterestAmount;
-import static jewellery.GetInterestAmount.totalInterest;
 
 public class LoanBook extends javax.swing.JPanel {
 
@@ -132,6 +131,7 @@ public class LoanBook extends javax.swing.JPanel {
     }
 
     public LoanBook() {
+        // GetInterestAmount.updateAllInterestAmounts();
         try {
 
             initComponents(); // Initialize all UI components first
@@ -256,10 +256,7 @@ public class LoanBook extends javax.swing.JPanel {
                     totalInterest = (dailyInterest * (rowDays)) * month;//mothly  
                 }
 
-                // displayData[i][6] = totalInterest;
-                displayData[i][6] =GetInterestAmount.getInterestAmount(data[i][2].toString());
-                        
-                // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY set INTEREST_AMOUNT=" + totalInterest + " where PARTY_NAME='" + data[i][2] + "';");
+                displayData[i][6] = data[i][21];
 
             } catch (NumberFormatException e) {
                 displayData[i][6] = 0.0;
@@ -274,7 +271,7 @@ public class LoanBook extends javax.swing.JPanel {
                         ? ((Number) displayData[i][6]).doubleValue()
                         : 0.00;
 
-                displayData[i][7] = Double.parseDouble(data[i][21].toString()) + loanAmt;
+                displayData[i][7] = Double.parseDouble(data[i][21].toString()) + Double.parseDouble(data[i][12].toString());
             } catch (NumberFormatException e) {
                 displayData[i][7] = 0.0;
             }
@@ -1114,7 +1111,7 @@ public class LoanBook extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-      private void showImagePopup(JFrame parent, java.awt.event.MouseEvent evt) {
+    private void showImagePopup(JFrame parent, java.awt.event.MouseEvent evt) {
         JXImageView source = (JXImageView) evt.getSource();
         String imagePath = (String) source.getClientProperty("imagePath");
 
@@ -1341,6 +1338,7 @@ public class LoanBook extends javax.swing.JPanel {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
         completeLoanData = GetLoanData.get();
+        //  GetInterestAmount.updateAllInterestAmounts();
     }// GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed

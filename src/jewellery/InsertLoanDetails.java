@@ -64,23 +64,12 @@ public class InsertLoanDetails {
             if (rowsInserted > 0) {
                 System.out.println("Loan details added successfully!");
                 JOptionPane.showMessageDialog(null, "Loan details added successfully! in loan details table");
-            }
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(null, "Invalid date or number format: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } 
-        catch (java.sql.SQLException e) {
-            if (e.getErrorCode() == 23505) {
-                JOptionPane.showMessageDialog(null,
-                        "A loan entry with this Party name. already exists. Please use a different Party name.",
-                        "Party is already exists",
-                        JOptionPane.ERROR_MESSAGE);
             } else {
-                // Handle other SQL exceptions
-                String errorDetails = "SQL Error adding loan details: " + e.getMessage()
-                        + "\nSQL State: " + e.getSQLState()
-                        + "\nError Code: " + e.getErrorCode();
-                JOptionPane.showMessageDialog(null, errorDetails, "SQL Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error while insert the data ");
             }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error while insert the data " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+
     }
 }
