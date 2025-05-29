@@ -693,7 +693,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnPurchaseRegister">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Pusrchase Register"/>
+            <Property name="text" type="java.lang.String" value="Purchase Register"/>
             <Property name="horizontalAlignment" type="int" value="2"/>
             <Property name="iconTextGap" type="int" value="20"/>
           </Properties>

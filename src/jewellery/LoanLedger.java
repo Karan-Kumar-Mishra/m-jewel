@@ -115,9 +115,9 @@ public class LoanLedger extends javax.swing.JFrame {
 
         tblPartyNameSuggestions = new javax.swing.JTable();
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {},
-                new String[] { "Party Name", "item", "Amount" }) {
-            boolean[] canEdit = new boolean[] { false, false, false };
+                new Object[][]{},
+                new String[]{"Party Name", "item", "Amount"}) {
+            boolean[] canEdit = new boolean[]{false, false, false};
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
@@ -135,7 +135,7 @@ public class LoanLedger extends javax.swing.JFrame {
         tblPartyNameSuggestions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
         jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
-        jPopupMenu1.setLocation(jTextField7.getX() + 6, jTextField7.getY() + 70);
+        jPopupMenu1.setLocation(jTextField7.getX() + 230, jTextField7.getY() + 120);
 
         spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
         jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
@@ -143,10 +143,10 @@ public class LoanLedger extends javax.swing.JFrame {
 
         // Updated table structure for Loan and Interest sections
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {},
-                new String[] {
-                        "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance", // Loan Section
-                        "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance" // Interest Section
+                new Object[][]{},
+                new String[]{
+                    "Sno.", "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance", // Loan Section
+                    "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance" // Interest Section
                 }));
     }
 
@@ -235,10 +235,10 @@ public class LoanLedger extends javax.swing.JFrame {
                 // Fix: Use the correct column index for loan amount (assuming it's index 2)
                 String loanAmount = (suggestion.get(2) == null) ? "0" : suggestion.get(2).toString();
 
-                suggestionsTable.addRow(new Object[] {
-                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
-                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
-                        loanAmount // Directly use the loan amount from the query result
+                suggestionsTable.addRow(new Object[]{
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
+                    loanAmount // Directly use the loan amount from the query result
                 });
             } catch (Exception ex) {
                 Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -590,8 +590,8 @@ public class LoanLedger extends javax.swing.JFrame {
             }
 
             // Loan entry query
-            String loanEntryQuery = "SELECT ENTRY_DATE, AMOUNT_PAID, INTEREST_AMOUNT, REMARKS " +
-                    "FROM LOAN_ENTRY WHERE PARTY_NAME = ? AND ENTRY_DATE BETWEEN ? AND ?";
+            String loanEntryQuery = "SELECT ENTRY_DATE, AMOUNT_PAID, INTEREST_AMOUNT, REMARKS "
+                    + "FROM LOAN_ENTRY WHERE PARTY_NAME = ? AND ENTRY_DATE BETWEEN ? AND ?";
             List<List<Object>> loanEntries = new ArrayList<>();
             try (PreparedStatement pstmt = conn.prepareStatement(loanEntryQuery)) {
                 pstmt.setString(1, partyName);
@@ -616,8 +616,8 @@ public class LoanLedger extends javax.swing.JFrame {
             }
 
             // Loan receipt query
-            String loanReceiptQuery = "SELECT TRANSACTION_DATE, LOAN_AMOUNT, INTREST_AMOUNT, REMARKS " +
-                    "FROM LOAN_RECEIPT WHERE PARTY_NAME = ? AND TRANSACTION_DATE BETWEEN ? AND ?";
+            String loanReceiptQuery = "SELECT TRANSACTION_DATE, LOAN_AMOUNT, INTREST_AMOUNT, REMARKS "
+                    + "FROM LOAN_RECEIPT WHERE PARTY_NAME = ? AND TRANSACTION_DATE BETWEEN ? AND ?";
             List<List<Object>> loanReceipts = new ArrayList<>();
             try (PreparedStatement pstmt = conn.prepareStatement(loanReceiptQuery)) {
                 pstmt.setString(1, partyName);
@@ -656,6 +656,7 @@ public class LoanLedger extends javax.swing.JFrame {
             double interestBalance = 0.0;
 
             // Process Loan Entries (Dr. for Loan and Interest)
+            long sno = 0;
             for (List<Object> row : loanEntries) {
                 String date = row.get(0) != null ? row.get(0).toString() : "";
                 String remarks = row.get(3) != null ? row.get(3).toString() : "";
@@ -668,12 +669,24 @@ public class LoanLedger extends javax.swing.JFrame {
                 totalLoanDr += loanDr;
                 totalInterestDr += interestDr;
 
-                tableModel.addRow(new Object[] {
-                        date, remarks, String.format("%.2f", loanDr), "0.00", String.format("%.2f", loanBalance), // Loan
-                                                                                                                  // Section
-                        date, remarks, String.format("%.2f", interestDr), "0.00", String.format("%.2f", interestBalance) // Interest
-                                                                                                                         // Section
+                tableModel.addRow(new Object[]{
+                    sno++, date, remarks, String.format("%.2f", loanDr), "0.00", String.format("%.2f", loanBalance), // Loan
+                    // Section
+                    date, remarks, String.format("%.2f", interestDr), "0.00", String.format("%.2f", interestBalance) // Interest
+                // Section
                 });
+                DBController.executeQueryUpdate("INSERT INTO LOAN_LEDGER  VALUES ("
+                        + sno + ", '"
+                        + date + "', '"
+                        + remarks + "', "
+                        + String.format("%.2f", loanDr) + ", '0.00', "
+                        + String.format("%.2f", loanBalance) + ", '"
+                        + date + "', '"
+                        + remarks + "', "
+                        + String.format("%.2f", interestDr) + ", '0.00', "
+                        + String.format("%.2f", interestBalance) + ");");
+//            
+
             }
 
             // Process Loan Receipts (Cr. for Loan and Interest)
@@ -689,12 +702,22 @@ public class LoanLedger extends javax.swing.JFrame {
                 totalLoanCr += loanCr;
                 totalInterestCr += interestCr;
 
-                tableModel.addRow(new Object[] {
-                        date, remarks, "0.00", String.format("%.2f", loanCr), String.format("%.2f", loanBalance), // Loan
-                                                                                                                  // Section
-                        date, remarks, "0.00", String.format("%.2f", interestCr), String.format("%.2f", interestBalance) // Interest
-                                                                                                                         // Section
+                tableModel.addRow(new Object[]{
+                    sno++, date, remarks, "0.00", String.format("%.2f", loanCr), String.format("%.2f", loanBalance), // Loan
+                    // Section
+                    date, remarks, "0.00", String.format("%.2f", interestCr), String.format("%.2f", interestBalance) // Interest
+                // Section
                 });
+                DBController.executeQueryUpdate("INSERT INTO LOAN_LEDGER  VALUES ("
+                        + sno + ", '"
+                        + date + "', '"
+                        + remarks + "', "
+                        + String.format("%.2f", loanCr) + ", '0.00', "
+                        + String.format("%.2f", loanBalance) + ", '"
+                        + date + "', '"
+                        + remarks + "', "
+                        + String.format("%.2f", interestCr) + ", '0.00', "
+                        + String.format("%.2f", interestBalance) + ");");
             }
 
             // Update summary fields

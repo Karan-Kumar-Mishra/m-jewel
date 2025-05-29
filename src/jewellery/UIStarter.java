@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import javax.swing.SwingUtilities;
+import jewellery.DatabaseTableCreator;
 
 public class UIStarter extends javax.swing.JFrame {
  
@@ -21,6 +22,7 @@ public class UIStarter extends javax.swing.JFrame {
         //new PurchaseScreen().setVisible(true);
         //// new DayBookScreen.setVisible(true);
         new RedesignedLauncher().setVisible(true);
+        DatabaseTableCreator.create();
 
     }
     

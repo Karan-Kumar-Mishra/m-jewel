@@ -572,7 +572,7 @@ public class DashBoardScreen extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel3.setText("BUILD DATE :");
 
-        btnPurchaseRegister.setText("Pusrchase Register");
+        btnPurchaseRegister.setText("Purchase Register");
         btnPurchaseRegister.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnPurchaseRegister.setIconTextGap(20);
         btnPurchaseRegister.addActionListener(new java.awt.event.ActionListener() {

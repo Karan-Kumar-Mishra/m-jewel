@@ -240,26 +240,27 @@ public class DBController {
     }
 
     public static int executeQueryUpdate(String query) {
-    Logger.getLogger(DBController.class.getName()).log(Level.INFO,
-            "executeUpdate() method called!");
+        Logger.getLogger(DBController.class.getName()).log(Level.INFO,
+                "executeUpdate() method called!");
 
-    int rowsAffected = 0;
-    
-    if (isDBConnected) {
-        try {
-            statement = dbConnection.createStatement();
-            rowsAffected = statement.executeUpdate(query);
-        } catch (SQLException ex) {
-            Logger.getLogger(DBController.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, ex.getMessage());
+        int rowsAffected = 0;
+
+        if (isDBConnected) {
+            try {
+                statement = dbConnection.createStatement();
+                rowsAffected = statement.executeUpdate(query);
+            } catch (SQLException ex) {
+                Logger.getLogger(DBController.class.getName()).log(Level.SEVERE, null, ex);
+              //  JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
         }
+
+        Logger.getLogger(DBController.class.getName()).log(Level.INFO,
+                "executeUpdate() method finished, rows affected: " + rowsAffected);
+
+        return rowsAffected;
     }
 
-    Logger.getLogger(DBController.class.getName()).log(Level.INFO,
-            "executeUpdate() method finished, rows affected: " + rowsAffected);
-
-    return rowsAffected;
-}
     public static List<List<Object>> getDataFromTableforcompany(String query) {
         List<List<Object>> tableData = new ArrayList<>();
 
