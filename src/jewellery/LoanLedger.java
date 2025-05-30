@@ -556,187 +556,293 @@ public class LoanLedger extends javax.swing.JFrame {
         return totalcreditAmount;
     }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        try {
-            // Validate dates
-            if (jDateChooser1.getDate() == null || jDateChooser2.getDate() == null) {
-                JOptionPane.showMessageDialog(this, "Please select both start and end dates.");
-                return;
+private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    try {
+        // Validate dates
+        if (jDateChooser1.getDate() == null || jDateChooser2.getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Please select both start and end dates.");
+            return;
+        }
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Use SQL-compatible format
+        String startDate = sdf.format(jDateChooser1.getDate());
+        String endDate = sdf.format(jDateChooser2.getDate());
+
+        // Get party name
+        String partyName = jTextField7.getText().trim();
+        if (partyName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a party name.");
+            return;
+        }
+
+        // Ensure database connection
+        if (!DBController.isDatabaseConnected()) {
+            DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
+                    DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
+        }
+
+        // Get connection from DBConnect
+        Connection conn = DBConnect.connect();
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this, "Failed to establish database connection.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Initialize table model and totals
+        DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
+        tableModel.setRowCount(0); // Clear existing data
+        double totalLoanDr = 0.0;
+        double totalLoanCr = 0.0;
+        double totalInterestDr = 0.0;
+        double totalInterestCr = 0.0;
+        double loanBalance = 0.0;
+        double interestBalance = 0.0;
+
+        // Loan entry query
+        String loanEntryQuery = "SELECT ENTRY_DATE, AMOUNT_PAID, INTEREST_AMOUNT, REMARKS "
+                + "FROM LOAN_ENTRY WHERE PARTY_NAME = ? AND ENTRY_DATE BETWEEN ? AND ?";
+        List<List<Object>> loanEntries = new ArrayList<>();
+        try (PreparedStatement pstmt = conn.prepareStatement(loanEntryQuery)) {
+            pstmt.setString(1, partyName);
+            pstmt.setString(2, startDate);
+            pstmt.setString(3, endDate);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                List<Object> row = new ArrayList<>();
+                row.add(rs.getString("ENTRY_DATE"));
+                row.add(rs.getDouble("AMOUNT_PAID"));
+                row.add(rs.getDouble("INTEREST_AMOUNT"));
+                row.add(rs.getString("REMARKS"));
+                loanEntries.add(row);
             }
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Use SQL-compatible format
-            String startDate = sdf.format(jDateChooser1.getDate());
-            String endDate = sdf.format(jDateChooser2.getDate());
-
-            // Get party name
-            String partyName = jTextField7.getText().trim();
-            if (partyName.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter a party name.");
-                return;
-            }
-
-            // Ensure database connection
-            if (!DBController.isDatabaseConnected()) {
-                DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
-                        DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
-            }
-
-            // Get connection from DBConnect
-            Connection conn = DBConnect.connect();
-            if (conn == null) {
-                JOptionPane.showMessageDialog(this, "Failed to establish database connection.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Loan entry query
-            String loanEntryQuery = "SELECT ENTRY_DATE, AMOUNT_PAID, INTEREST_AMOUNT, REMARKS "
-                    + "FROM LOAN_ENTRY WHERE PARTY_NAME = ? AND ENTRY_DATE BETWEEN ? AND ?";
-            List<List<Object>> loanEntries = new ArrayList<>();
-            try (PreparedStatement pstmt = conn.prepareStatement(loanEntryQuery)) {
-                pstmt.setString(1, partyName);
-                pstmt.setString(2, startDate);
-                pstmt.setString(3, endDate);
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    List<Object> row = new ArrayList<>();
-                    row.add(rs.getString("ENTRY_DATE"));
-                    row.add(rs.getDouble("AMOUNT_PAID"));
-                    row.add(rs.getDouble("INTEREST_AMOUNT"));
-                    row.add(rs.getString("REMARKS"));
-                    loanEntries.add(row);
-                }
-                rs.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error fetching loan entries", ex);
-                JOptionPane.showMessageDialog(this, "Error fetching loan entries: " + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                conn.close();
-                return;
-            }
-
-            // Loan receipt query
-            String loanReceiptQuery = "SELECT TRANSACTION_DATE, LOAN_AMOUNT, INTREST_AMOUNT, REMARKS "
-                    + "FROM LOAN_RECEIPT WHERE PARTY_NAME = ? AND TRANSACTION_DATE BETWEEN ? AND ?";
-            List<List<Object>> loanReceipts = new ArrayList<>();
-            try (PreparedStatement pstmt = conn.prepareStatement(loanReceiptQuery)) {
-                pstmt.setString(1, partyName);
-                pstmt.setString(2, startDate);
-                pstmt.setString(3, endDate);
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    List<Object> row = new ArrayList<>();
-                    row.add(rs.getString("TRANSACTION_DATE"));
-                    row.add(rs.getDouble("LOAN_AMOUNT"));
-                    row.add(rs.getDouble("INTREST_AMOUNT"));
-                    row.add(rs.getString("REMARKS"));
-                    loanReceipts.add(row);
-                }
-                rs.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error fetching loan receipts", ex);
-                JOptionPane.showMessageDialog(this, "Error fetching loan receipts: " + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                conn.close();
-                return;
-            }
-
-            // Close connection
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error fetching loan entries", ex);
+            JOptionPane.showMessageDialog(this, "Error fetching loan entries: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
             conn.close();
+            return;
+        }
 
-            DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
-            tableModel.setRowCount(0); // Clear existing data
+        // Loan receipt query
+        String loanReceiptQuery = "SELECT TRANSACTION_DATE, LOAN_AMOUNT, INTREST_AMOUNT, REMARKS "
+                + "FROM LOAN_RECEIPT WHERE PARTY_NAME = ? AND TRANSACTION_DATE BETWEEN ? AND ?";
+        List<List<Object>> loanReceipts = new ArrayList<>();
+        try (PreparedStatement pstmt = conn.prepareStatement(loanReceiptQuery)) {
+            pstmt.setString(1, partyName);
+            pstmt.setString(2, startDate);
+            pstmt.setString(3, endDate);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                List<Object> row = new ArrayList<>();
+                row.add(rs.getString("TRANSACTION_DATE"));
+                row.add(rs.getDouble("LOAN_AMOUNT"));
+                row.add(rs.getDouble("INTREST_AMOUNT"));
+                row.add(rs.getString("REMARKS"));
+                loanReceipts.add(row);
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error fetching loan receipts", ex);
+            JOptionPane.showMessageDialog(this, "Error fetching loan receipts: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            conn.close();
+            return;
+        }
 
-            // Initialize totals
-            double totalLoanDr = 0.0;
-            double totalLoanCr = 0.0;
-            double totalInterestDr = 0.0;
-            double totalInterestCr = 0.0;
-            double loanBalance = 0.0;
-            double interestBalance = 0.0;
+        // Determine the next SNO
+        long sno = 1; // Start with 1, will adjust based on LOAN_LEDGER later if needed
+        String maxSnoQuery = "SELECT MAX(sno) FROM LOAN_LEDGER";
+        try (PreparedStatement pstmt = conn.prepareStatement(maxSnoQuery)) {
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                sno = rs.getLong(1) + 1; // Get next SNO
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error fetching max SNO", ex);
+        }
 
-            // Process Loan Entries (Dr. for Loan and Interest)
-            long sno = 0;
-            for (List<Object> row : loanEntries) {
-                String date = row.get(0) != null ? row.get(0).toString() : "";
-                String remarks = row.get(3) != null ? row.get(3).toString() : "";
-                double loanDr = row.get(1) != null ? Double.parseDouble(row.get(1).toString()) : 0.0;
-                double interestDr = row.get(2) != null ? Double.parseDouble(row.get(2).toString()) : 0.0;
+        // Check query for LOAN_LEDGER duplicates
+        String checkDuplicateQuery = "SELECT COUNT(*) FROM LOAN_LEDGER WHERE DATE1 = ? AND REMARKS1 = ? AND DR_AMT1 = ? AND CR_AMT1 = ? AND DATE2 = ? AND REMARKS2 = ? AND DR_AMT2 = ? AND CR_AMT2 = ?";
 
+        // Process Loan Entries (Dr. for Loan and Interest)
+        for (List<Object> row : loanEntries) {
+            String date = row.get(0) != null ? row.get(0).toString() : "";
+            String remarks = row.get(3) != null ? row.get(3).toString() : "";
+            double loanDr = row.get(1) != null ? Double.parseDouble(row.get(1).toString()) : 0.0;
+            double interestDr = row.get(2) != null ? Double.parseDouble(row.get(2).toString()) : 0.0;
+
+            // Check for duplicate in LOAN_LEDGER
+            boolean isDuplicate = false;
+            try (PreparedStatement pstmt = conn.prepareStatement(checkDuplicateQuery)) {
+                pstmt.setString(1, date);
+                pstmt.setString(2, remarks);
+                pstmt.setDouble(3, loanDr);
+                pstmt.setDouble(4, 0.0);
+                pstmt.setString(5, date);
+                pstmt.setString(6, remarks);
+                pstmt.setDouble(7, interestDr);
+                pstmt.setDouble(8, 0.0);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    isDuplicate = true;
+                }
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error checking duplicate loan entry", ex);
+                continue; // Skip insertion on error
+            }
+
+            if (!isDuplicate) {
                 loanBalance += loanDr;
                 interestBalance += interestDr;
 
                 totalLoanDr += loanDr;
                 totalInterestDr += interestDr;
 
-                tableModel.addRow(new Object[]{
-                    sno++, date, remarks, String.format("%.2f", loanDr), "0.00", String.format("%.2f", loanBalance), // Loan
-                    // Section
-                    date, remarks, String.format("%.2f", interestDr), "0.00", String.format("%.2f", interestBalance) // Interest
-                // Section
-                });
-                DBController.executeQueryUpdate("INSERT INTO LOAN_LEDGER  VALUES ("
-                        + sno + ", '"
-                        + date + "', '"
-                        + remarks + "', "
-                        + String.format("%.2f", loanDr) + ", '0.00', "
-                        + String.format("%.2f", loanBalance) + ", '"
-                        + date + "', '"
-                        + remarks + "', "
-                        + String.format("%.2f", interestDr) + ", '0.00', "
-                        + String.format("%.2f", interestBalance) + ");");
-//            
+                // Insert into LOAN_LEDGER
+                DBController.executeQueryUpdate(
+                        "INSERT INTO LOAN_LEDGER (sno, DATE1, REMARKS1, DR_AMT1, CR_AMT1, BALANCE1, "
+                                + "DATE2, REMARKS2, DR_AMT2, CR_AMT2, BALANCE2) VALUES ("
+                                + sno + ", '" + date + "', '" + remarks + "', "
+                                + String.format("%.2f", loanDr) + ", '0.00', "
+                                + String.format("%.2f", loanBalance) + ", '"
+                                + date + "', '" + remarks + "', "
+                                + String.format("%.2f", interestDr) + ", '0.00', "
+                                + String.format("%.2f", interestBalance) + ");");
+                sno++;
+            }
+        }
 
+        // Process Loan Receipts (Cr. for Loan and Interest)
+        for (List<Object> row : loanReceipts) {
+            String date = row.get(0) != null ? row.get(0).toString() : "";
+            String remarks = row.get(3) != null ? row.get(3).toString() : "";
+            double loanCr = row.get(1) != null ? Double.parseDouble(row.get(1).toString()) : 0.0;
+            double interestCr = row.get(2) != null ? Double.parseDouble(row.get(2).toString()) : 0.0;
+
+            // Check for duplicate in LOAN_LEDGER
+            boolean isDuplicate = false;
+            try (PreparedStatement pstmt = conn.prepareStatement(checkDuplicateQuery)) {
+                pstmt.setString(1, date);
+                pstmt.setString(2, remarks);
+                pstmt.setDouble(3, 0.0);
+                pstmt.setDouble(4, loanCr);
+                pstmt.setString(5, date);
+                pstmt.setString(6, remarks);
+                pstmt.setDouble(7, 0.0);
+                pstmt.setDouble(8, interestCr);
+                ResultSet rs = pstmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    isDuplicate = true;
+                }
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error checking duplicate loan receipt", ex);
+                continue; // Skip insertion on error
             }
 
-            // Process Loan Receipts (Cr. for Loan and Interest)
-            for (List<Object> row : loanReceipts) {
-                String date = row.get(0) != null ? row.get(0).toString() : "";
-                String remarks = row.get(3) != null ? row.get(3).toString() : "";
-                double loanCr = row.get(1) != null ? Double.parseDouble(row.get(1).toString()) : 0.0;
-                double interestCr = row.get(2) != null ? Double.parseDouble(row.get(2).toString()) : 0.0;
-
+            if (!isDuplicate) {
                 loanBalance -= loanCr;
                 interestBalance -= interestCr;
 
                 totalLoanCr += loanCr;
                 totalInterestCr += interestCr;
 
-                tableModel.addRow(new Object[]{
-                    sno++, date, remarks, "0.00", String.format("%.2f", loanCr), String.format("%.2f", loanBalance), // Loan
-                    // Section
-                    date, remarks, "0.00", String.format("%.2f", interestCr), String.format("%.2f", interestBalance) // Interest
-                // Section
-                });
-                DBController.executeQueryUpdate("INSERT INTO LOAN_LEDGER  VALUES ("
-                        + sno + ", '"
-                        + date + "', '"
-                        + remarks + "', "
-                        + String.format("%.2f", loanCr) + ", '0.00', "
-                        + String.format("%.2f", loanBalance) + ", '"
-                        + date + "', '"
-                        + remarks + "', "
-                        + String.format("%.2f", interestCr) + ", '0.00', "
-                        + String.format("%.2f", interestBalance) + ");");
+                // Insert into LOAN_LEDGER
+                DBController.executeQueryUpdate(
+                        "INSERT INTO LOAN_LEDGER (sno, DATE1, REMARKS1, DR_AMT1, CR_AMT1, BALANCE1, "
+                                + "DATE2, REMARKS2, DR_AMT2, CR_AMT2, BALANCE2) VALUES ("
+                                + sno + ", '" + date + "', '" + remarks + "', '0.00', "
+                                + String.format("%.2f", loanCr) + ", "
+                                + String.format("%.2f", loanBalance) + ", '"
+                                + date + "', '" + remarks + "', '0.00', "
+                                + String.format("%.2f", interestCr) + ", "
+                                + String.format("%.2f", interestBalance) + ");");
+                sno++;
             }
-
-            // Update summary fields
-            jTextField1.setText(String.format("%.2f", totalLoanDr)); // Total Loan Dr.
-            jTextField2.setText(String.format("%.2f", totalLoanCr)); // Total Loan Cr.
-            jTextField3.setText(String.format("%.2f", loanBalance)); // Loan Balance
-            jTextField6.setText(String.format("%.2f", totalInterestDr)); // Total Interest Dr.
-            jTextField5.setText(String.format("%.2f", totalInterestCr)); // Total Interest Cr.
-            jTextField4.setText(String.format("%.2f", interestBalance)); // Interest Balance
-
-            JOptionPane.showMessageDialog(this, "Data loaded successfully!");
-
-        } catch (Exception ex) {
-            Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error in jButton1ActionPerformed", ex);
-            JOptionPane.showMessageDialog(this, "Error fetching data: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
 
+        // Loan ledger query (load last)
+        String loanLedgerQuery = "SELECT sno, DATE1, REMARKS1, DR_AMT1, CR_AMT1, BALANCE1, "
+                + "DATE2, REMARKS2, DR_AMT2, CR_AMT2, BALANCE2 "
+                + "FROM LOAN_LEDGER WHERE DATE1 BETWEEN ? AND ? OR DATE2 BETWEEN ? AND ?";
+        List<List<Object>> loanLedgerEntries = new ArrayList<>();
+        try (PreparedStatement pstmt = conn.prepareStatement(loanLedgerQuery)) {
+            pstmt.setString(1, startDate);
+            pstmt.setString(2, endDate);
+            pstmt.setString(3, startDate);
+            pstmt.setString(4, endDate);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                List<Object> row = new ArrayList<>();
+                row.add(rs.getLong("sno"));
+                row.add(rs.getString("DATE1"));
+                row.add(rs.getString("REMARKS1"));
+                row.add(rs.getDouble("DR_AMT1"));
+                row.add(rs.getDouble("CR_AMT1"));
+                row.add(rs.getDouble("BALANCE1"));
+                row.add(rs.getString("DATE2"));
+                row.add(rs.getString("REMARKS2"));
+                row.add(rs.getDouble("DR_AMT2"));
+                row.add(rs.getDouble("CR_AMT2"));
+                row.add(rs.getDouble("BALANCE2"));
+                loanLedgerEntries.add(row);
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error fetching loan ledger entries",
+                    ex);
+            JOptionPane.showMessageDialog(this, "Error fetching loan ledger entries: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            conn.close();
+            return;
+        }
+
+        // Close connection
+        conn.close();
+
+        // Process Loan Ledger Entries (display records)
+        for (List<Object> row : loanLedgerEntries) {
+            long ledgerSno = row.get(0) != null ? Long.parseLong(row.get(0).toString()) : 0;
+            String date1 = row.get(1) != null ? row.get(1).toString() : "";
+            String remarks1 = row.get(2) != null ? row.get(2).toString() : "";
+            double loanDr = row.get(3) != null ? Double.parseDouble(row.get(3).toString()) : 0.0;
+            double loanCr = row.get(4) != null ? Double.parseDouble(row.get(4).toString()) : 0.0;
+            double loanBal = row.get(5) != null ? Double.parseDouble(row.get(5).toString()) : 0.0;
+            String date2 = row.get(6) != null ? row.get(6).toString() : "";
+            String remarks2 = row.get(7) != null ? row.get(7).toString() : "";
+            double interestDr = row.get(8) != null ? Double.parseDouble(row.get(8).toString()) : 0.0;
+            double interestCr = row.get(9) != null ? Double.parseDouble(row.get(9).toString()) : 0.0;
+            double interestBal = row.get(10) != null ? Double.parseDouble(row.get(10).toString()) : 0.0;
+
+            // Add to table
+            tableModel.addRow(new Object[]{
+                    ledgerSno, date1, remarks1, String.format("%.2f", loanDr), String.format("%.2f", loanCr),
+                    String.format("%.2f", loanBal),
+                    date2, remarks2, String.format("%.2f", interestDr), String.format("%.2f", interestCr),
+                    String.format("%.2f", interestBal)
+            });
+        }
+
+        // Update summary fields
+        jTextField1.setText(String.format("%.2f", totalLoanDr)); // Total Loan Dr.
+        jTextField2.setText(String.format("%.2f", totalLoanCr)); // Total Loan Cr.
+        jTextField3.setText(String.format("%.2f", loanBalance)); // Loan Balance
+        jTextField6.setText(String.format("%.2f", totalInterestDr)); // Total Interest Dr.
+        jTextField5.setText(String.format("%.2f", totalInterestCr)); // Total Interest Cr.
+        jTextField4.setText(String.format("%.2f", interestBalance)); // Interest Balance
+
+        JOptionPane.showMessageDialog(this, "Data loaded successfully!");
+
+    } catch (Exception ex) {
+        Logger.getLogger(LoanLedger.class.getName()).log(Level.SEVERE, "Error in jButton1ActionPerformed", ex);
+        JOptionPane.showMessageDialog(this, "Error fetching data: " + ex.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }// GEN-LAST:event_jTextField2ActionPerformed
