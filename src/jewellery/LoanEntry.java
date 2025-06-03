@@ -1264,6 +1264,7 @@ public class LoanEntry extends javax.swing.JPanel {
                 "0.0"
         );
         GetInterestAmount.updateAllInterestAmounts();
+        GetInterestAmount.processAllLoanEntries();
         clearAllTextBox();
         disableAllInputs();
     }

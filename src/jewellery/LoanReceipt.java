@@ -61,6 +61,7 @@ public class LoanReceipt extends javax.swing.JFrame {
 
     public LoanReceipt() {
         DatabaseTableCreator.create();
+       // GetInterestAmount.processAllLoanEntries();
         initComponents();
         try {
             Connection cd = DBConnect.connect();
@@ -1080,6 +1081,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         }
         jTextField1.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_RECEIPT") + 1));
         loadLoanReceiptData();
+        GetInterestAmount.processAllLoanEntries();
     }
 
     private void displayDataInTable(String[][] data) {

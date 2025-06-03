@@ -53,6 +53,7 @@ public class DatabaseTableCreator {
             String createLoanLedgertTable = """
                 CREATE TABLE IF NOT EXISTS LOAN_LEDGER (
                     sno VARCHAR(100) PRIMARY KEY,
+                    PARTY_NAME VARCHAR(100) NOT NULL,                     
                     DATE1 DATE,
                     REMARKS1 VARCHAR(100),
                     DR_AMT1 VARCHAR(100),

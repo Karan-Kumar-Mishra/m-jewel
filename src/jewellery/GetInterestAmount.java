@@ -8,6 +8,21 @@ import javax.swing.JOptionPane;
 import jewellery.DBController;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class GetInterestAmount {
 
@@ -16,8 +31,7 @@ public class GetInterestAmount {
 
     public static void calculateTotalLoanAndInterest() {
         List<Object> queryResult = DBController.executeQuery(
-                "SELECT LOAN_AMOUNT, INTREST_AMOUNT FROM LOAN_RECEIPT "
-        );
+                "SELECT LOAN_AMOUNT, INTREST_AMOUNT FROM LOAN_RECEIPT ");
 
         // Each row has 2 columns (LOAN_AMOUNT, INTREST_AMOUNT)
         int columnsPerRow = 2;
@@ -45,10 +59,10 @@ public class GetInterestAmount {
                 + "Grand Total: %s",
                 RECEIPT_totalLoanAmount.toString(),
                 RECEIPT_totalInterestAmount.toString(),
-                grandTotal.toString()
-        );
+                grandTotal.toString());
 
-        // JOptionPane.showMessageDialog(null, message, "Loan Receipt Summary", JOptionPane.INFORMATION_MESSAGE);
+        // JOptionPane.showMessageDialog(null, message, "Loan Receipt Summary",
+        // JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void updateAllInterestAmounts() {
@@ -61,8 +75,7 @@ public class GetInterestAmount {
         String partyName = "";
 
         List<Object> queryResult = DBController.executeQuery(
-                "SELECT START_DATE, INTEREST_DATE_PERCENTAGE, INTREST_TYPE, AMOUNT_PAID, INTEREST_AMOUNT, PARTY_NAME FROM LOAN_ENTRY"
-        );
+                "SELECT START_DATE, INTEREST_DATE_PERCENTAGE, INTREST_TYPE, AMOUNT_PAID, INTEREST_AMOUNT, PARTY_NAME FROM LOAN_ENTRY");
 
         // Each row has 6 columns
         int columnsPerRow = 6;
@@ -111,10 +124,13 @@ public class GetInterestAmount {
                 // Define the desired format
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 String formattedDate = currentDate.format(formatter);
-                DBController.executeQueryUpdate("update  LOAN_ENTRY SET START_DATE ='" + formattedDate + "'  where PARTY_NAME = '" + partyName + "' ;  ");
+                DBController.executeQueryUpdate("update  LOAN_ENTRY SET START_DATE ='" + formattedDate
+                        + "'  where PARTY_NAME = '" + partyName + "' ;  ");
             }
-            DBController.executeQueryUpdate("update  LOAN_ENTRY SET INTEREST_AMOUNT='" + finalInterestAmount + "' ,AMOUNT_PAID='" + finalLoanAmount + "' where PARTY_NAME = '" + partyName + "' ;  ");
-            JOptionPane.showMessageDialog(null, "Total Interest: " + finalInterestAmount + " loan amount :" + finalLoanAmount);
+            DBController.executeQueryUpdate("update  LOAN_ENTRY SET INTEREST_AMOUNT='" + finalInterestAmount
+                    + "' ,AMOUNT_PAID='" + finalLoanAmount + "' where PARTY_NAME = '" + partyName + "' ;  ");
+            JOptionPane.showMessageDialog(null,
+                    "Total Interest: " + finalInterestAmount + " loan amount :" + finalLoanAmount);
 
         }
 
@@ -151,5 +167,83 @@ public class GetInterestAmount {
             }
         }
         return BigDecimal.ZERO;
+    }
+    static String sno = "0";
+    public static void processAllLoanEntries() {
+        List<Object> LOAN_DATA = DBController.executeQuery(
+                "SELECT PARTY_NAME,AMOUNT_PAID,INTEREST_AMOUNT,START_DATE,REMARKS FROM LOAN_ENTRY ORDER BY SLIP_NO DESC LIMIT 1;");
+
+        // Initialize with default values in case RECEIPT_DATA is empty
+        List<Object> RECEIPT_DATA = DBController.executeQuery(
+                "SELECT PARTY_NAME,LOAN_AMOUNT,INTREST_AMOUNT,TRANSACTION_DATE,REMARKS FROM LOAN_RECEIPT ORDER BY RECEIPT_NO DESC LIMIT 1;");
+
+         // Changed to String to match table definition
+
+        // Handle empty LOAN_DATA
+        if (LOAN_DATA.isEmpty()) {
+            System.out.println("No loan data found");
+            return;
+        }
+
+        String partyname = (LOAN_DATA.get(0) != null && LOAN_DATA.get(0).toString().length() > 0)
+                ? LOAN_DATA.get(0).toString()
+                : "Default";
+
+        // for loan - use 0.0 if RECEIPT_DATA is empty
+        String DR_AMT1 = LOAN_DATA.get(1) != null ? LOAN_DATA.get(1).toString() : "0.0";
+        String CR_AMT1 = (!RECEIPT_DATA.isEmpty() && RECEIPT_DATA.get(1) != null)
+                ? RECEIPT_DATA.get(1).toString()
+                : "0.0";
+
+        // for interest - use 0.0 if RECEIPT_DATA is empty
+        String DR_AMT2 = LOAN_DATA.get(2) != null ? LOAN_DATA.get(2).toString() : "0.0";
+        String CR_AMT2 = (!RECEIPT_DATA.isEmpty() && RECEIPT_DATA.get(2) != null)
+                ? RECEIPT_DATA.get(2).toString()
+                : "0.0";
+
+        String BALANCE1 = String.valueOf(Double.parseDouble(DR_AMT1) - Double.parseDouble(CR_AMT1));
+        String BALANCE2 = String.valueOf(Double.parseDouble(DR_AMT2) - Double.parseDouble(CR_AMT2));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String date1Str = "NULL";
+        if (LOAN_DATA.get(3) != null) {
+            try {
+                Date date1 = dateFormat.parse(LOAN_DATA.get(3).toString());
+                date1Str = "'" + sqlDateFormat.format(date1) + "'";
+            } catch (Exception e) {
+                System.out.println("Error parsing loan date: " + e.getMessage());
+            }
+        }
+
+        String date2Str = "NULL";
+        if (!RECEIPT_DATA.isEmpty() && RECEIPT_DATA.get(3) != null) {
+            try {
+                Date date2 = dateFormat.parse(RECEIPT_DATA.get(3).toString());
+                date2Str = "'" + sqlDateFormat.format(date2) + "'";
+            } catch (Exception e) {
+                System.out.println("Error parsing receipt date: " + e.getMessage());
+            }
+        }
+
+        String REMARKS1 = LOAN_DATA.get(4) != null ? "'" + LOAN_DATA.get(4).toString().replace("'", "''") + "'" : "''";
+        String REMARKS2 = (!RECEIPT_DATA.isEmpty() && RECEIPT_DATA.get(4) != null)
+                ? "'" + RECEIPT_DATA.get(4).toString().replace("'", "''") + "'"
+                : "''";
+
+        // Properly quote string values in the SQL statement
+        String sql = "INSERT INTO LOAN_LEDGER VALUES("
+                + "'" + sno + "', '" + partyname.replace("'", "''") + "', " + date1Str + ", " + REMARKS1 + ", "
+                + "'" + DR_AMT1 + "', '" + CR_AMT1 + "', '" + BALANCE1 + "', "
+                + date2Str + ", " + REMARKS2 + ", "
+                + "'" + DR_AMT2 + "', '" + CR_AMT2 + "', '" + BALANCE2 + "')";
+
+        DBController.executeQueryUpdate(sql);
+        int a= Integer.parseInt(sno);
+        a++;
+        sno = a+"";
+        
+        
     }
 }
