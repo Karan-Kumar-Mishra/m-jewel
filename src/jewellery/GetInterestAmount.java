@@ -28,10 +28,9 @@ public class GetInterestAmount {
 
     public static BigDecimal RECEIPT_totalLoanAmount = BigDecimal.ZERO;
     public static BigDecimal RECEIPT_totalInterestAmount = BigDecimal.ZERO;
-
-    public static void calculateTotalLoanAndInterest( ) {
+    public static void calculateTotalLoanAndInterest(String party) {
         List<Object> queryResult = DBController.executeQuery(
-                "SELECT LOAN_AMOUNT, INTREST_AMOUNT FROM LOAN_RECEIPT ");
+                "SELECT LOAN_AMOUNT, INTREST_AMOUNT FROM LOAN_RECEIPT where PARTY_NAME='" + party + "'");
 
         // Each row has 2 columns (LOAN_AMOUNT, INTREST_AMOUNT)
         int columnsPerRow = 2;
@@ -61,7 +60,7 @@ public class GetInterestAmount {
         String partyName = "";
 
         List<Object> queryResult = DBController.executeQuery(
-                "SELECT START_DATE, INTEREST_DATE_PERCENTAGE, INTREST_TYPE, AMOUNT_PAID, INTEREST_AMOUNT, PARTY_NAME FROM LOAN_ENTRY where PARTY_NAME='"+party+"' ");
+                "SELECT START_DATE, INTEREST_DATE_PERCENTAGE, INTREST_TYPE, AMOUNT_PAID, INTEREST_AMOUNT, PARTY_NAME FROM LOAN_ENTRY where PARTY_NAME='" + party + "' ");
 
         // Each row has 6 columns
         int columnsPerRow = 6;
@@ -96,7 +95,7 @@ public class GetInterestAmount {
                 currentPartyInterest = (dailyInterest * 30 * months); // Monthly interest
             }
 
-            calculateTotalLoanAndInterest();
+            calculateTotalLoanAndInterest(party);
             BigDecimal finalInterestAmount = BigDecimal.ZERO;
 
             // Use only the current party's interest in calculation

@@ -880,6 +880,7 @@ public class UpdateLoan extends javax.swing.JFrame {
     }
 
     public String getSelectedPartyName() {
+
         Object selectedItem = jComboBox2.getSelectedItem();
         return selectedItem.toString();// this function is call in ImageSelector window for store the images  
     }
@@ -1089,7 +1090,6 @@ public class UpdateLoan extends javax.swing.JFrame {
     }
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
-
         ImageSelector();
     }
 
@@ -1130,6 +1130,12 @@ public class UpdateLoan extends javax.swing.JFrame {
     }
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+        Object selectedItem = jComboBox2.getSelectedItem();
+        String partyName = selectedItem == null ? " " : selectedItem.toString();
+        LoanEntryDeleter.deleteLoanByPartyName(partyName);
+        JOptionPane.showMessageDialog(null, "Entry is delete successfully !");
+        clearAllTextBox();
+        jButton4.doClick();
     }
 
     public void setInfo(
@@ -1259,8 +1265,9 @@ public class UpdateLoan extends javax.swing.JFrame {
                 itemLocation,
                 interestAmount
         );
-        GetInterestAmount.updateAllInterestAmounts();
+        GetInterestAmount.updateAllInterestAmounts(partyName);
         clearAllTextBox();
+        jButton4.doClick();
     }
 
     private void jTextField23ActionPerformed(java.awt.event.ActionEvent evt) {

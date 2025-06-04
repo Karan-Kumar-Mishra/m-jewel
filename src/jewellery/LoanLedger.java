@@ -613,8 +613,8 @@ public class LoanLedger extends javax.swing.JFrame {
                 double loanDr = row.get(3) != null ? Double.parseDouble(row.get(3).toString()) : 0.0;
                 double loanCr = row.get(4) != null ? Double.parseDouble(row.get(4).toString()) : 0.0;
                 double loanBal = row.get(5) != null ? Double.parseDouble(row.get(5).toString()) : 0.0;
-                String date2 = row.get(6) != null ? row.get(6).toString() : "";
-                String remarks2 = row.get(7) != null ? row.get(7).toString() : "";
+                String date2 = row.get(6) != null ? row.get(6).toString() : row.get(1).toString();
+                String remarks2 = row.get(7) != null ? row.get(7).toString() : remarks1;
                 double interestDr = row.get(8) != null ? Double.parseDouble(row.get(8).toString()) : 0.0;
                 double interestCr = row.get(9) != null ? Double.parseDouble(row.get(9).toString()) : 0.0;
                 double interestBal = row.get(10) != null ? Double.parseDouble(row.get(10).toString()) : 0.0;
