@@ -29,7 +29,7 @@ public class GetInterestAmount {
     public static BigDecimal RECEIPT_totalLoanAmount = BigDecimal.ZERO;
     public static BigDecimal RECEIPT_totalInterestAmount = BigDecimal.ZERO;
 
-    public static void calculateTotalLoanAndInterest() {
+    public static void calculateTotalLoanAndInterest( ) {
         List<Object> queryResult = DBController.executeQuery(
                 "SELECT LOAN_AMOUNT, INTREST_AMOUNT FROM LOAN_RECEIPT ");
 
@@ -50,23 +50,9 @@ public class GetInterestAmount {
             RECEIPT_totalInterestAmount = BigDecimal.ZERO;
         }
 
-        BigDecimal grandTotal = RECEIPT_totalLoanAmount.add(RECEIPT_totalInterestAmount);
-
-        // Display results
-        String message = String.format(
-                "Loan Amount: %s%n"
-                + "Interest Amount: %s%n"
-                + "Grand Total: %s",
-                RECEIPT_totalLoanAmount.toString(),
-                RECEIPT_totalInterestAmount.toString(),
-                grandTotal.toString());
-
-        // JOptionPane.showMessageDialog(null, message, "Loan Receipt Summary",
-        // JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static void updateAllInterestAmounts() {
-        Double totalInterest = 0.0;
+    public static void updateAllInterestAmounts(String party) {
         Date startDate = new Date();
         double interestDatePercentage = 0.0;
         String interestType = "month";
@@ -75,7 +61,7 @@ public class GetInterestAmount {
         String partyName = "";
 
         List<Object> queryResult = DBController.executeQuery(
-                "SELECT START_DATE, INTEREST_DATE_PERCENTAGE, INTREST_TYPE, AMOUNT_PAID, INTEREST_AMOUNT, PARTY_NAME FROM LOAN_ENTRY");
+                "SELECT START_DATE, INTEREST_DATE_PERCENTAGE, INTREST_TYPE, AMOUNT_PAID, INTEREST_AMOUNT, PARTY_NAME FROM LOAN_ENTRY where PARTY_NAME='"+party+"' ");
 
         // Each row has 6 columns
         int columnsPerRow = 6;
@@ -99,20 +85,22 @@ public class GetInterestAmount {
             // Calculate days between now and start date
             long rowDays = (System.currentTimeMillis() - startDate.getTime()) / (1000 * 60 * 60 * 24);
 
-            // Calculate interest
+            // Calculate interest for current party only
+            double currentPartyInterest = 0.0;
             double dailyInterest = (amountPaid * interestDatePercentage / 100) / 30;
 
             if (interestType.equalsIgnoreCase("Day")) {
-                totalInterest += (dailyInterest * rowDays); // Daily interest
+                currentPartyInterest = (dailyInterest * rowDays); // Daily interest
             } else {
                 long months = rowDays / 30;
-                totalInterest += (dailyInterest * 30 * months); // Monthly interest
+                currentPartyInterest = (dailyInterest * 30 * months); // Monthly interest
             }
 
             calculateTotalLoanAndInterest();
             BigDecimal finalInterestAmount = BigDecimal.ZERO;
 
-            finalInterestAmount = BigDecimal.valueOf(totalInterest).subtract(RECEIPT_totalInterestAmount);
+            // Use only the current party's interest in calculation
+            finalInterestAmount = BigDecimal.valueOf(currentPartyInterest).subtract(RECEIPT_totalInterestAmount);
 
             BigDecimal finalLoanAmount = BigDecimal.valueOf(amountPaid).subtract(RECEIPT_totalLoanAmount);
 
@@ -124,16 +112,16 @@ public class GetInterestAmount {
                 // Define the desired format
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 String formattedDate = currentDate.format(formatter);
-                DBController.executeQueryUpdate("update  LOAN_ENTRY SET START_DATE ='" + formattedDate
-                        + "'  where PARTY_NAME = '" + partyName + "' ;  ");
+                DBController.executeQueryUpdate("update LOAN_ENTRY SET START_DATE ='" + formattedDate
+                        + "' where PARTY_NAME = '" + partyName + "' ;");
             }
-            DBController.executeQueryUpdate("update  LOAN_ENTRY SET INTEREST_AMOUNT='" + finalInterestAmount
-                    + "' ,AMOUNT_PAID='" + finalLoanAmount + "' where PARTY_NAME = '" + partyName + "' ;  ");
+
+            DBController.executeQueryUpdate("update LOAN_ENTRY SET INTEREST_AMOUNT='" + finalInterestAmount
+                    + "', AMOUNT_PAID='" + finalLoanAmount + "' where PARTY_NAME = '" + partyName + "' ;");
             JOptionPane.showMessageDialog(null,
-                    "Total Interest: " + finalInterestAmount + " loan amount :" + finalLoanAmount);
-
+                    "Total Interest: " + finalInterestAmount + " loan amount: " + finalLoanAmount);
+            RECEIPT_totalInterestAmount = BigDecimal.ZERO;
         }
-
     }
 
     // Helper method to safely parse numbers (String or BigDecimal)
@@ -168,7 +156,8 @@ public class GetInterestAmount {
         }
         return BigDecimal.ZERO;
     }
-    static String sno = "0";
+    static int sno = 0;
+
     public static void processAllLoanEntries() {
         List<Object> LOAN_DATA = DBController.executeQuery(
                 "SELECT PARTY_NAME,AMOUNT_PAID,INTEREST_AMOUNT,START_DATE,REMARKS FROM LOAN_ENTRY ORDER BY SLIP_NO DESC LIMIT 1;");
@@ -177,8 +166,7 @@ public class GetInterestAmount {
         List<Object> RECEIPT_DATA = DBController.executeQuery(
                 "SELECT PARTY_NAME,LOAN_AMOUNT,INTREST_AMOUNT,TRANSACTION_DATE,REMARKS FROM LOAN_RECEIPT ORDER BY RECEIPT_NO DESC LIMIT 1;");
 
-         // Changed to String to match table definition
-
+        // Changed to String to match table definition
         // Handle empty LOAN_DATA
         if (LOAN_DATA.isEmpty()) {
             System.out.println("No loan data found");
@@ -234,16 +222,12 @@ public class GetInterestAmount {
 
         // Properly quote string values in the SQL statement
         String sql = "INSERT INTO LOAN_LEDGER VALUES("
-                + "'" + sno + "', '" + partyname.replace("'", "''") + "', " + date1Str + ", " + REMARKS1 + ", "
+                + "'" + (sno++) + "', '" + partyname.replace("'", "''") + "', " + date1Str + ", " + REMARKS1 + ", "
                 + "'" + DR_AMT1 + "', '" + CR_AMT1 + "', '" + BALANCE1 + "', "
                 + date2Str + ", " + REMARKS2 + ", "
                 + "'" + DR_AMT2 + "', '" + CR_AMT2 + "', '" + BALANCE2 + "')";
 
         DBController.executeQueryUpdate(sql);
-        int a= Integer.parseInt(sno);
-        a++;
-        sno = a+"";
-        
-        
+
     }
 }

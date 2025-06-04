@@ -1022,7 +1022,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                                 "Data Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
-                    GetInterestAmount.updateAllInterestAmounts();
+                    GetInterestAmount.updateAllInterestAmounts(partyName);
                 }
 
                 // Calculate interest
