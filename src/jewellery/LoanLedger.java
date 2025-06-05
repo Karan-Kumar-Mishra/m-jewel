@@ -608,8 +608,8 @@ public class LoanLedger extends javax.swing.JFrame {
             // Process Loan Ledger Entries
             for (List<Object> row : loanLedgerEntries) {
                 long ledgerSno = row.get(0) != null ? Long.parseLong(row.get(0).toString()) : 0;
-                String date1 = row.get(1) != null ? row.get(1).toString() : "";
-                String remarks1 = row.get(2) != null ? row.get(2).toString() : "";
+                String date1 = row.get(1) != null ? row.get(1).toString() : "-";
+                String remarks1 = row.get(2) != null ? row.get(2).toString() : "-";
                 double loanDr = row.get(3) != null ? Double.parseDouble(row.get(3).toString()) : 0.0;
                 double loanCr = row.get(4) != null ? Double.parseDouble(row.get(4).toString()) : 0.0;
                 double loanBal = row.get(5) != null ? Double.parseDouble(row.get(5).toString()) : 0.0;

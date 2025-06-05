@@ -28,6 +28,7 @@ public class GetInterestAmount {
 
     public static BigDecimal RECEIPT_totalLoanAmount = BigDecimal.ZERO;
     public static BigDecimal RECEIPT_totalInterestAmount = BigDecimal.ZERO;
+
     public static void calculateTotalLoanAndInterest(String party) {
         List<Object> queryResult = DBController.executeQuery(
                 "SELECT LOAN_AMOUNT, INTREST_AMOUNT FROM LOAN_RECEIPT where PARTY_NAME='" + party + "'");
@@ -214,10 +215,10 @@ public class GetInterestAmount {
             }
         }
 
-        String REMARKS1 = LOAN_DATA.get(4) != null ? "'" + LOAN_DATA.get(4).toString().replace("'", "''") + "'" : "''";
+        String REMARKS1 = LOAN_DATA.get(4) != null ? "'" + LOAN_DATA.get(4).toString().replace("'", "''") + "'" : null;
         String REMARKS2 = (!RECEIPT_DATA.isEmpty() && RECEIPT_DATA.get(4) != null)
                 ? "'" + RECEIPT_DATA.get(4).toString().replace("'", "''") + "'"
-                : "''";
+                : null;
 
         // Properly quote string values in the SQL statement
         String sql = "INSERT INTO LOAN_LEDGER VALUES("

@@ -187,6 +187,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jTextField20 = new javax.swing.JTextField();
         jTextField22 = new javax.swing.JTextField();
         jTextField24 = new javax.swing.JTextField();
@@ -231,7 +232,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         jLabel37 = new javax.swing.JLabel();
         jTextField18 = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+      
         jLabel39 = new javax.swing.JLabel();
         jTextField19 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -354,6 +355,7 @@ public class UpdateLoan extends javax.swing.JFrame {
                 jComboBox1ActionPerformed(evt);
             }
         });
+        
         partyNames = GetPartyName.get();
 
         if (partyNames != null && partyNames.length > 0) {
@@ -844,8 +846,8 @@ public class UpdateLoan extends javax.swing.JFrame {
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {
         Object selectedItem = jComboBox2.getSelectedItem();
-        System.out.println("Selected party: " + selectedItem.toString());
-        //  setVisible(true);
+       
+        setVisible(true);
         String details[] = getPartyDetailInLoan.get(selectedItem.toString());
 
         jLabelPartyName.setText(details[0]);
@@ -1100,11 +1102,11 @@ public class UpdateLoan extends javax.swing.JFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {
         partyNames = GetPartyName.get();
 
-        if (partyNames != null && partyNames.length > 0) {
-            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(partyNames));
-        } else {
-            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"No Parties Available"}));
-        }
+//        if (partyNames != null && partyNames.length > 0) {
+//            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(partyNames));
+//        } else {
+//            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"No Parties Available"}));
+//        }
 
         // Clear all fields
         clearAllTextBox();
@@ -1179,6 +1181,13 @@ public class UpdateLoan extends javax.swing.JFrame {
         jTextField24.setText(amountPaid);
         jTextField25.setText(itemDetails);
         jTextField26.setText(startDate);
+        jComboBox1.setSelectedItem(weightType);
+       // jComboBox2.setSelectedItem(partyName);
+     
+        jComboBox3.setSelectedItem(interstType);
+    
+         JOptionPane.showMessageDialog(null," party name is => "+partyName);
+        
         //  System.out.println("weight type => " + jComboBox1.getSelectedItem());
     }
 
