@@ -232,7 +232,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         jLabel37 = new javax.swing.JLabel();
         jTextField18 = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
-      
+
         jLabel39 = new javax.swing.JLabel();
         jTextField19 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -355,7 +355,7 @@ public class UpdateLoan extends javax.swing.JFrame {
                 jComboBox1ActionPerformed(evt);
             }
         });
-        
+
         partyNames = GetPartyName.get();
 
         if (partyNames != null && partyNames.length > 0) {
@@ -846,9 +846,15 @@ public class UpdateLoan extends javax.swing.JFrame {
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {
         Object selectedItem = jComboBox2.getSelectedItem();
-       
-        setVisible(true);
+
+        //setVisible(true);
         String details[] = getPartyDetailInLoan.get(selectedItem.toString());
+
+        if (details == null || details.length == 0) {
+            
+           // JOptionPane.showMessageDialog(null, " party testing=> " + details == null || details.length == 0);
+            return;
+        }
 
         jLabelPartyName.setText(details[0]);
         jLabelPartyAddress.setText(details[1]);
@@ -1107,7 +1113,6 @@ public class UpdateLoan extends javax.swing.JFrame {
 //        } else {
 //            jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"No Parties Available"}));
 //        }
-
         // Clear all fields
         clearAllTextBox();
 
@@ -1135,6 +1140,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         Object selectedItem = jComboBox2.getSelectedItem();
         String partyName = selectedItem == null ? " " : selectedItem.toString();
         LoanEntryDeleter.deleteLoanByPartyName(partyName);
+        DBController.executeQueryUpdate("DELETE FROM LOAN_RECEIPT WHERE PARTY_NAME = '" + PartynameForDeletetion + "'");
         JOptionPane.showMessageDialog(null, "Entry is delete successfully !");
         clearAllTextBox();
         jButton4.doClick();
@@ -1182,12 +1188,12 @@ public class UpdateLoan extends javax.swing.JFrame {
         jTextField25.setText(itemDetails);
         jTextField26.setText(startDate);
         jComboBox1.setSelectedItem(weightType);
-       // jComboBox2.setSelectedItem(partyName);
-     
+        jComboBox2.setSelectedItem(partyName);
+
         jComboBox3.setSelectedItem(interstType);
-    
-         JOptionPane.showMessageDialog(null," party name is => "+partyName);
-        
+
+      //  JOptionPane.showMessageDialog(null, " party name is => " + partyName);
+
         //  System.out.println("weight type => " + jComboBox1.getSelectedItem());
     }
 
@@ -1241,9 +1247,9 @@ public class UpdateLoan extends javax.swing.JFrame {
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
         List<Object> result = DBController.executeQuery("select INTEREST_AMOUNT from LOAN_ENTRY where PARTY_NAME = '" + partyName + "';");
-
+     
         LoanEntryDeleter.deleteLoanByPartyName(PartynameForDeletetion);
-
+    
         String interestAmount = "0"; // Default value if no result is found
 
         if (result != null && !result.isEmpty()) {

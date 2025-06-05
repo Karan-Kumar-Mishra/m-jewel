@@ -45,10 +45,5 @@ public class getPartyDetailInLoan {
         // Convert the ArrayList to a String array before returning
         return partyDetails.toArray(new String[0]); // This returns a String[]
     }
-    // public static void main(String[] args) {
-    //     for(String s: get("karan"))
-    //     {
-    //         System.out.println(s);
-    //     }
-    // }
+
 }
