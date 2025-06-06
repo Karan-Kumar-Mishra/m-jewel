@@ -118,8 +118,8 @@ public class GetInterestAmount {
 
             DBController.executeQueryUpdate("update LOAN_ENTRY SET INTEREST_AMOUNT='" + finalInterestAmount
                     + "', AMOUNT_PAID='" + finalLoanAmount + "' where PARTY_NAME = '" + partyName + "' ;");
-            JOptionPane.showMessageDialog(null,
-                    "Total Interest: " + finalInterestAmount + " loan amount: " + finalLoanAmount);
+//            JOptionPane.showMessageDialog(null,
+//                    "Total Interest: " + finalInterestAmount + " loan amount: " + finalLoanAmount);
             RECEIPT_totalInterestAmount = BigDecimal.ZERO;
         }
     }

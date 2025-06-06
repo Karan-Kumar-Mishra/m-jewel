@@ -145,7 +145,7 @@ public class UpdateLoan extends javax.swing.JFrame {
         // setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         // Instead, set the content pane's layout to absolute layout
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1060, 530));
+        getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1260, 830));
 
         // Set the frame size
         setSize(1080, 600);

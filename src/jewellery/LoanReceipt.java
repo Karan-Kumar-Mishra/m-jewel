@@ -61,7 +61,7 @@ public class LoanReceipt extends javax.swing.JFrame {
 
     public LoanReceipt() {
         DatabaseTableCreator.create();
-       // GetInterestAmount.processAllLoanEntries();
+        // GetInterestAmount.processAllLoanEntries();
         initComponents();
         try {
             Connection cd = DBConnect.connect();
@@ -84,7 +84,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         this.getContentPane().setBackground(new java.awt.Color(57, 68, 76));
         partyNames = GetPartyName.get();
         // Initialize the table model with column names
-        String[] columnNames = {"Receipt No", "Account Name", "Loan Amount", "Interest Amount", "Remarks"};
+        String[] columnNames = { "Receipt No", "Account Name", "Loan Amount", "Interest Amount", "Remarks" };
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -202,7 +202,7 @@ public class LoanReceipt extends javax.swing.JFrame {
 
             while (rs1.next()) {
                 banks.add(rs1.getString("accountname"));
-//                JOptionPane.showMessageDialog(this, rs1.getString("accountname"));
+                // JOptionPane.showMessageDialog(this, rs1.getString("accountname"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(ReceiptScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -324,7 +324,7 @@ public class LoanReceipt extends javax.swing.JFrame {
             displayDataInTable(allLoanData);
 
             // Filter by current date
-            //  filterTableByDate();
+            // filterTableByDate();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                     "Error loading loan receipt data: " + e.getMessage(),
@@ -349,10 +349,10 @@ public class LoanReceipt extends javax.swing.JFrame {
                 // Fix: Use the correct column index for loan amount (assuming it's index 2)
                 String loanAmount = (suggestion.get(2) == null) ? "0" : suggestion.get(2).toString();
 
-                suggestionsTable.addRow(new Object[]{
-                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
-                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
-                    loanAmount // Directly use the loan amount from the query result
+                suggestionsTable.addRow(new Object[] {
+                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
+                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
+                        loanAmount // Directly use the loan amount from the query result
                 });
             } catch (Exception ex) {
                 Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -407,7 +407,8 @@ public class LoanReceipt extends javax.swing.JFrame {
                     EventQueue.invokeLater(() -> {
                         jPopupMenu1.setVisible(true);
                         populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel,
-                                "SELECT PARTY_NAME, ITEM_DETAILS, AMOUNT_PAID FROM LOAN_ENTRY ");
+                                "SELECT PARTY_NAME, AMOUNT_PAID, ITEM_DETAILS FROM LOAN_ENTRY"
+                                        + " WHERE PARTY_NAME LIKE " + "'" + txtPartyName.getText() + "%'");
                     });
                     break;
             }
@@ -547,9 +548,9 @@ public class LoanReceipt extends javax.swing.JFrame {
 
         // Set up the table model for suggestions
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{"Party Name", "item", "Amount"}) {
-            boolean[] canEdit = new boolean[]{false, false, false};
+                new Object[][] {},
+                new String[] { "Party Name", "item", "Amount" }) {
+            boolean[] canEdit = new boolean[] { false, false, false };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
@@ -603,14 +604,14 @@ public class LoanReceipt extends javax.swing.JFrame {
         });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null}
+                new Object[][] {
+                        { null, null, null, null },
+                        { null, null, null, null },
+                        { null, null, null, null },
+                        { null, null, null, null }
                 },
-                new String[]{
-                    "Title 1", "Title 2", "Title 3", "Title 4"
+                new String[] {
+                        "Title 1", "Title 2", "Title 3", "Title 4"
                 }));
         jScrollPane1.setViewportView(jTable1);
 
@@ -943,32 +944,14 @@ public class LoanReceipt extends javax.swing.JFrame {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDate = dateFormat.format(transactionDate);
 
-            // 5. Show confirmation with all collected data
-            String confirmationMessage = "Please confirm the following details:\n\n"
-                    + "Receipt No: " + (receiptNo.isEmpty() ? "[New Entry]" : receiptNo) + "\n"
-                    + "Party Name: " + partyName + "\n"
-                    + "Transaction Date: " + formattedDate + "\n"
-                    + "Payment Mode: " + paymentMode + "\n"
-                    + "Loan Amount: " + loanAmount + "\n"
-                    + "Interest Amount: " + interestAmount + "\n"
-                    + "Total Amount: " + totalAmount + "\n"
-                    + "Remarks: " + remarks + "\n\n"
-                    + "Do you want to save this entry?";
-
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    confirmationMessage,
-                    "Confirm Save",
-                    JOptionPane.YES_NO_OPTION);
-
-            if (confirm == JOptionPane.YES_OPTION) {
+            if (1 == 1) {
                 // 6. Add data to the table
                 String[] newRow = {
-                    receiptNo.isEmpty() ? "[New Entry]" : receiptNo,
-                    partyName,
-                    String.valueOf(loanAmount),
-                    String.valueOf(interestAmount),
-                    remarks
+                        receiptNo.isEmpty() ? "[New Entry]" : receiptNo,
+                        partyName,
+                        String.valueOf(loanAmount),
+                        String.valueOf(interestAmount),
+                        remarks
                 };
                 tableModel.addRow(newRow); // Directly add to table model
 
@@ -994,7 +977,9 @@ public class LoanReceipt extends javax.swing.JFrame {
                 boolean insertSuccess = DBController.insertDataIntoTable("LOAN_RECEIPT", columnNames, dataValues);
 
                 // Get loan details for interest calculation
-                List<Object> result = DBController.executeQuery("SELECT AMOUNT_PAID ,INTEREST_DATE_PERCENTAGE,INTREST_TYPE,START_DATE FROM LOAN_ENTRY WHERE PARTY_NAME='" + partyName + "'");
+                List<Object> result = DBController.executeQuery(
+                        "SELECT AMOUNT_PAID ,INTEREST_DATE_PERCENTAGE,INTREST_TYPE,START_DATE FROM LOAN_ENTRY WHERE PARTY_NAME='"
+                                + partyName + "'");
 
                 double amountPaid = 0.0;
                 double INTEREST_DATE_PERCENTAGE = 0.0;
@@ -1045,22 +1030,17 @@ public class LoanReceipt extends javax.swing.JFrame {
                 // Update loan amount if checkbox is selected
                 if (jCheckBox1.isSelected()) {
                     amountPaid = amountPaid - Double.parseDouble(loanAmountStr);
-                    // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY SET AMOUNT_PAID='" + amountPaid + "' WHERE PARTY_NAME ='" + partyName + "';");
+                    // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY SET AMOUNT_PAID='" +
+                    // amountPaid + "' WHERE PARTY_NAME ='" + partyName + "';");
                 }
                 if (jCheckBox2.isSelected()) {
-                    // PENDING FOR INTEREST AMOUNT 
-                    // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY SET INTEREST_AMOUNT='" + interestAmountStr + "' WHERE PARTY_NAME ='" + partyName + "';");
+                    // PENDING FOR INTEREST AMOUNT
+                    // DBController.executeQueryUpdate("UPDATE LOAN_ENTRY SET INTEREST_AMOUNT='" +
+                    // interestAmountStr + "' WHERE PARTY_NAME ='" + partyName + "';");
                 }
 
                 // Show success message only once
                 if (insertSuccess) {
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Data saved successfully!\n\n" + confirmationMessage.replace("Please confirm", "Saved"),
-                            "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                    // Clear form after adding
                     clearTextbox();
                 } else {
                     JOptionPane.showMessageDialog(

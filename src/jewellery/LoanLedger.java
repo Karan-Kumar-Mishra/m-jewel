@@ -115,9 +115,9 @@ public class LoanLedger extends javax.swing.JFrame {
 
         tblPartyNameSuggestions = new javax.swing.JTable();
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{"Party Name", "item", "Amount"}) {
-            boolean[] canEdit = new boolean[]{false, false, false};
+                new Object[][] {},
+                new String[] { "Party Name", "item", "Amount" }) {
+            boolean[] canEdit = new boolean[] { false, false, false };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
@@ -143,10 +143,10 @@ public class LoanLedger extends javax.swing.JFrame {
 
         // Updated table structure for Loan and Interest sections
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{
-                    "Sno.", "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance", // Loan Section
-                    "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance" // Interest Section
+                new Object[][] {},
+                new String[] {
+                        "Sno.", "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance", // Loan Section
+                        "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance" // Interest Section
                 }));
     }
 
@@ -235,10 +235,10 @@ public class LoanLedger extends javax.swing.JFrame {
                 // Fix: Use the correct column index for loan amount (assuming it's index 2)
                 String loanAmount = (suggestion.get(2) == null) ? "0" : suggestion.get(2).toString();
 
-                suggestionsTable.addRow(new Object[]{
-                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
-                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
-                    loanAmount // Directly use the loan amount from the query result
+                suggestionsTable.addRow(new Object[] {
+                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
+                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
+                        loanAmount // Directly use the loan amount from the query result
                 });
             } catch (Exception ex) {
                 Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -293,7 +293,8 @@ public class LoanLedger extends javax.swing.JFrame {
                     EventQueue.invokeLater(() -> {
                         jPopupMenu1.setVisible(true);
                         populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel,
-                                "SELECT PARTY_NAME, ITEM_DETAILS, AMOUNT_PAID FROM LOAN_ENTRY ");
+                                "SELECT PARTY_NAME, AMOUNT_PAID, ITEM_DETAILS FROM LOAN_ENTRY"
+                                        + " WHERE PARTY_NAME LIKE " + "'" + jTextField7.getText() + "%'");
                     });
                     break;
             }
@@ -596,7 +597,8 @@ public class LoanLedger extends javax.swing.JFrame {
                     + "DATE2, REMARKS2, DR_AMT2, CR_AMT2, BALANCE2 "
                     + "FROM LOAN_LEDGER WHERE (DATE1 BETWEEN '" + startDate.replace("'", "''") + "' AND '"
                     + endDate.replace("'", "''") + "' OR DATE2 BETWEEN '" + startDate.replace("'", "''")
-                    + "' AND '" + endDate.replace("'", "''") + "') AND PARTY_NAME = '" + partyName.replace("'", "''") + "'";
+                    + "' AND '" + endDate.replace("'", "''") + "') AND PARTY_NAME = '" + partyName.replace("'", "''")
+                    + "'";
             List<List<Object>> loanLedgerEntries = DBController.getDataFromTable(loanLedgerQuery);
             if (loanLedgerEntries == null) {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error fetching loan ledger entries");
@@ -628,11 +630,11 @@ public class LoanLedger extends javax.swing.JFrame {
                 interestBalance = interestBal;
 
                 // Add to table
-                tableModel.addRow(new Object[]{
-                    ledgerSno, date1, remarks1, String.format("%.2f", loanDr), String.format("%.2f", loanCr),
-                    String.format("%.2f", loanBal),
-                    date2, remarks2, String.format("%.2f", interestDr), String.format("%.2f", interestCr),
-                    String.format("%.2f", interestBal)
+                tableModel.addRow(new Object[] {
+                        ledgerSno, date1, remarks1, String.format("%.2f", loanDr), String.format("%.2f", loanCr),
+                        String.format("%.2f", loanBal),
+                        date2, remarks2, String.format("%.2f", interestDr), String.format("%.2f", interestCr),
+                        String.format("%.2f", interestBal)
                 });
             }
 
