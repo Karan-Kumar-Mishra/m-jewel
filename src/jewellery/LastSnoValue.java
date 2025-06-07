@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class LastSnoValue {
     
-    public static int getLastSnoValue(String tablename) {
+    public static int getLastSnoValue(String tablename,String columname ) {
         String path = "jdbc:h2:./company/" + GLOBAL_VARS.SELECTED_COMPANY + "/" + 
                      GLOBAL_VARS.SELECTED_COMPANY_FYYEAR + "_db;DATABASE_TO_UPPER=false;IGNORECASE=TRUE";
         String username = "sa";
@@ -27,12 +27,12 @@ public class LastSnoValue {
                                       ResultSet.CONCUR_READ_ONLY);
             
             // 3. Execute query to get the last sno value
-            String sql = "SELECT SLIP_NO FROM "+tablename+" ORDER BY SLIP_NO DESC LIMIT 1";
+            String sql = "SELECT "+columname+" FROM "+tablename+" ORDER BY SLIP_NO DESC LIMIT 1";
             rs = stmt.executeQuery(sql);
             
             // 4. Get the last sno value
             if (rs.next()) {
-                lastSno = rs.getInt("SLIP_NO");
+                lastSno = rs.getInt(columname);
             }
             
         } catch (SQLException ex) {

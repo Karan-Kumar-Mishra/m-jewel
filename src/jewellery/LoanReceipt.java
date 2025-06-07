@@ -184,7 +184,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         // Add key listeners for Enter key navigation
         // Load data from database
         clearTextbox();
-        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT") + 1));
+        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT","RECEIPT_NO") + 1));
         loadLoanReceiptData();
     }
 
@@ -1059,7 +1059,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT") + 1));
+        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT","getLastSnoValue") + 1));
         loadLoanReceiptData();
         GetInterestAmount.processAllLoanEntries();
     }
