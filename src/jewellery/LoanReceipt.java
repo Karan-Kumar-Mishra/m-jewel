@@ -34,7 +34,7 @@ import jewellery.GetLoanData;
 import jewellery.helper.outstandingAnalysisHelper;
 import jewellery.DBController;
 import jewellery.DatabaseTableCreator;
-import jewellery.TableRowCounter;
+import jewellery.LastSnoValue;
 import java.text.SimpleDateFormat;
 import jewellery.GetInterestAmount;
 
@@ -184,7 +184,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         // Add key listeners for Enter key navigation
         // Load data from database
         clearTextbox();
-        jTextField1.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_RECEIPT") + 1));
+        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT") + 1));
         loadLoanReceiptData();
     }
 
@@ -1059,7 +1059,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-        jTextField1.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_RECEIPT") + 1));
+        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT") + 1));
         loadLoanReceiptData();
         GetInterestAmount.processAllLoanEntries();
     }

@@ -135,7 +135,7 @@ public class LoanEntry extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     private void initComponents() {
         DatabaseTableCreator.create();
-        int slip_number = TableRowCounter.getRowCount("LOAN_ENTRY");
+        int slip_number = LastSnoValue.getLastSnoValue("LOAN_ENTRY");
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -238,8 +238,10 @@ public class LoanEntry extends javax.swing.JPanel {
 
         jTextField17.setText(LocalDate.now().toString());
         disableAllInputs();
-
+        
+         
         jTextField18.setText(String.valueOf(slip_number));
+        
         jTextField26.setText(LocalDate.now().toString());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -703,7 +705,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField13.setText("");
         jTextField14.setText("");
         jTextField17.setText(LocalDate.now().toString());
-        jTextField18.setText(String.valueOf(TableRowCounter.getRowCount("LOAN_ENTRY") + 1));
+        jTextField18.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_ENTRY") + 1));
         jTextField19.setText("");
         jTextField20.setText("");
         jTextField22.setText("");
@@ -1103,7 +1105,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField17.setText(LocalDate.now().toString());
         jTextField26.setText(LocalDate.now().toString());
 
-        int slip_number = TableRowCounter.getRowCount("LOAN_ENTRY") + 1;
+        int slip_number = LastSnoValue.getLastSnoValue("LOAN_ENTRY") + 1;
         jTextField18.setText(String.valueOf(slip_number));
 
         enableAllInputs();
