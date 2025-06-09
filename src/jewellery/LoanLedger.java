@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ import javax.swing.table.TableModel;
 import java.text.SimpleDateFormat;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JTable;
 
 /**
  *
@@ -115,9 +117,9 @@ public class LoanLedger extends javax.swing.JFrame {
 
         tblPartyNameSuggestions = new javax.swing.JTable();
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {},
-                new String[] { "Party Name", "item", "Amount" }) {
-            boolean[] canEdit = new boolean[] { false, false, false };
+                new Object[][]{},
+                new String[]{"Party Name", "item", "Amount"}) {
+            boolean[] canEdit = new boolean[]{false, false, false};
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit[columnIndex];
@@ -143,10 +145,10 @@ public class LoanLedger extends javax.swing.JFrame {
 
         // Updated table structure for Loan and Interest sections
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {},
-                new String[] {
-                        "Sno.", "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance", // Loan Section
-                        "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance" // Interest Section
+                new Object[][]{},
+                new String[]{
+                    "Sno.", "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance", // Loan Section
+                    "Date", "Remarks", "Dr. Amt", "Cr. Amt", "Balance" // Interest Section
                 }));
     }
 
@@ -235,10 +237,10 @@ public class LoanLedger extends javax.swing.JFrame {
                 // Fix: Use the correct column index for loan amount (assuming it's index 2)
                 String loanAmount = (suggestion.get(2) == null) ? "0" : suggestion.get(2).toString();
 
-                suggestionsTable.addRow(new Object[] {
-                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
-                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
-                        loanAmount // Directly use the loan amount from the query result
+                suggestionsTable.addRow(new Object[]{
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0).toString(),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1).toString(),
+                    loanAmount // Directly use the loan amount from the query result
                 });
             } catch (Exception ex) {
                 Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -294,7 +296,7 @@ public class LoanLedger extends javax.swing.JFrame {
                         jPopupMenu1.setVisible(true);
                         populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel,
                                 "SELECT PARTY_NAME, AMOUNT_PAID, ITEM_DETAILS FROM LOAN_ENTRY"
-                                        + " WHERE PARTY_NAME LIKE " + "'" + jTextField7.getText() + "%'");
+                                + " WHERE PARTY_NAME LIKE " + "'" + jTextField7.getText() + "%'");
                     });
                     break;
             }
@@ -630,11 +632,11 @@ public class LoanLedger extends javax.swing.JFrame {
                 interestBalance = interestBal;
 
                 // Add to table
-                tableModel.addRow(new Object[] {
-                        ledgerSno, date1, remarks1, String.format("%.2f", loanDr), String.format("%.2f", loanCr),
-                        String.format("%.2f", loanBal),
-                        date2, remarks2, String.format("%.2f", interestDr), String.format("%.2f", interestCr),
-                        String.format("%.2f", interestBal)
+                tableModel.addRow(new Object[]{
+                    ledgerSno, date1, remarks1, String.format("%.2f", loanDr), String.format("%.2f", loanCr),
+                    String.format("%.2f", loanBal),
+                    date2, remarks2, String.format("%.2f", interestDr), String.format("%.2f", interestCr),
+                    String.format("%.2f", interestBal)
                 });
             }
 
@@ -665,6 +667,29 @@ public class LoanLedger extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        try {
+            // Attempt to print the table
+            boolean complete = jTable1.print(JTable.PrintMode.FIT_WIDTH,
+                    new MessageFormat("Loan Book"),
+                    new MessageFormat("Page {0}"));
+            if (complete) {
+                JOptionPane.showMessageDialog(this,
+                        "Printing completed successfully",
+                        "Print Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Printing was cancelled",
+                        "Print Cancelled",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (java.awt.print.PrinterException pe) {
+            JOptionPane.showMessageDialog(this,
+                    "Error while printing: " + pe.getMessage(),
+                    "Print Error",
+                    JOptionPane.ERROR_MESSAGE);
+            pe.printStackTrace();
+        }
     }// GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton3ActionPerformed

@@ -14,9 +14,7 @@ import java.sql.DriverManager;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -27,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.MessageFormat;
 import jewellery.GetInterestAmount;
 
 public class LoanEntry extends javax.swing.JPanel {
@@ -135,7 +134,7 @@ public class LoanEntry extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     private void initComponents() {
         DatabaseTableCreator.create();
-        int slip_number = LastSnoValue.getLastSnoValue("LOAN_ENTRY","SLIP_NO");
+        int slip_number = LastSnoValue.getLastSnoValue("LOAN_ENTRY", "SLIP_NO");
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -238,10 +237,9 @@ public class LoanEntry extends javax.swing.JPanel {
 
         jTextField17.setText(LocalDate.now().toString());
         disableAllInputs();
-        
-         
+
         jTextField18.setText(String.valueOf(slip_number));
-        
+
         jTextField26.setText(LocalDate.now().toString());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -453,7 +451,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jButton6.setText("Add Guarantor Image");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt); 
+                jButton6ActionPerformed(evt);
             }
         });
         jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 290, 180, -1));
@@ -462,8 +460,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jButton1.setBackground(Color.blue);
         jButton1.setForeground(Color.white);
         jButton1.setFont(new Font("Serif", Font.PLAIN, 18));
-            
-            
+
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -686,7 +683,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jButton8.setSize(40, 10);
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-               
+                jButton8ActionPerformed(evt);
             }
         });
         jPanel5.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 80, 90, -1));
@@ -705,7 +702,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField13.setText("");
         jTextField14.setText("");
         jTextField17.setText(LocalDate.now().toString());
-        jTextField18.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_ENTRY","SLIP_NO") + 1));
+        jTextField18.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_ENTRY", "SLIP_NO") + 1));
         jTextField19.setText("");
         jTextField20.setText("");
         jTextField22.setText("");
@@ -899,7 +896,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jComboBox3.setEnabled(false);
 
         jButton1.setEnabled(false);
-      ///  jButton2.setEnabled(false);
+        ///  jButton2.setEnabled(false);
         jButton3.setEnabled(false);
         jButton5.setEnabled(false);
         jButton6.setEnabled(false);
@@ -1105,12 +1102,63 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField17.setText(LocalDate.now().toString());
         jTextField26.setText(LocalDate.now().toString());
 
-        int slip_number = LastSnoValue.getLastSnoValue("LOAN_ENTRY","SLIP_NO") + 1;
+        int slip_number = LastSnoValue.getLastSnoValue("LOAN_ENTRY", "SLIP_NO") + 1;
         jTextField18.setText(String.valueOf(slip_number));
 
         enableAllInputs();
 
         jTextField17.requestFocus();
+    }
+
+   public void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
+        java.awt.print.PrinterJob printerJob = java.awt.print.PrinterJob.getPrinterJob();
+        printerJob.setPrintable(new java.awt.print.Printable() {
+            @Override
+            public int print(java.awt.Graphics graphics, java.awt.print.PageFormat pageFormat, int pageIndex) throws java.awt.print.PrinterException {
+                if (pageIndex > 0) {
+                    return java.awt.print.Printable.NO_SUCH_PAGE;
+                }
+
+                java.awt.Graphics2D g2d = (java.awt.Graphics2D) graphics;
+                g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+
+                // Set font and position for printing
+                g2d.setFont(new java.awt.Font("Serif", java.awt.Font.PLAIN, 12));
+                int y = 20;
+
+                // Print party details
+                g2d.drawString("Party Details", 100, y);
+                y += 20;
+                g2d.drawString("Name: " + (jLabelPartyName.getText().isEmpty() ? "N/A" : jLabelPartyName.getText()), 100, y);
+                y += 20;
+                g2d.drawString("Address: " + (jLabelPartyAddress.getText().isEmpty() ? "N/A" : jLabelPartyAddress.getText()), 100, y);
+                y += 20;
+                g2d.drawString("City: " + (jLabelPartyCity.getText().isEmpty() ? "N/A" : jLabelPartyCity.getText()), 100, y);
+                y += 20;
+                g2d.drawString("Mobile: " + (jLabelPartyMobile.getText().isEmpty() ? "N/A" : jLabelPartyMobile.getText()), 100, y);
+                y += 20;
+                g2d.drawString("Email: " + (jLabelPartyEmail.getText().isEmpty() ? "N/A" : jLabelPartyEmail.getText()), 100, y);
+                y += 20;
+                g2d.drawString("Ledger Balance: " + (jLabelPartyLedgerBalance.getText().isEmpty() ? "N/A" : jLabelPartyLedgerBalance.getText()), 100, y);
+                y += 20;
+                g2d.drawString("Last Entry: " + (jLabelPartyLastEntry.getText().isEmpty() ? "N/A" : jLabelPartyLastEntry.getText()), 100, y);
+
+                return java.awt.print.Printable.PAGE_EXISTS;
+            }
+        });
+
+        // Show print dialog and initiate printing
+        if (printerJob.printDialog()) {
+            try {
+                printerJob.print();
+                JOptionPane.showMessageDialog(this, "Printing completed successfully", "Print Success", JOptionPane.INFORMATION_MESSAGE);
+            } catch (java.awt.print.PrinterException pe) {
+                JOptionPane.showMessageDialog(this, "Error while printing: " + pe.getMessage(), "Print Error", JOptionPane.ERROR_MESSAGE);
+                pe.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Printing was cancelled", "Print Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     public javax.swing.JPanel getContentPane() {
@@ -1149,7 +1197,6 @@ public class LoanEntry extends javax.swing.JPanel {
 
     private void jTextField18ActionPerformed(java.awt.event.ActionEvent evt) {
     }
-
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
         ImageSelector();

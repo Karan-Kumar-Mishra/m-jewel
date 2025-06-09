@@ -25,6 +25,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -184,7 +185,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         // Add key listeners for Enter key navigation
         // Load data from database
         clearTextbox();
-        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT","RECEIPT_NO") + 1));
+        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT", "RECEIPT_NO") + 1));
         loadLoanReceiptData();
     }
 
@@ -534,6 +535,7 @@ public class LoanReceipt extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton(); // Initialize new Print button
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -560,11 +562,8 @@ public class LoanReceipt extends javax.swing.JFrame {
         tblPartyNameSuggestions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
         jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
-        jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
         jPopupMenu1.setLocation(txtPartyName.getX() + 6, txtPartyName.getY() + 250);
 
-        spTblPartyNameSuggestionsContainer.setViewportView(tblPartyNameSuggestions);
-        jPopupMenu1.add(spTblPartyNameSuggestionsContainer);
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("LOAN RECEIPT");
@@ -632,6 +631,13 @@ public class LoanReceipt extends javax.swing.JFrame {
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Print"); // Configure new Print button
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
             }
         });
 
@@ -739,8 +745,9 @@ public class LoanReceipt extends javax.swing.JFrame {
                                                                         javax.swing.GroupLayout.PREFERRED_SIZE, 130,
                                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(18, 18, 18)
-                                                                .addGroup(layout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addGroup(layout
+                                                                        .createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
                                                                         .addComponent(jTextField1,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 143,
@@ -751,8 +758,9 @@ public class LoanReceipt extends javax.swing.JFrame {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
                                                                 .addPreferredGap(
                                                                         javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                .addGroup(layout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addGroup(layout
+                                                                        .createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
                                                                         .addComponent(jLabel9,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 137,
@@ -766,7 +774,13 @@ public class LoanReceipt extends javax.swing.JFrame {
                                                                                 .addComponent(jButton4,
                                                                                         javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                         84,
-                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addGap(18, 18, 18)
+                                                                                .addComponent(jButton5,
+                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                        84,
+                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE))))))) // Add
+                                                                                                                                      // jButton5
                                 .addContainerGap(151, Short.MAX_VALUE)));
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -792,20 +806,24 @@ public class LoanReceipt extends javax.swing.JFrame {
                                                         .addGroup(layout.createSequentialGroup()
                                                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                         Short.MAX_VALUE)
-                                                                .addGroup(layout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addGroup(layout
+                                                                        .createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
                                                                         .addComponent(jDateChooser1,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 20,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                        .addGroup(layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                        .addGroup(layout
+                                                                                .createParallelGroup(
+                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
                                                                                 .addComponent(jTextField1,
                                                                                         javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
                                                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                                 .addComponent(jComboBox1)
-                                                                                .addComponent(jButton4))))
+                                                                                .addComponent(jButton4)
+                                                                                .addComponent(jButton5)))) // Add
+                                                                                                           // jButton5
                                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
                                                                 .createSequentialGroup()
                                                                 .addContainerGap(33, Short.MAX_VALUE)
@@ -816,18 +834,21 @@ public class LoanReceipt extends javax.swing.JFrame {
                                                 .addGroup(layout
                                                         .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addGroup(layout.createSequentialGroup()
-                                                                .addGroup(layout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                .addGroup(layout
+                                                                        .createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
                                                                         .addComponent(jLabel4)
                                                                         .addComponent(jLabel3)
                                                                         .addComponent(jLabel6))
                                                                 .addPreferredGap(
                                                                         javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(layout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.LEADING,
-                                                                        false)
-                                                                        .addGroup(layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                .addGroup(layout
+                                                                        .createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                                                false)
+                                                                        .addGroup(layout
+                                                                                .createParallelGroup(
+                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
                                                                                 .addComponent(txtPartyName,
                                                                                         javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -859,7 +880,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                                 .addContainerGap()));
 
         pack();
-    }// </editor-fold>
+    }
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
@@ -1059,7 +1080,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT","getLastSnoValue") + 1));
+        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT", "getLastSnoValue") + 1));
         loadLoanReceiptData();
         GetInterestAmount.processAllLoanEntries();
     }
@@ -1133,6 +1154,34 @@ public class LoanReceipt extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
+        // Placeholder for print functionality
+        try {
+            // Attempt to print the table
+            boolean complete = jTable1.print(JTable.PrintMode.FIT_WIDTH,
+                    new MessageFormat("Loan Receipt"),
+                    new MessageFormat("Page {0}"));
+            if (complete) {
+                JOptionPane.showMessageDialog(this,
+                        "Printing completed successfully",
+                        "Print Success",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Printing was cancelled",
+                        "Print Cancelled",
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (java.awt.print.PrinterException pe) {
+            JOptionPane.showMessageDialog(this,
+                    "Error while printing: " + pe.getMessage(),
+                    "Print Error",
+                    JOptionPane.ERROR_MESSAGE);
+            pe.printStackTrace();
+        }
+        // Add your print logic here, e.g., printing the current receipt data
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -1141,6 +1190,8 @@ public class LoanReceipt extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox<String> jComboBox1;

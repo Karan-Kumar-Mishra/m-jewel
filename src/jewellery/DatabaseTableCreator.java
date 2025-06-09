@@ -16,7 +16,7 @@ public class DatabaseTableCreator {
                 CREATE TABLE IF NOT EXISTS LOAN_ENTRY (
                     ENTRY_DATE DATE ,
                     SLIP_NO VARCHAR(50) ,
-                    PARTY_NAME VARCHAR(100) PRIMARY KEY ,
+                    PARTY_NAME VARCHAR(100),
                     REMARKS VARCHAR(255),
                     START_DATE DATE,
                     INTEREST_DATE_PERCENTAGE DECIMAL(5, 2),

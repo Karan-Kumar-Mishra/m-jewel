@@ -12,8 +12,8 @@ public class LoanEntryDeleter {
 
     private static final Logger LOGGER = Logger.getLogger(LoanEntryDeleter.class.getName());
 
-    public static boolean deleteLoanByPartyName(String partyName) {
-        if (partyName == null || partyName.trim().isEmpty()) {
+    public static boolean deleteLoanByPartyName(String slip) {
+        if (slip == null || slip.trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Party name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -23,9 +23,9 @@ public class LoanEntryDeleter {
        
 
             // Proceed with deletion
-            String deleteSql = "DELETE FROM LOAN_ENTRY WHERE PARTY_NAME = ?";
+            String deleteSql = "DELETE FROM LOAN_ENTRY WHERE SLIP_NO = ?";
             try (PreparedStatement deleteStmt = connection.prepareStatement(deleteSql)) {
-                deleteStmt.setString(1, partyName);
+                deleteStmt.setString(1, slip);
                 int rowsAffected = deleteStmt.executeUpdate();
 
                 if (rowsAffected > 0) {
@@ -33,7 +33,7 @@ public class LoanEntryDeleter {
 //                        "Successfully deleted loan for party: " + partyName, 
 //                        "Success", 
 //                        JOptionPane.INFORMATION_MESSAGE);
-                    LOGGER.log(Level.INFO, "Deleted loan entry for party: {0}", partyName);
+                    LOGGER.log(Level.INFO, "Deleted loan entry for party: {0}", slip);
                     return true;
                 } else {
 //                    JOptionPane.showMessageDialog(null, 
@@ -44,7 +44,7 @@ public class LoanEntryDeleter {
                 }
             }
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error deleting loan for party: " + partyName, e);
+            LOGGER.log(Level.SEVERE, "Error deleting loan for party: " + slip, e);
 //            JOptionPane.showMessageDialog(null, 
 //                "Error deleting loan: " + e.getMessage(), 
 //                "Error", 

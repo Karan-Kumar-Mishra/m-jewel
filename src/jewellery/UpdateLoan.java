@@ -851,8 +851,8 @@ public class UpdateLoan extends javax.swing.JFrame {
         String details[] = getPartyDetailInLoan.get(selectedItem.toString());
 
         if (details == null || details.length == 0) {
-            
-           // JOptionPane.showMessageDialog(null, " party testing=> " + details == null || details.length == 0);
+
+            // JOptionPane.showMessageDialog(null, " party testing=> " + details == null || details.length == 0);
             return;
         }
 
@@ -1139,9 +1139,9 @@ public class UpdateLoan extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         Object selectedItem = jComboBox2.getSelectedItem();
         String partyName = selectedItem == null ? " " : selectedItem.toString();
-        LoanEntryDeleter.deleteLoanByPartyName(partyName);
-        DBController.executeQueryUpdate("DELETE FROM LOAN_RECEIPT WHERE PARTY_NAME = '" + PartynameForDeletetion + "'");
-        JOptionPane.showMessageDialog(null, "Entry is delete successfully !");
+        LoanEntryDeleter.deleteLoanByPartyName(jTextField18.getText());
+        DBController.executeQueryUpdate("DELETE FROM LOAN_RECEIPT WHERE SLIP_NO = '" + jTextField18.getText() + "'");
+        JOptionPane.showMessageDialog(null, "Entry is delete successfully ! with id=> " + jTextField18.getText());
         clearAllTextBox();
         jButton4.doClick();
     }
@@ -1192,8 +1192,7 @@ public class UpdateLoan extends javax.swing.JFrame {
 
         jComboBox3.setSelectedItem(interstType);
 
-      //  JOptionPane.showMessageDialog(null, " party name is => " + partyName);
-
+        //  JOptionPane.showMessageDialog(null, " party name is => " + partyName);
         //  System.out.println("weight type => " + jComboBox1.getSelectedItem());
     }
 
@@ -1246,10 +1245,10 @@ public class UpdateLoan extends javax.swing.JFrame {
         String reminders = jTextField11.getText().isEmpty() ? " " : jTextField11.getText();
         String notes = jTextField13.getText().isEmpty() ? " " : jTextField13.getText();
         String itemLocation = jTextField6.getText().isEmpty() ? "" : jTextField6.getText();
-        List<Object> result = DBController.executeQuery("select INTEREST_AMOUNT from LOAN_ENTRY where PARTY_NAME = '" + partyName + "';");
-     
-        LoanEntryDeleter.deleteLoanByPartyName(PartynameForDeletetion);
-    
+        List<Object> result = DBController.executeQuery("select INTEREST_AMOUNT from LOAN_ENTRY where SLIP_NO = '" + slipNo + "';");
+
+        LoanEntryDeleter.deleteLoanByPartyName(jTextField18.getText());
+
         String interestAmount = "0"; // Default value if no result is found
 
         if (result != null && !result.isEmpty()) {
