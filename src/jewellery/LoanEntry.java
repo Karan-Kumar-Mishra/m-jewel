@@ -837,8 +837,8 @@ public class LoanEntry extends javax.swing.JPanel {
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {
         Object selectedItem = jComboBox2.getSelectedItem();
         System.out.println("Selected party: " + selectedItem.toString());
+        JOptionPane.showMessageDialog(null, "party is=> " + selectedItem.toString());
         String details[] = getPartyDetailInLoan.get(selectedItem.toString());
-
         jLabelPartyName.setText(details[0]);
         jLabelPartyAddress.setText(details[1]);
         jLabelPartyCity.setText(details[2]);
@@ -1110,7 +1110,7 @@ public class LoanEntry extends javax.swing.JPanel {
         jTextField17.requestFocus();
     }
 
-   public void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
+    public void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
         java.awt.print.PrinterJob printerJob = java.awt.print.PrinterJob.getPrinterJob();
         printerJob.setPrintable(new java.awt.print.Printable() {
             @Override

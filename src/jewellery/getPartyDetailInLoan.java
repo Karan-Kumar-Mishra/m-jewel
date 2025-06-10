@@ -20,7 +20,7 @@ public class getPartyDetailInLoan {
 
         try (Connection connection = DriverManager.getConnection(path, username, password); Statement statement = connection.createStatement()) {
 
-            String selectSQL = "select printname,address,city,mobile1,email from account where grp='Customer' and printname='" + KeyPartyName + "'";
+            String selectSQL = "select printname,address,city,mobile1,email from account where grp='Loans' and printname='" + KeyPartyName + "'";
 
             try (ResultSet resultSet = statement.executeQuery(selectSQL)) {
                 while (resultSet.next()) {

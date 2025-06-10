@@ -27,7 +27,7 @@ public class LastSnoValue {
                                       ResultSet.CONCUR_READ_ONLY);
             
             // 3. Execute query to get the last sno value
-            String sql = "SELECT "+columname+" FROM "+tablename+" ORDER BY SLIP_NO DESC LIMIT 1";
+            String sql = "SELECT "+columname+" FROM "+tablename+" ORDER BY "+columname+" DESC LIMIT 1";
             rs = stmt.executeQuery(sql);
             
             // 4. Get the last sno value

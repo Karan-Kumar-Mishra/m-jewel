@@ -214,7 +214,6 @@ public class LoanReceipt extends javax.swing.JFrame {
 
     private void PAYMENTMODEActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
-
     }
 
     // Add this method to your LoanReceipt class
@@ -1080,7 +1079,7 @@ public class LoanReceipt extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT", "getLastSnoValue") + 1));
+        jTextField1.setText(String.valueOf(LastSnoValue.getLastSnoValue("LOAN_RECEIPT", "RECEIPT_NO") + 1));
         loadLoanReceiptData();
         GetInterestAmount.processAllLoanEntries();
     }
