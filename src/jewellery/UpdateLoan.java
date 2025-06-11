@@ -1,4 +1,4 @@
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
@@ -1248,8 +1248,9 @@ public class UpdateLoan extends javax.swing.JFrame {
         List<Object> result = DBController.executeQuery("select INTEREST_AMOUNT from LOAN_ENTRY where SLIP_NO = '" + slipNo + "';");
 
         LoanEntryDeleter.deleteLoanByPartyName(jTextField18.getText());
+        
 
-        String interestAmount = "0"; // Default value if no result is found
+        String interestAmount = "0"; 
 
         if (result != null && !result.isEmpty()) {
             Object interestObj = result.get(0);
@@ -1280,6 +1281,7 @@ public class UpdateLoan extends javax.swing.JFrame {
                 interestAmount
         );
         GetInterestAmount.updateAllInterestAmounts(partyName);
+        DBController.executeQueryUpdate("delete from ");
         clearAllTextBox();
         jButton4.doClick();
     }

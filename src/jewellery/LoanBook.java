@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Window;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -34,9 +35,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.imageio.ImageIO;
-
 import org.jdesktop.swingx.JXImageView;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.nio.file.Files;
@@ -60,6 +59,18 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import jewellery.GetInterestAmount;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class LoanBook extends javax.swing.JPanel {
 
@@ -125,6 +136,157 @@ public class LoanBook extends javax.swing.JPanel {
             }
             return super.getTableCellRendererComponent(table, value, isSelected,
                     hasFocus, row, column);
+        }
+    }
+
+    private LoanDataBean createLoanDataBeanFromTable(Object[] rowData) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = rowData[0] != null ? new Date(dateFormat.parse(rowData[0].toString()).getTime()) : null;
+            String slipNo = rowData[1] != null ? rowData[1].toString() : "";
+            String partyName = rowData[2] != null ? rowData[2].toString() : "";
+            Double loanAmount = rowData[3] != null ? Double.parseDouble(rowData[3].toString()) : 0.0;
+            Double weight = rowData[4] != null ? Double.parseDouble(rowData[4].toString()) : 0.0;
+            Long days = rowData[5] != null ? Long.parseLong(rowData[5].toString().split("\\(")[1].replace(")", ""))
+                    : 0L;
+            Double interestAmount = rowData[6] != null ? Double.parseDouble(rowData[6].toString()) : 0.0;
+            Double totalAmount = rowData[7] != null ? Double.parseDouble(rowData[7].toString()) : 0.0;
+            Double currentValue = rowData[8] != null ? Double.parseDouble(rowData[8].toString()) : 0.0;
+
+            return new LoanDataBean(date, slipNo, partyName, loanAmount, weight, days, interestAmount, totalAmount,
+                    currentValue);
+        } catch (Exception e) {
+            Logger.getLogger(LoanBook.class.getName()).log(Level.SEVERE, "Error creating LoanDataBean from table", e);
+            return new LoanDataBean(null, "", "", 0.0, 0.0, 0L, 0.0, 0.0, 0.0);
+        }
+    }
+
+    private void printSaleBillJasperReport(Object[] selectedRow, String reportType) {
+        try {
+            // Check if a row is selected
+            int selectedRowIndex = jTable1.getSelectedRow();
+            if (selectedRowIndex < 0 && selectedRow == null) {
+                JOptionPane.showMessageDialog(this, "Please select a row to print.",
+                        "No Selection", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Prepare data for the report
+            List<LoanDataBean> dataList = new ArrayList<>();
+
+            // If selectedRow is provided, print only that row; otherwise, use table
+            // selection
+            if (selectedRow != null) {
+                dataList.add(createLoanDataBean(selectedRow));
+            } else {
+                // Get selected row data from the table
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                Object[] rowData = new Object[model.getColumnCount()];
+                for (int col = 0; col < model.getColumnCount(); col++) {
+                    rowData[col] = model.getValueAt(selectedRowIndex, col);
+                }
+                dataList.add(createLoanDataBeanFromTable(rowData));
+            }
+
+            // Create JRBeanCollectionDataSource
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(dataList);
+
+            // Load the JasperReport template based on reportType
+            String reportPath = System.getProperty("user.dir") + File.separator + "src" + File.separator
+                    + "jasper_reports" + File.separator + "loanBook.jrxml";
+            if (!new File(reportPath).exists()) {
+                JOptionPane.showMessageDialog(this, "Report template not found at: " + reportPath,
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Compile the report
+            JasperReport jasperReport = JasperCompileManager.compileReport(reportPath);
+
+            // Fill the report with parameters
+            HashMap<String, Object> parameters = new HashMap<>();
+            parameters.put("ReportTitle", "Loan Report - " + reportType);
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+            // Export to PDF
+            String outputPath = System.getProperty("user.dir") + File.separator + "LoanReport_"
+                    + System.currentTimeMillis() + ".pdf";
+            JasperExportManager.exportReportToPdfFile(jasperPrint, outputPath);
+
+            // View the report
+            JasperViewer viewer = new JasperViewer(jasperPrint, false);
+            viewer.setTitle("Loan Report - " + reportType);
+            viewer.setVisible(true);
+
+            JOptionPane.showMessageDialog(this, "Report generated successfully at: " + outputPath,
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (JRException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error generating report: " + ex.getMessage(),
+                    "Report Error", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(LoanBook.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Unexpected error: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(LoanBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    // Helper method to create LoanDataBean from table row
+    // Helper method to create LoanDataBean from completeLoanData row
+    private LoanDataBean createLoanDataBean(Object[] rowData) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = rowData[0] != null ? new Date(dateFormat.parse(rowData[0].toString()).getTime()) : null;
+            String slipNo = getStringValue(rowData, 1);
+            String partyName = getStringValue(rowData, 2);
+            Double loanAmount = rowData[12] != null ? Double.parseDouble(rowData[12].toString()) : 0.0; // AMOUNT_PAID
+            Double weight = rowData[10] != null ? Double.parseDouble(rowData[10].toString()) : 0.0; // NET_WEIGHT
+            Long days = rowDays; // Calculated days
+            Double interestAmount = rowData[21] != null ? Double.parseDouble(rowData[21].toString()) : 0.0; // INTEREST_AMOUNT
+            Double totalAmount = (rowData[21] != null && rowData[12] != null)
+                    ? Double.parseDouble(rowData[21].toString()) + Double.parseDouble(rowData[12].toString())
+                    : 0.0;
+            Double currentValue = 0.0; // Placeholder as per original code
+
+            return new LoanDataBean(date, slipNo, partyName, loanAmount, weight, days, interestAmount, totalAmount,
+                    currentValue);
+        } catch (Exception e) {
+            Logger.getLogger(LoanBook.class.getName()).log(Level.SEVERE, "Error creating LoanDataBean", e);
+            return new LoanDataBean(null, "", "", 0.0, 0.0, 0L, 0.0, 0.0, 0.0);
+        }
+    }
+
+    private void printbuttonclicked() {
+        try {
+            String[] options = { "Type 1", "Type 2", "Type 3" };
+            String typeToBePrinted = (String) JOptionPane.showInputDialog(null,
+                    "Select One:", "Print", JOptionPane.QUESTION_MESSAGE, null,
+                    options, options[0]);
+
+            if (typeToBePrinted != null && Arrays.asList(options).contains(typeToBePrinted)) {
+                int selectedRowIndex = jTable1.getSelectedRow();
+                if (selectedRowIndex >= 0 && selectedRowIndex < completeLoanData.length) {
+                    Object[] selectedRow = completeLoanData[selectedRowIndex];
+                    printSaleBillJasperReport(selectedRow, typeToBePrinted);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Please select a row to print.",
+                            "No Selection", JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "No report type selected or invalid selection.",
+                        "Selection Error", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error initiating print: " + e.getMessage(),
+                    "Print Error", JOptionPane.ERROR_MESSAGE);
+            Logger.getLogger(LoanBook.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -201,7 +363,8 @@ public class LoanBook extends javax.swing.JPanel {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     java.util.Date parsedDate = dateFormat.parse(dateString);
                     java.sql.Date startDate = new java.sql.Date(parsedDate.getTime());
-                    rowDays = (System.currentTimeMillis() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+                    rowDays = (System.currentTimeMillis() - startDate.getTime())
+                            / (1000 * 60 * 60 * 24);
                 }
             } catch (Exception e) {
                 rowDays = 0;
@@ -333,7 +496,8 @@ public class LoanBook extends javax.swing.JPanel {
 
         // Filter the data based on date range (start date <= selected date)
         Object[][] filteredData = Arrays.stream(completeLoanData)
-                .filter(row -> row != null && row.length > 1 && row[1] != null) // Check for valid row and date exists
+                .filter(row -> row != null && row.length > 1 && row[1] != null) // Check for valid row
+                // and date exists
                 .filter(row -> {
                     try {
                         // The date to compare is in the original data at index 1 (START_DATE)
@@ -348,7 +512,8 @@ public class LoanBook extends javax.swing.JPanel {
                             rowDate = (java.sql.Date) dateObj;
                         } else if (dateObj instanceof String) {
                             // Try to parse the string date
-                            SimpleDateFormat parseFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            SimpleDateFormat parseFormat = new SimpleDateFormat(
+                                    "yyyy-MM-dd");
                             rowDate = parseFormat.parse(dateObj.toString());
                         } else if (dateObj instanceof java.util.Date) {
                             rowDate = (java.util.Date) dateObj;
@@ -372,7 +537,8 @@ public class LoanBook extends javax.swing.JPanel {
         if (filteredData.length == 0) {
             setColumnWidths();
             JOptionPane.showMessageDialog(this,
-                    "No records found before or on: " + new SimpleDateFormat("dd-MM-yyyy").format(selectedDate),
+                    "No records found before or on: "
+                            + new SimpleDateFormat("dd-MM-yyyy").format(selectedDate),
                     "No Data",
                     JOptionPane.INFORMATION_MESSAGE);
         }
@@ -470,7 +636,8 @@ public class LoanBook extends javax.swing.JPanel {
             // Add each field to the display table
             for (int i = 0; i < fieldLabels.length; i++) {
                 message.append("<tr>" + i + "<td><b>").append(fieldLabels[i]).append("</b></td>")
-                        .append("<td>").append(loanData[i] != null ? loanData[i].toString() : "N/A")
+                        .append("<td>")
+                        .append(loanData[i] != null ? loanData[i].toString() : "N/A")
                         .append("</td></tr>");
             }
             message.append("</table></body></html>");
@@ -679,7 +846,8 @@ public class LoanBook extends javax.swing.JPanel {
             // Get and parse the start date string
             String dateString = rowData[0].toString();
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // adjust format to match your date string
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // adjust format to match your
+            // date string
             java.util.Date parsedDate = dateFormat.parse(dateString);
             java.sql.Date startDate = new java.sql.Date(parsedDate.getTime());
 
@@ -838,77 +1006,123 @@ public class LoanBook extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel1Layout
-                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 113,
+                                        .createParallelGroup(
+                                                javax.swing.GroupLayout.Alignment.LEADING,
+                                                false)
+                                        .addComponent(jCheckBox1,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                Short.MAX_VALUE)
+                                        .addComponent(jLabel1,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                113,
                                                 Short.MAX_VALUE))
                                 .addGap(26, 26, 26)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 104,
+                                .addGroup(jPanel1Layout.createParallelGroup(
+                                        javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel2,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                104,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104,
+                                        .addComponent(jLabel3,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                104,
                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(48, 48, 48)
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 154,
+                                .addComponent(jDateChooser1,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        154,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 97,
+                                .addPreferredGap(
+                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        97,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 97,
+                                .addPreferredGap(
+                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton4,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        97,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 97,
+                                .addPreferredGap(
+                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton3,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        97,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 97,
+                                .addPreferredGap(
+                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        97,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(
+                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 97,
+                                .addPreferredGap(
+                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton5,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        97,
                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        Short.MAX_VALUE)));
         jPanel1Layout.setVerticalGroup(
                 jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout
-                                                .createSequentialGroup()
-                                                .addGroup(jPanel1Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(jPanel1Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                                        .addComponent(jCheckBox1,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 25,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jLabel3))
-                                                .addGap(8, 8, 8))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout
-                                                .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-                                                        jPanel1Layout.createSequentialGroup()
-                                                                .addGroup(jPanel1Layout.createParallelGroup(
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(
+                                        javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                                jPanel1Layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(jPanel1Layout
+                                                                .createParallelGroup(
+                                                                        javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                .addComponent(jLabel1,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                        27,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(jLabel2,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                        25,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addPreferredGap(
+                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addGroup(jPanel1Layout
+                                                                .createParallelGroup(
                                                                         javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                        .addComponent(jButton2)
-                                                                        .addComponent(jButton4)
-                                                                        .addComponent(jButton5)
-                                                                        .addComponent(jButton6)
-                                                                        .addComponent(jButton1)
-                                                                        .addComponent(jButton3))
-                                                                .addGap(19, 19, 19))
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addComponent(jDateChooser1,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 31,
-                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addContainerGap())))));
+                                                                .addComponent(jCheckBox1,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                        25,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(jLabel3))
+                                                        .addGap(8, 8, 8))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                                jPanel1Layout
+                                                        .createParallelGroup(
+                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                jPanel1Layout.createSequentialGroup()
+                                                                        .addGroup(jPanel1Layout
+                                                                                .createParallelGroup(
+                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                .addComponent(jButton2)
+                                                                                .addComponent(jButton4)
+                                                                                .addComponent(jButton5)
+                                                                                .addComponent(jButton6)
+                                                                                .addComponent(jButton1)
+                                                                                .addComponent(jButton3))
+                                                                        .addGap(19, 19, 19))
+                                                        .addGroup(jPanel1Layout
+                                                                .createSequentialGroup()
+                                                                .addComponent(jDateChooser1,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                        31,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addContainerGap())))));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
                 new Object[][] {
@@ -976,21 +1190,27 @@ public class LoanBook extends javax.swing.JPanel {
                                 javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jScrollPane1)
                         .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(
+                                        javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(14, 14, 14)
-                                                .addComponent(jXImageView1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                .addComponent(jXImageView1,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(30, 30, 30)
-                                                .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 148,
+                                                .addComponent(jLabel31,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        148,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(
+                                        javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .createParallelGroup(
+                                                                javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addGroup(layout.createSequentialGroup()
                                                                 .addGroup(layout.createParallelGroup(
                                                                         javax.swing.GroupLayout.Alignment.LEADING)
@@ -1021,7 +1241,8 @@ public class LoanBook extends javax.swing.JPanel {
                                                                                         .addComponent(jLabel22,
                                                                                                 javax.swing.GroupLayout.Alignment.LEADING,
                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                                98, Short.MAX_VALUE)
+                                                                                                98,
+                                                                                                Short.MAX_VALUE)
                                                                                         .addComponent(jLabel21,
                                                                                                 javax.swing.GroupLayout.Alignment.LEADING,
                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
@@ -1103,19 +1324,26 @@ public class LoanBook extends javax.swing.JPanel {
                                                                                 .addGap(0, 0, Short.MAX_VALUE))))
                                                         .addGroup(layout.createSequentialGroup()
                                                                 .addComponent(jLabel8,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 134,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                        134,
                                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
                                                                         javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(jSeparator2,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 539,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                        539,
                                                                         javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 29,
+                                                .addPreferredGap(
+                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel7,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        29,
                                                         javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addPreferredGap(
+                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .createParallelGroup(
+                                                                javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addGroup(layout.createSequentialGroup()
                                                                 .addGroup(layout.createParallelGroup(
                                                                         javax.swing.GroupLayout.Alignment.LEADING,
@@ -1160,137 +1388,165 @@ public class LoanBook extends javax.swing.JPanel {
                                                                                         Short.MAX_VALUE)
                                                                                 .addComponent(jLabel30,
                                                                                         javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                        88, Short.MAX_VALUE))
+                                                                                        88,
+                                                                                        Short.MAX_VALUE))
                                                                         .addComponent(jLabel33,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 119,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE))
                                                                 .addGap(73, 73, 73))
-                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
-                                                                .createSequentialGroup()
-                                                                .addComponent(jLabel4,
-                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                        Short.MAX_VALUE)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                layout
+                                                                        .createSequentialGroup()
+                                                                        .addComponent(jLabel4,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)
+                                                                        .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jButton7)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                                .addPreferredGap(
+                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                        Short.MAX_VALUE)))
                                 .addComponent(jLabel5)
                                 .addContainerGap()));
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jPanel1,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(
+                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(
+                                        javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel5,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                Short.MAX_VALUE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGap(0, 0, Short.MAX_VALUE)
                                                 .addComponent(jLabel34)
                                                 .addGap(102, 102, 102))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout
-                                                .createSequentialGroup()
-                                                .addGroup(layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(jScrollPane1,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 310,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(layout.createParallelGroup(
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+                                                layout
+                                                        .createSequentialGroup()
+                                                        .addGroup(layout
+                                                                .createParallelGroup(
                                                                         javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                .addComponent(jLabel4)
-                                                                                .addPreferredGap(
-                                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                        Short.MAX_VALUE)
-                                                                                .addGroup(layout.createParallelGroup(
-                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                        .addComponent(jLabel10)
-                                                                                        .addComponent(jLabel27))
-                                                                                .addGap(18, 18, 18)
-                                                                                .addGroup(layout.createParallelGroup(
-                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                        .addComponent(jLabel11)
-                                                                                        .addComponent(jLabel28))
-                                                                                .addGap(18, 18, 18)
-                                                                                .addGroup(layout.createParallelGroup(
-                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                        .addComponent(jLabel12)
-                                                                                        .addComponent(jLabel29))
-                                                                                .addGap(18, 18, 18)
-                                                                                .addGroup(layout.createParallelGroup(
-                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                        .addComponent(jLabel13)
-                                                                                        .addComponent(jLabel30))
-                                                                                .addComponent(jLabel33)
-                                                                                .addPreferredGap(
-                                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                .addComponent(jLabel14))
-                                                                        .addGroup(
-                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
-                                                                                layout.createSequentialGroup()
-                                                                                        .addComponent(jXImageView1,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                .addComponent(jLabel7,
+                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                        Short.MAX_VALUE)
+                                                                .addGroup(layout.createSequentialGroup()
+                                                                        .addComponent(jScrollPane1,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                310,
+                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(
+                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addGroup(layout.createParallelGroup(
+                                                                                javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                .addGroup(layout.createSequentialGroup()
+                                                                                        .addComponent(jLabel4)
+                                                                                        .addPreferredGap(
+                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED,
                                                                                                 javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                        .addGap(9, 9, 9))
-                                                                        .addGroup(layout.createSequentialGroup()
-                                                                                .addGroup(layout.createParallelGroup(
-                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                        .addComponent(jLabel15)
-                                                                                        .addComponent(jLabel23))
-                                                                                .addPreferredGap(
-                                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                .addGroup(layout.createParallelGroup(
-                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                        .addComponent(jLabel20)
-                                                                                        .addComponent(jLabel9)
-                                                                                        .addComponent(jLabel16,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                                25,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(jLabel24))
-                                                                                .addPreferredGap(
-                                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                .addGroup(layout.createParallelGroup(
-                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                        .addComponent(jLabel19)
-                                                                                        .addComponent(jLabel21)
-                                                                                        .addComponent(jLabel17)
-                                                                                        .addComponent(jLabel25))
-                                                                                .addPreferredGap(
-                                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                .addGroup(layout.createParallelGroup(
-                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
-                                                                                        .addComponent(jLabel6)
-                                                                                        .addComponent(jLabel22)
-                                                                                        .addComponent(jLabel18)
-                                                                                        .addComponent(jLabel26))
-                                                                                .addGap(20, 20, 20)
-                                                                                .addGroup(layout.createParallelGroup(
-                                                                                        javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                        .addComponent(jSeparator2,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                                10,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                        .addComponent(jLabel8))
-                                                                                .addPreferredGap(
-                                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                .addComponent(jButton7)
-                                                                                .addGap(0, 0, Short.MAX_VALUE)))))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel31)
-                                                .addGap(71, 71, 71)))
+                                                                                                Short.MAX_VALUE)
+                                                                                        .addGroup(layout
+                                                                                                .createParallelGroup(
+                                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                                .addComponent(jLabel10)
+                                                                                                .addComponent(jLabel27))
+                                                                                        .addGap(18, 18, 18)
+                                                                                        .addGroup(layout
+                                                                                                .createParallelGroup(
+                                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                                .addComponent(jLabel11)
+                                                                                                .addComponent(jLabel28))
+                                                                                        .addGap(18, 18, 18)
+                                                                                        .addGroup(layout
+                                                                                                .createParallelGroup(
+                                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                                .addComponent(jLabel12)
+                                                                                                .addComponent(jLabel29))
+                                                                                        .addGap(18, 18, 18)
+                                                                                        .addGroup(layout
+                                                                                                .createParallelGroup(
+                                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                                .addComponent(jLabel13)
+                                                                                                .addComponent(jLabel30))
+                                                                                        .addComponent(jLabel33)
+                                                                                        .addPreferredGap(
+                                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                        .addComponent(jLabel14))
+                                                                                .addGroup(
+                                                                                        javax.swing.GroupLayout.Alignment.TRAILING,
+                                                                                        layout.createSequentialGroup()
+                                                                                                .addComponent(
+                                                                                                        jXImageView1,
+                                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                .addGap(9, 9, 9))
+                                                                                .addGroup(layout.createSequentialGroup()
+                                                                                        .addGroup(layout
+                                                                                                .createParallelGroup(
+                                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                                .addComponent(jLabel15)
+                                                                                                .addComponent(jLabel23))
+                                                                                        .addPreferredGap(
+                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                        .addGroup(layout
+                                                                                                .createParallelGroup(
+                                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                                .addComponent(jLabel20)
+                                                                                                .addComponent(jLabel9)
+                                                                                                .addComponent(jLabel16,
+                                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                        25,
+                                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                .addComponent(jLabel24))
+                                                                                        .addPreferredGap(
+                                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                        .addGroup(layout
+                                                                                                .createParallelGroup(
+                                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                                .addComponent(jLabel19)
+                                                                                                .addComponent(jLabel21)
+                                                                                                .addComponent(jLabel17)
+                                                                                                .addComponent(jLabel25))
+                                                                                        .addPreferredGap(
+                                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                        .addGroup(layout
+                                                                                                .createParallelGroup(
+                                                                                                        javax.swing.GroupLayout.Alignment.BASELINE)
+                                                                                                .addComponent(jLabel6)
+                                                                                                .addComponent(jLabel22)
+                                                                                                .addComponent(jLabel18)
+                                                                                                .addComponent(jLabel26))
+                                                                                        .addGap(20, 20, 20)
+                                                                                        .addGroup(layout
+                                                                                                .createParallelGroup(
+                                                                                                        javax.swing.GroupLayout.Alignment.LEADING)
+                                                                                                .addComponent(
+                                                                                                        jSeparator2,
+                                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                                                        10,
+                                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                                .addComponent(jLabel8))
+                                                                                        .addPreferredGap(
+                                                                                                javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                                        .addComponent(jButton7)
+                                                                                        .addGap(0, 0,
+                                                                                                Short.MAX_VALUE)))))
+                                                        .addPreferredGap(
+                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(jLabel31)
+                                                        .addGap(71, 71, 71)))
                                 .addContainerGap()));
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1347,7 +1603,8 @@ public class LoanBook extends javax.swing.JPanel {
                     imagePaths.add(path.toString());
                 }
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(frame, "Error reading image directory: " + ex.getMessage(),
+                JOptionPane.showMessageDialog(frame,
+                        "Error reading image directory: " + ex.getMessage(),
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -1503,29 +1760,7 @@ public class LoanBook extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        try {
-            // Attempt to print the table
-            boolean complete = jTable1.print(JTable.PrintMode.FIT_WIDTH,
-                    new MessageFormat("Loan Book"),
-                    new MessageFormat("Page {0}"));
-            if (complete) {
-                JOptionPane.showMessageDialog(this,
-                        "Printing completed successfully",
-                        "Print Success",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Printing was cancelled",
-                        "Print Cancelled",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (java.awt.print.PrinterException pe) {
-            JOptionPane.showMessageDialog(this,
-                    "Error while printing: " + pe.getMessage(),
-                    "Print Error",
-                    JOptionPane.ERROR_MESSAGE);
-            pe.printStackTrace();
-        }
+        printbuttonclicked();
 
     }// GEN-LAST:event_jButton2ActionPerformed
 

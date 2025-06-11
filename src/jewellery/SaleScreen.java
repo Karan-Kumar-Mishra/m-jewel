@@ -2176,6 +2176,11 @@ public class SaleScreen extends javax.swing.JFrame {
                 jButton4MouseClicked(evt);
             }
         });
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
         pnlRootContainer.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 10, 70, 31));
 
         jButton5.setText("Refresh");
@@ -3500,7 +3505,7 @@ public class SaleScreen extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, qty);
                 con = DBConnect.connect();
                 Statement st = con.createStatement();
-                String query = "UPDATE " + DatabaseCredentials.ENTRY_ITEM_TABLE + " SET item_sold = " + ((int)(qty)) + " "
+                String query = "UPDATE " + DatabaseCredentials.ENTRY_ITEM_TABLE + " SET item_sold = " + ((int) (qty)) + " "
                         + " WHERE itemname = '" + itemname + "';";
                 st.execute(query);
 
@@ -5635,6 +5640,10 @@ public class SaleScreen extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e);
         }
     }//GEN-LAST:event_saveMouseClicked
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     private void spTblItemNameSuggestionsDetailsContainerFocusLost(java.awt.event.FocusEvent evt) {
         // TODO add your handling code here:

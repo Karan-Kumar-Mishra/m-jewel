@@ -1105,7 +1105,6 @@ public class PaymentScreen extends javax.swing.JFrame {
 
     private void PAYMENTMODEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PAYMENTMODEActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_PAYMENTMODEActionPerformed
 
     private void PAYMENTMODEFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_PAYMENTMODEFocusGained

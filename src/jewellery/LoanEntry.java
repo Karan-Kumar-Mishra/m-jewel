@@ -28,6 +28,8 @@ import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import jewellery.GetInterestAmount;
 
+import jewellery.ID_generator;
+
 public class LoanEntry extends javax.swing.JPanel {
 
     private String[] partyNames;
@@ -134,7 +136,7 @@ public class LoanEntry extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     private void initComponents() {
         DatabaseTableCreator.create();
-        int slip_number = LastSnoValue.getLastSnoValue("LOAN_ENTRY", "SLIP_NO");
+        String slip_number = ID_generator.generate(5);
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
