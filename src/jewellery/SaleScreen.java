@@ -75,7 +75,8 @@ public class SaleScreen extends javax.swing.JFrame {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public DefaultTableModel salesListTableModel;
     private ImageIcon imageIcon;
-//    private final PurchaseItemsDetailDialog purchaseItemsDetailsDialog = new PurchaseItemsDetailDialog(this, false, 0);
+    // private final PurchaseItemsDetailDialog purchaseItemsDetailsDialog = new
+    // PurchaseItemsDetailDialog(this, false, 0);
     private DateTimeFormatter dateTimeFormatter;
     private LocalDateTime localDateTime;
     private final DefaultTableModel itemNameSuggestionsTableModel;
@@ -97,13 +98,14 @@ public class SaleScreen extends javax.swing.JFrame {
         initComponents();
 
         initPopups();
-//        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        // jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         whatsuppanel.setVisible(false);
         jPanel2.setVisible(false);
         save.setEnabled(false);
         jButton4.setEnabled(false);
         txtQty.setText("1");
-        Logger.getLogger(SaleScreen.class.getName()).info("*********************************************************running sales");
+        Logger.getLogger(SaleScreen.class.getName())
+                .info("*********************************************************running sales");
         System.out.println("*********************************************************running sales");
         ex.setVisible(false);
         salesListTableModel = (DefaultTableModel) tblPurchasesList.getModel();
@@ -123,9 +125,9 @@ public class SaleScreen extends javax.swing.JFrame {
         String itemgrp;
         setDateOnJCalender("yyyy-MM-dd");
 
-//        setImageOnJLabel(lblDeleteButton, AssetsLocations.TRASH_CAN_ICON);
-//        setImageOnJLabel(lblPrintButton, AssetsLocations.PRINT_ICON);
-//        setImageOnJLabel(lblClearFields, AssetsLocations.CLEANING_BROOM_ICON);
+        // setImageOnJLabel(lblDeleteButton, AssetsLocations.TRASH_CAN_ICON);
+        // setImageOnJLabel(lblPrintButton, AssetsLocations.PRINT_ICON);
+        // setImageOnJLabel(lblClearFields, AssetsLocations.CLEANING_BROOM_ICON);
         pmItemNameSuggestionsPopup.add(spTblItemNameSuggestionsContainer);
         pmItemNameSuggestionsPopup.setLocation(txtItemName.getX() + 200, txtItemName.getY() + 150);
         pmItemNameSuggestionsDetailsPopup.add(spTblItemNameSuggestionsDetailsContainer);
@@ -150,7 +152,8 @@ public class SaleScreen extends javax.swing.JFrame {
 
         Connection con = DBConnect.connect();
         Statement st = con.createStatement();
-        ResultSet rs = st.executeQuery("SELECT * FROM " + DatabaseCredentials.SALES_TABLE + " WHERE bill = " + billNumber);
+        ResultSet rs = st
+                .executeQuery("SELECT * FROM " + DatabaseCredentials.SALES_TABLE + " WHERE bill = " + billNumber);
         String terms = "";
         while (rs.next()) {
             terms = rs.getString("terms");
@@ -196,8 +199,8 @@ public class SaleScreen extends javax.swing.JFrame {
 
     public void saleRegisterRedirect(int bill) throws SQLException, FileNotFoundException {
         save.setText(("Update"));
-//ExChange ex=new ExChange();
-//ex.fetchData(bill);
+        // ExChange ex=new ExChange();
+        // ex.fetchData(bill);
         save.setEnabled(true);
         jButton4.setEnabled(true);
         soldItemsForCurrentBill.clear();
@@ -250,8 +253,9 @@ public class SaleScreen extends javax.swing.JFrame {
         DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS, DatabaseCredentials.DB_USERNAME,
                 DatabaseCredentials.DB_PASSWORD);
 
-        List<List<Object>> res = DBController.getDataFromTable("SELECT partyname, receivedamount FROM " + DatabaseCredentials.SALES_TABLE
-                + " WHERE bill=" + bill);
+        List<List<Object>> res = DBController
+                .getDataFromTable("SELECT partyname, receivedamount FROM " + DatabaseCredentials.SALES_TABLE
+                        + " WHERE bill=" + bill);
 
         String partyname = "";
         double recamt = 0;
@@ -276,17 +280,17 @@ public class SaleScreen extends javax.swing.JFrame {
                     + DatabaseCredentials.SALES_TABLE + " WHERE bill= " + "'" + bill + "'");
 
             salesItems.forEach((item) -> {
-                salesListTableModel.addRow(new Object[]{
-                    (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
-                    (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
-                    (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
-                    (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
-                    (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
-                    (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // taxableAmount
-                    (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // gst
-                    (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gstamt
-                    (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8),
-                    (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
+                salesListTableModel.addRow(new Object[] {
+                        (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
+                        (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
+                        (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
+                        (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
+                        (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
+                        (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // taxableAmount
+                        (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // gst
+                        (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gstamt
+                        (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8),
+                        (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
                 });
             });
         } else {
@@ -298,17 +302,17 @@ public class SaleScreen extends javax.swing.JFrame {
                     + DatabaseCredentials.SALES_TABLE + " WHERE bill= " + "'" + bill + "'");
 
             salesItems.forEach((item) -> {
-                salesListTableModel.addRow(new Object[]{
-                    (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
-                    (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
-                    (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
-                    (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
-                    (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
-                    (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // taxableAmount
-                    (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // gst
-                    (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gstamt
-                    (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8),
-                    (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
+                salesListTableModel.addRow(new Object[] {
+                        (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
+                        (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
+                        (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
+                        (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
+                        (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
+                        (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // taxableAmount
+                        (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // gst
+                        (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gstamt
+                        (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8),
+                        (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
                 });
             });
         }
@@ -469,13 +473,15 @@ public class SaleScreen extends javax.swing.JFrame {
             DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
                     DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
         }
-//        JOptionPane.showMessageDialog(this, "testsachin item name "+name);
-//        JOptionPane.showMessageDialog(this, "testsachin tag no name "+tagno);
-        List<Object> itemGroup = DBController.executeQuery("SELECT grosswt,huid,beedswt,netwt,diamondwt,carats,taxslab FROM "
-                + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = " + "'" + name + "' AND tagno = '" + tagno + "' AND itemgroup = '" + itemgrp + "';");
-//           for(Object values:itemGroup){
-//              JOptionPane.showMessageDialog(this, "testsachin tag no name "+values); 
-//           }
+        // JOptionPane.showMessageDialog(this, "testsachin item name "+name);
+        // JOptionPane.showMessageDialog(this, "testsachin tag no name "+tagno);
+        List<Object> itemGroup = DBController
+                .executeQuery("SELECT grosswt,huid,beedswt,netwt,diamondwt,carats,taxslab FROM "
+                        + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = " + "'" + name + "' AND tagno = '"
+                        + tagno + "' AND itemgroup = '" + itemgrp + "';");
+        // for(Object values:itemGroup){
+        // JOptionPane.showMessageDialog(this, "testsachin tag no name "+values);
+        // }
         try {
             if (itemGroup.get(1) != null) {
                 huid = ("".equals(itemGroup.get(1).toString())) ? "" : itemGroup.get(1).toString();
@@ -512,13 +518,13 @@ public class SaleScreen extends javax.swing.JFrame {
 
         }
 
-//              JOptionPane.showMessageDialog(this, "testsachin huid name "+huid); 
-//              JOptionPane.showMessageDialog(this, "testsachin gro name "+grosswt); 
-//              JOptionPane.showMessageDialog(this, "testsachin beed name "+beedswt); 
-//              JOptionPane.showMessageDialog(this, "testsachin net wt name "+netwt); 
-//              JOptionPane.showMessageDialog(this, "testsachin diamond name "+diamondwt); 
-//              JOptionPane.showMessageDialog(this, "testsachin carat name "+carat); 
-//              JOptionPane.showMessageDialog(this, "testsachin gst name "+gst); 
+        // JOptionPane.showMessageDialog(this, "testsachin huid name "+huid);
+        // JOptionPane.showMessageDialog(this, "testsachin gro name "+grosswt);
+        // JOptionPane.showMessageDialog(this, "testsachin beed name "+beedswt);
+        // JOptionPane.showMessageDialog(this, "testsachin net wt name "+netwt);
+        // JOptionPane.showMessageDialog(this, "testsachin diamond name "+diamondwt);
+        // JOptionPane.showMessageDialog(this, "testsachin carat name "+carat);
+        // JOptionPane.showMessageDialog(this, "testsachin gst name "+gst);
         if (RealSettingsHelper.gettagNoIsTrue()) {
             if ("N.A".equals(tagno)) {
                 if (jComboBox1.getSelectedItem().equals("No GST")) {
@@ -599,7 +605,7 @@ public class SaleScreen extends javax.swing.JFrame {
             txtGSTPercent.setText(gst.replaceAll("%", ""));
         }
 
-//    JOptionPane.showMessageDialog(this, "testsachin ending of enter items"); 
+        // JOptionPane.showMessageDialog(this, "testsachin ending of enter items");
     }
 
     void getGST(String name) {
@@ -625,11 +631,11 @@ public class SaleScreen extends javax.swing.JFrame {
 
     private boolean fieldsAreValidated() {
         if (UtilityMethods.isTextFieldEmpty(txtPartyName)) {
-//                || !UtilityMethods.inputOnlyContainsAlphabets(txtPartyName.getText())) {
+            // || !UtilityMethods.inputOnlyContainsAlphabets(txtPartyName.getText())) {
             JOptionPane.showMessageDialog(this, "Please enter the party name correctly");
             return false;
         } else if (UtilityMethods.isTextFieldEmpty(txtItemName)) {
-//                || !UtilityMethods.inputContainsAlphabetsAndNumbers(txtItemName.getText())) {
+            // || !UtilityMethods.inputContainsAlphabetsAndNumbers(txtItemName.getText())) {
             JOptionPane.showMessageDialog(this, "Please enter the item name correctly");
             return false;
         }
@@ -722,20 +728,21 @@ public class SaleScreen extends javax.swing.JFrame {
                 salesItems = DBController.getDataFromTable("SELECT id,"
                         + "itemname, huid, netwt, qty,Discount, taxable_amount, gstpercent,gstamt, netamount FROM "
                         + DatabaseCredentials.SALES_TABLE + " WHERE date = "
-                        + "'" + UtilityMethods.getCurrentDate("yyyy-MM-dd") + "'" + " AND bill= " + "'" + txtBill.getText().trim() + "'");
+                        + "'" + UtilityMethods.getCurrentDate("yyyy-MM-dd") + "'" + " AND bill= " + "'"
+                        + txtBill.getText().trim() + "'");
 
                 salesItems.forEach((item) -> {
-                    salesListTableModel.addRow(new Object[]{
-                        (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
-                        (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
-                        (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
-                        (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
-                        (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
-                        (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), //discount
-                        (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // taxableAmount
-                        (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gst
-                        (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8), // gstamt
-                        (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
+                    salesListTableModel.addRow(new Object[] {
+                            (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
+                            (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
+                            (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
+                            (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
+                            (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
+                            (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // discount
+                            (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // taxableAmount
+                            (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gst
+                            (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8), // gstamt
+                            (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
                     });
                 });
             } else {
@@ -745,20 +752,21 @@ public class SaleScreen extends javax.swing.JFrame {
                 salesItems = DBController.getDataFromTable("SELECT id,"
                         + "itemname, huid, netwt, qty,Discount, taxable_amount, gstpercent,gstamt, netamount FROM "
                         + DatabaseCredentials.SALES_TABLE + " WHERE date = "
-                        + "'" + UtilityMethods.getCurrentDate("yyyy-MM-dd") + "'" + " AND bill= " + "'" + txtBill.getText().trim() + "'");
+                        + "'" + UtilityMethods.getCurrentDate("yyyy-MM-dd") + "'" + " AND bill= " + "'"
+                        + txtBill.getText().trim() + "'");
 
                 salesItems.forEach((item) -> {
-                    salesListTableModel.addRow(new Object[]{
-                        (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
-                        (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
-                        (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
-                        (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
-                        (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
-                        (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), //discount
-                        (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // taxableAmount
-                        (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gst
-                        (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8), // gstamt
-                        (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
+                    salesListTableModel.addRow(new Object[] {
+                            (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
+                            (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
+                            (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
+                            (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
+                            (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
+                            (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // discount
+                            (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // taxableAmount
+                            (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gst
+                            (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8), // gstamt
+                            (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
                     });
                 });
             }
@@ -846,15 +854,15 @@ public class SaleScreen extends javax.swing.JFrame {
             } else {
                 labour = (netWeight * rate) * (labourper / 100.0);
             }
-//            double labourdis = Double.parseDouble(txtExtraCharge2.getText());
+            // double labourdis = Double.parseDouble(txtExtraCharge2.getText());
             double diamondWt = Double.parseDouble(txtDiamondWt.getText());
             double diamondRate = Double.parseDouble(txtDiamondRate.getText());
             double extraCharge = Double.parseDouble(txtExtraCharge.getText());
 
             double basicAmount = (netWeight * rate) + (diamondWt * diamondRate) + extraCharge + (labour);
-//            if(!(txtDiscount.getText().trim().isEmpty())){
-//               basicAmount-=Double.parseDouble(txtDiscount.getText());
-//            }
+            // if(!(txtDiscount.getText().trim().isEmpty())){
+            // basicAmount-=Double.parseDouble(txtDiscount.getText());
+            // }
 
             txtBasicAmt.setText(String.format("%.3f", basicAmount));
 
@@ -878,7 +886,8 @@ public class SaleScreen extends javax.swing.JFrame {
 
         if (partyGSTAndBalance.get(1) != null) {
             try {
-//                JOptionPane.showMessageDialog(this,outstandingAnalysisHelper.fillTableInDateGivenParty(partyName) );
+                // JOptionPane.showMessageDialog(this,outstandingAnalysisHelper.fillTableInDateGivenParty(partyName)
+                // );
                 lblPreviousBalance.setText(outstandingAnalysisHelper.fillTableInDateGivenParty(partyName));
             } catch (ParseException ex) {
                 Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -914,11 +923,11 @@ public class SaleScreen extends javax.swing.JFrame {
                         tblItemNameSuggestionsDetails.getValueAt(tblItemNameSuggestionsDetails
                                 .getSelectedRow(), 0).toString(),
                         tblItemNameSuggestionsDetails.getValueAt(tblItemNameSuggestionsDetails
-                                .getSelectedRow(), 2).toString()
-                );
-//                txtGSTPercent.setText(itemNameSuggestionsTableModel
-//                        .getValueAt(tblItemNameSuggestions.getSelectedRow(), 2).toString().replaceAll("%", ""));
-//			txtQty.setText("1");
+                                .getSelectedRow(), 2).toString());
+                // txtGSTPercent.setText(itemNameSuggestionsTableModel
+                // .getValueAt(tblItemNameSuggestions.getSelectedRow(),
+                // 2).toString().replaceAll("%", ""));
+                // txtQty.setText("1");
                 pmItemNameSuggestionsDetailsPopup.setVisible(false);
                 break;
             case KeyEvent.VK_DOWN:
@@ -927,8 +936,11 @@ public class SaleScreen extends javax.swing.JFrame {
                     tblItemNameSuggestionsDetails.setRowSelectionInterval(0, 0);
                     selectedrow++;
                 } else {
-                    if (tblItemNameSuggestionsDetails.getSelectedRow() < tblItemNameSuggestionsDetails.getRowCount() - 1) {
-                        tblItemNameSuggestionsDetails.setRowSelectionInterval(tblItemNameSuggestionsDetails.getSelectedRow() + 1, tblItemNameSuggestionsDetails.getSelectedRow() + 1);
+                    if (tblItemNameSuggestionsDetails.getSelectedRow() < tblItemNameSuggestionsDetails.getRowCount()
+                            - 1) {
+                        tblItemNameSuggestionsDetails.setRowSelectionInterval(
+                                tblItemNameSuggestionsDetails.getSelectedRow() + 1,
+                                tblItemNameSuggestionsDetails.getSelectedRow() + 1);
                     }
                 }
                 txtItemName.setText(tblItemNameSuggestionsDetails.getValueAt(tblItemNameSuggestionsDetails
@@ -943,16 +955,19 @@ public class SaleScreen extends javax.swing.JFrame {
                                 .getSelectedRow(), 0).toString(),
                         tblItemNameSuggestionsDetails.getValueAt(tblItemNameSuggestionsDetails
                                 .getSelectedRow(), 2).toString());
-//                txtGSTPercent.setText(itemNameSuggestionsTableModel
-//                        .getValueAt(tblItemNameSuggestions.getSelectedRow(), 2).toString().replaceAll("%", ""));
-//			txtQty.setText("1");
+                // txtGSTPercent.setText(itemNameSuggestionsTableModel
+                // .getValueAt(tblItemNameSuggestions.getSelectedRow(),
+                // 2).toString().replaceAll("%", ""));
+                // txtQty.setText("1");
                 pmItemNameSuggestionsDetailsPopup.setVisible(false);
                 break;
             case KeyEvent.VK_UP:
                 tblItemNameSuggestionsDetails.requestFocus();
 
                 if (tblItemNameSuggestionsDetails.getSelectedRow() > 0) {
-                    tblItemNameSuggestionsDetails.setRowSelectionInterval(tblItemNameSuggestionsDetails.getSelectedRow() - 1, tblItemNameSuggestionsDetails.getSelectedRow() - 1);
+                    tblItemNameSuggestionsDetails.setRowSelectionInterval(
+                            tblItemNameSuggestionsDetails.getSelectedRow() - 1,
+                            tblItemNameSuggestionsDetails.getSelectedRow() - 1);
                 }
 
                 txtItemName.setText(tblItemNameSuggestionsDetails.getValueAt(tblItemNameSuggestionsDetails
@@ -967,9 +982,10 @@ public class SaleScreen extends javax.swing.JFrame {
                                 .getSelectedRow(), 0).toString(),
                         tblItemNameSuggestionsDetails.getValueAt(tblItemNameSuggestionsDetails
                                 .getSelectedRow(), 2).toString());
-//                txtGSTPercent.setText(itemNameSuggestionsTableModel
-//                        .getValueAt(tblItemNameSuggestions.getSelectedRow(), 2).toString().replaceAll("%", ""));
-//			txtQty.setText("1");
+                // txtGSTPercent.setText(itemNameSuggestionsTableModel
+                // .getValueAt(tblItemNameSuggestions.getSelectedRow(),
+                // 2).toString().replaceAll("%", ""));
+                // txtQty.setText("1");
                 pmItemNameSuggestionsDetailsPopup.setVisible(false);
                 break;
         }
@@ -988,13 +1004,12 @@ public class SaleScreen extends javax.swing.JFrame {
         pmItemNameSuggestionsDetailsPopup.setMinimumSize(new java.awt.Dimension(200, 200));
 
         tblItemNameSuggestionsDetails.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{
-                    "Tag No.", "Item Name", "Item Group", "Net.W", "Huid"
-                }
-        ) {
-            boolean[] canEdit = new boolean[]{
-                false, false, false, false, false
+                new Object[][] {},
+                new String[] {
+                        "Tag No.", "Item Name", "Item Group", "Net.W", "Huid"
+                }) {
+            boolean[] canEdit = new boolean[] {
+                    false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1007,15 +1022,16 @@ public class SaleScreen extends javax.swing.JFrame {
                 tblItemNameSuggestionsDetailsMouseClicked(evt);
             }
         });
-//        tblItemNameSuggestionsDetails.addKeyListener(new java.awt.event.KeyAdapter() {
-//            public void keyPressed(java.awt.event.KeyEvent evt) {
-//                tblItemNameSuggestionsDetailsKeyPressed(evt);
-//            }
-//
-//            public void keyReleased(java.awt.event.KeyEvent evt) {
-//                tblItemNameSuggestionsDetailsKeyReleased(evt);
-//            }
-//        });
+        // tblItemNameSuggestionsDetails.addKeyListener(new java.awt.event.KeyAdapter()
+        // {
+        // public void keyPressed(java.awt.event.KeyEvent evt) {
+        // tblItemNameSuggestionsDetailsKeyPressed(evt);
+        // }
+        //
+        // public void keyReleased(java.awt.event.KeyEvent evt) {
+        // tblItemNameSuggestionsDetailsKeyReleased(evt);
+        // }
+        // });
 
         spTblItemNameSuggestionsDetailsContainer.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -1026,7 +1042,8 @@ public class SaleScreen extends javax.swing.JFrame {
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         pmItemNameSuggestionsPopup = new javax.swing.JPopupMenu();
@@ -1149,25 +1166,25 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 spTblItemNameSuggestionsContainerFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 spTblItemNameSuggestionsContainerFocusLost(evt);
             }
         });
 
         tblItemNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][] {
 
-            },
-            new String [] {
-                "Item Name", "Item Group"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
+                },
+                new String[] {
+                        "Item Name", "Item Group"
+                }) {
+            boolean[] canEdit = new boolean[] {
+                    false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tblItemNameSuggestions.setOpaque(false);
@@ -1185,19 +1202,18 @@ public class SaleScreen extends javax.swing.JFrame {
         });
 
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][] {
 
-            },
-            new String [] {
-                "Party Name", "State", "GRP"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+                },
+                new String[] {
+                        "Party Name", "State", "GRP"
+                }) {
+            boolean[] canEdit = new boolean[] {
+                    false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tblPartyNameSuggestions.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1274,6 +1290,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 phnnoFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 phnnoFocusLost(evt);
             }
@@ -1303,6 +1320,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField2FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jTextField2FocusLost(evt);
             }
@@ -1339,6 +1357,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtItemNameFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtItemNameFocusLost(evt);
             }
@@ -1352,6 +1371,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtItemNameKeyPressed(evt);
             }
+
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtItemNameKeyReleased(evt);
             }
@@ -1369,6 +1389,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtQtyFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtQtyFocusLost(evt);
             }
@@ -1389,6 +1410,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtBeedsWtFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtBeedsWtFocusLost(evt);
             }
@@ -1404,6 +1426,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtNetWtFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtNetWtFocusLost(evt);
             }
@@ -1419,6 +1442,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtDiamondWtFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtDiamondWtFocusLost(evt);
             }
@@ -1434,6 +1458,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtDiamondRateFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtDiamondRateFocusLost(evt);
             }
@@ -1454,6 +1479,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtGrossWtFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtGrossWtFocusLost(evt);
             }
@@ -1469,6 +1495,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtItemDescriptionFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtItemDescriptionFocusLost(evt);
             }
@@ -1482,6 +1509,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtItemDescriptionKeyReleased(evt);
             }
+
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtItemDescriptionKeyTyped(evt);
             }
@@ -1558,6 +1586,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtRateFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtRateFocusLost(evt);
             }
@@ -1573,6 +1602,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtExtraChargeFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtExtraChargeFocusLost(evt);
             }
@@ -1588,6 +1618,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtBasicAmtFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtBasicAmtFocusLost(evt);
             }
@@ -1604,6 +1635,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 cmbPerFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cmbPerFocusLost(evt);
             }
@@ -1624,6 +1656,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtPartyNameFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtPartyNameFocusLost(evt);
             }
@@ -1650,6 +1683,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtBillFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtBillFocusLost(evt);
             }
@@ -1663,6 +1697,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtBillKeyPressed(evt);
             }
+
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtBillKeyReleased(evt);
             }
@@ -1703,6 +1738,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 cmbTermsFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cmbTermsFocusLost(evt);
             }
@@ -1739,6 +1775,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtTaxableAmtFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtTaxableAmtFocusLost(evt);
             }
@@ -1747,6 +1784,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtTaxableAmtKeyReleased(evt);
             }
+
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtTaxableAmtKeyTyped(evt);
             }
@@ -1763,6 +1801,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtGSTPercentFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtGSTPercentFocusLost(evt);
             }
@@ -1778,6 +1817,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtNetAmtFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtNetAmtFocusLost(evt);
             }
@@ -1838,6 +1878,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtExtraCharge1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtExtraCharge1FocusLost(evt);
             }
@@ -1859,6 +1900,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtExtraCharge2FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtExtraCharge2FocusLost(evt);
             }
@@ -1879,6 +1921,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txthuidFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txthuidFocusLost(evt);
             }
@@ -1892,6 +1935,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txthuidKeyPressed(evt);
             }
+
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txthuidKeyReleased(evt);
             }
@@ -1908,6 +1952,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 saveMouseClicked(evt);
             }
+
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 saveMouseEntered(evt);
             }
@@ -1934,6 +1979,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtcountFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtcountFocusLost(evt);
             }
@@ -1945,6 +1991,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtgrandtotalFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtgrandtotalFocusLost(evt);
             }
@@ -1966,6 +2013,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtnetwtFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtnetwtFocusLost(evt);
             }
@@ -1976,6 +2024,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtGSTAmtFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtGSTAmtFocusLost(evt);
             }
@@ -2009,6 +2058,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtdiscountFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtdiscountFocusLost(evt);
             }
@@ -2030,6 +2080,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtreceiveFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtreceiveFocusLost(evt);
             }
@@ -2051,6 +2102,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtoutstandingFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtoutstandingFocusLost(evt);
             }
@@ -2088,6 +2140,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtexchangeFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtexchangeFocusLost(evt);
             }
@@ -2132,6 +2185,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtDiscountFocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtDiscountFocusLost(evt);
             }
@@ -2221,38 +2275,40 @@ public class SaleScreen extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel41))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel38)
-                        .addGap(27, 27, 27)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(140, 140, 140)
-                        .addComponent(jButton2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel39, javax.swing.GroupLayout.PREFERRED_SIZE, 310,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel41))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(23, 23, 23)
+                                                .addComponent(jLabel38)
+                                                .addGap(27, 27, 27)
+                                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 178,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(140, 140, 140)
+                                                .addComponent(jButton2)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel41)
-                    .addComponent(jLabel39))
-                .addGap(23, 23, 23)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel38)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel41)
+                                        .addComponent(jLabel39))
+                                .addGap(23, 23, 23)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel38)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         pnlRootContainer.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, -1, 110));
 
@@ -2263,19 +2319,19 @@ public class SaleScreen extends javax.swing.JFrame {
         });
 
         tblPurchasesList.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
+                new Object[][] {
 
-            },
-            new String [] {
-                "ID", "Item Name", "HUID", "Net Wt.", "Qty.", "Discount", "Taxable Amt.", "GST [%]", "GST Amount", "Net Amt."
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                },
+                new String[] {
+                        "ID", "Item Name", "HUID", "Net Wt.", "Qty.", "Discount", "Taxable Amt.", "GST [%]",
+                        "GST Amount", "Net Amt."
+                }) {
+            boolean[] canEdit = new boolean[] {
+                    false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tblPurchasesList.setRowHeight(36);
@@ -2299,6 +2355,7 @@ public class SaleScreen extends javax.swing.JFrame {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jComboBox1FocusGained(evt);
             }
+
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jComboBox1FocusLost(evt);
             }
@@ -2347,13 +2404,13 @@ public class SaleScreen extends javax.swing.JFrame {
         for (int i = 0; i < tblPurchasesList.getRowCount(); i++) {
             total += Double.parseDouble(tblPurchasesList.getValueAt(i, 9).toString());
             netwt += Double.parseDouble(tblPurchasesList.getValueAt(i, 3).toString());
-//       JOptionPane.showMessageDialog(this, total);
+            // JOptionPane.showMessageDialog(this, total);
         }
 
         long total_value = Math.round(total);
         txtnetwt.setText(String.format("%.3f", netwt));
 
-        //   total -= Double.parseDouble(txtexchange.getText());
+        // total -= Double.parseDouble(txtexchange.getText());
         txtgrandtotal.setText(Long.toString(total_value));
 
         if (cmbTerms.getSelectedItem().toString().equals("Cash")) {
@@ -2391,13 +2448,15 @@ public class SaleScreen extends javax.swing.JFrame {
             Statement s = c.createStatement();
             Connection c1 = DBConnect.connect();
             Statement s1 = c1.createStatement();
-            ResultSet rs = s.executeQuery("select dueamt from account where accountname='" + txtPartyName.getText().trim() + "'");
+            ResultSet rs = s.executeQuery(
+                    "select dueamt from account where accountname='" + txtPartyName.getText().trim() + "'");
             while (rs.next()) {
                 dueamt = rs.getDouble("dueamt");
             }
             dueamt = dueamt + Double.parseDouble(txtNetAmt.getText().trim());
 
-            s1.executeUpdate("Update account set dueamt='" + dueamt + "' where accountname='" + txtPartyName.getText().trim() + "'");
+            s1.executeUpdate("Update account set dueamt='" + dueamt + "' where accountname='"
+                    + txtPartyName.getText().trim() + "'");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2417,9 +2476,9 @@ public class SaleScreen extends javax.swing.JFrame {
         suggestionsTable.setRowCount(0);
 
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[]{
-                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),});
+            suggestionsTable.addRow(new Object[] {
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1), });
         });
         spTblItemNameSuggestionsContainer.setVisible(true);
 
@@ -2438,10 +2497,10 @@ public class SaleScreen extends javax.swing.JFrame {
         suggestionsTable.setRowCount(0);
 
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[]{
-                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),});
+            suggestionsTable.addRow(new Object[] {
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2), });
         });
         fillgrandtotal();
 
@@ -2469,7 +2528,8 @@ public class SaleScreen extends javax.swing.JFrame {
         try {
             Connection con = DBConnect.connect();
             Statement st = con.createStatement();
-            String query = "SELECT * FROM " + DatabaseCredentials.ACCOUNT_TABLE + " WHERE accountname = '" + partyname + "'";
+            String query = "SELECT * FROM " + DatabaseCredentials.ACCOUNT_TABLE + " WHERE accountname = '" + partyname
+                    + "'";
             ResultSet rs = st.executeQuery(query);
 
             while (rs.next()) {
@@ -2484,23 +2544,25 @@ public class SaleScreen extends javax.swing.JFrame {
                     try {
                         Statement stmt = con.createStatement();
                         String sql = "select * from cashpurchasedetails order by id desc";
-                        List<List<Object>> companyState = DBController.getDataFromTableforcompany("SELECT state, state_code FROM company "
-                                + "WHERE companyname = '"
-                                + GLOBAL_VARS.SELECTED_COMPANY + "';");
+                        List<List<Object>> companyState = DBController
+                                .getDataFromTableforcompany("SELECT state, state_code FROM company "
+                                        + "WHERE companyname = '"
+                                        + GLOBAL_VARS.SELECTED_COMPANY + "';");
 
                         ResultSet res = stmt.executeQuery(sql);
                         while (res.next()) {
-//                         result.add(partyname);
-//                result.add(res.getObject("name") != null ? res.getString("name") : "");
-//                result.add(res.getObject("address") != null ? res.getString("address") : "");
+                            // result.add(partyname);
+                            // result.add(res.getObject("name") != null ? res.getString("name") : "");
+                            // result.add(res.getObject("address") != null ? res.getString("address") : "");
                             result.add(res.getObject("name") != null ? res.getString("name") : "");
                             result.add(res.getObject("address") != null ? res.getString("address") : "");
                             result.add((String) companyState.get(0).get(0));
                             result.add((String) companyState.get(0).get(1));
                             result.add(res.getObject("contact_no") != null ? res.getString("contact_no") : "");
                             result.add("");
-//                result.add(res.getObject("contact_no") != null ? String.valueOf(res.getLong("contact_no")) : "");
-//                result.add(res.getObject("gstno") != null ? res.getString("gstno") : ""); 
+                            // result.add(res.getObject("contact_no") != null ?
+                            // String.valueOf(res.getLong("contact_no")) : "");
+                            // result.add(res.getObject("gstno") != null ? res.getString("gstno") : "");
                         }
                         stmt.close();
                         res.close();
@@ -2525,7 +2587,9 @@ public class SaleScreen extends javax.swing.JFrame {
         ArrayList<String> cashAndBankData = new ArrayList<>();
         Connection con = DBConnect.connect();
         String cashamt = "";
-        String card1amt = "", card1tran = "", card11bank = "", card12amt = "", card12tran = "", card12bank = "", ewallateamt = "", ewallatetran = "", ewallatbank = "", chamt = "", chtran = "", chbank = "", chbankname = "", chno = "", chDate = "";
+        String card1amt = "", card1tran = "", card11bank = "", card12amt = "", card12tran = "", card12bank = "",
+                ewallateamt = "", ewallatetran = "", ewallatbank = "", chamt = "", chtran = "", chbank = "",
+                chbankname = "", chno = "", chDate = "";
         try {
             Statement stmt = con.createStatement();
             String sqlForReceipt = "select amtpaid from receipt where sales_Bill='" + billnumber + "'";
@@ -2592,9 +2656,11 @@ public class SaleScreen extends javax.swing.JFrame {
     }
 
     private void printSaleBillJasperReport(int billnumber, String Type) throws FileNotFoundException {
-        String path = System.getProperty("user.dir") + File.separator + "src" + File.separator + "jasper_reports" + File.separator;
-//        JOptionPane.showMessageDialog(this, "system path is " + System.getProperty("user.dir"));
-//        JOptionPane.showMessageDialog(this, "path is " + path);
+        String path = System.getProperty("user.dir") + File.separator + "src" + File.separator + "jasper_reports"
+                + File.separator;
+        // JOptionPane.showMessageDialog(this, "system path is " +
+        // System.getProperty("user.dir"));
+        // JOptionPane.showMessageDialog(this, "path is " + path);
         if ("Type 1".equals(Type)) {
             path += "SaleBill_Report.jrxml";
         } else if ("Type 2".equals(Type)) {
@@ -2605,7 +2671,8 @@ public class SaleScreen extends javax.swing.JFrame {
 
         List<SaleJasperContentDetails> listItems = new ArrayList<>();
         Map<String, Object> parameters = new HashMap<>();
-        String realPath = System.getProperty("user.dir") + File.separator + "jasper_reports" + File.separator + "img" + File.separator;
+        String realPath = System.getProperty("user.dir") + File.separator + "jasper_reports" + File.separator + "img"
+                + File.separator;
         ArrayList<String> datas = getBankPaymentAndCash(billnumber);
         parameters.put("imagePath", realPath);
         parameters.put("PaymentCash", datas.get(0));
@@ -2624,7 +2691,7 @@ public class SaleScreen extends javax.swing.JFrame {
         parameters.put("PaymentchDate", datas.get(13));
         parameters.put("Paymentchbank", datas.get(14));
 
-//         JOptionPane.showMessageDialog(this, " image path is "+realPath);
+        // JOptionPane.showMessageDialog(this, " image path is "+realPath);
         try {
             Connection con = DBConnect.connect();
             Statement st = con.createStatement();
@@ -2642,7 +2709,7 @@ public class SaleScreen extends javax.swing.JFrame {
             st.clearBatch();
 
             List<String> partyDetails = getPartyDetails(partyname);
-//            JOptionPane.showMessageDialog(this, partyDetails);
+            // JOptionPane.showMessageDialog(this, partyDetails);
 
             parameters.put("partyname", partyDetails.get(0));
             parameters.put("address", partyDetails.get(1));
@@ -2687,7 +2754,8 @@ public class SaleScreen extends javax.swing.JFrame {
 
                 Statement hsnst = con.createStatement();
                 String itemname = rs.getString("itemname");
-                ResultSet hsn = hsnst.executeQuery("select hsncode from entryitem where itemname = '" + itemname + "';");
+                ResultSet hsn = hsnst
+                        .executeQuery("select hsncode from entryitem where itemname = '" + itemname + "';");
                 String hsncode = "";
                 while (hsn.next()) {
                     if (hsn.getString("hsncode") != null) {
@@ -2695,27 +2763,27 @@ public class SaleScreen extends javax.swing.JFrame {
                     }
                 }
                 hsnst.close();
-                DecimalFormat df = new DecimalFormat("0.#"); // This will remove the decimal point if it's a whole number
+                DecimalFormat df = new DecimalFormat("0.#"); // This will remove the decimal point if it's a whole
+                                                             // number
                 String result = df.format(rs.getFloat("gstpercent"));
 
                 SaleJasperContentDetails obj = new SaleJasperContentDetails(
-                        rs.getObject("itemname") != null ? rs.getString("itemname") : "", //itemdescription
+                        rs.getObject("itemname") != null ? rs.getString("itemname") : "", // itemdescription
                         hsncode, // hsn
                         rs.getString("qty"), // pcs
                         "", // marka
                         rs.getString("huid"), // huid
                         String.valueOf(rs.getDouble("grosswt")), // gross wt
                         String.valueOf(rs.getDouble("netwt")), // net wt
-                        String.valueOf(rs.getDouble("diamondwt")), // diamond wt    
-                        String.valueOf(rs.getDouble("rate")), //rate
+                        String.valueOf(rs.getDouble("diamondwt")), // diamond wt
+                        String.valueOf(rs.getDouble("rate")), // rate
                         makingper, // making percentage
-                        String.valueOf(rs.getDouble("netamount")),// net amount
-                        String.valueOf(rs.getString("tagno")),//tagno
+                        String.valueOf(rs.getDouble("netamount")), // net amount
+                        String.valueOf(rs.getString("tagno")), // tagno
                         String.valueOf(result + "%"),
                         String.valueOf(rs.getDouble("taxable_amount")),
                         makingprice,
-                        lbr_per
-                );
+                        lbr_per);
 
                 listItems.add(obj);
 
@@ -2728,11 +2796,13 @@ public class SaleScreen extends javax.swing.JFrame {
                 ResultSet rs1;
                 if (listItems.get(i).getgst().equals("0%")) {
                     rs1 = st.executeQuery("select hsncode, itemgroup from entryitem where tagno='"
-                            + listItems.get(i).getTagno() + "' And itemname = '" + listItems.get(i).getItemdesc() + "'");
+                            + listItems.get(i).getTagno() + "' And itemname = '" + listItems.get(i).getItemdesc()
+                            + "'");
 
                 } else {
                     rs1 = st.executeQuery("select hsncode, itemgroup from entryitem where tagno='"
-                            + listItems.get(i).getTagno() + "' And taxslab = '" + listItems.get(i).getgst() + "' And itemname = '" + listItems.get(i).getItemdesc() + "'");
+                            + listItems.get(i).getTagno() + "' And taxslab = '" + listItems.get(i).getgst()
+                            + "' And itemname = '" + listItems.get(i).getItemdesc() + "'");
 
                 }
 
@@ -2754,7 +2824,8 @@ public class SaleScreen extends javax.swing.JFrame {
             st.clearBatch();
             Connection con2 = DBConnect.connectCopy();
             Statement sytm = con2.createStatement();
-            rs = sytm.executeQuery("SELECT gstno FROM " + DatabaseCredentials.COMPANY_TABLE + " WHERE companyname = '" + GLOBAL_VARS.SELECTED_COMPANY + "';");
+            rs = sytm.executeQuery("SELECT gstno FROM " + DatabaseCredentials.COMPANY_TABLE + " WHERE companyname = '"
+                    + GLOBAL_VARS.SELECTED_COMPANY + "';");
 
             while (rs.next()) {
                 selectedCompanyGST = rs.getString("gstno");
@@ -2767,9 +2838,10 @@ public class SaleScreen extends javax.swing.JFrame {
             companyStateCode = (String) companyState.get(0).get(0);
 
             double igst = 0.0, cgst = 0.0, sgst = 0.0;
-            List<List<Object>> partyState = DBController.getDataFromTable("SELECT statecode FROM " + DatabaseCredentials.ACCOUNT_TABLE
-                    + " WHERE accountname = '"
-                    + partyname + "';");
+            List<List<Object>> partyState = DBController
+                    .getDataFromTable("SELECT statecode FROM " + DatabaseCredentials.ACCOUNT_TABLE
+                            + " WHERE accountname = '"
+                            + partyname + "';");
 
             double gst_amt = taxAmt;
             DecimalFormat df = new DecimalFormat("0.00");
@@ -2827,7 +2899,8 @@ public class SaleScreen extends javax.swing.JFrame {
             parameters.put("date", date);
             parameters.put("bill-no", billNo);
             Long wordnumber = (Long) Math.round(amtAfterTax);
-//            JOptionPane.showMessageDialog(this, numberToWord.convertNumberToWord((wordnumber)));
+            // JOptionPane.showMessageDialog(this,
+            // numberToWord.convertNumberToWord((wordnumber)));
             parameters.put("numberInWord", numberToWord.convertNumberToWord((wordnumber)));
 
             parameters.put("tax-amount", taxAmt);
@@ -2853,11 +2926,11 @@ public class SaleScreen extends javax.swing.JFrame {
                     fine = rs.getString("fine");
                     netwt = rs.getString("netwt");
                     total = rs.getString("total");
-//                  parameters.put("item-name", rs.getString("Item Name"));
-//                  parameters.put("grosswt", rs.getString("grosswt"));
-//                  parameters.put("fine", rs.getString("fine"));
-//                  parameters.put("netwt", rs.getString("netwt"));
-//                  parameters.put("total", rs.getString("total"));
+                    // parameters.put("item-name", rs.getString("Item Name"));
+                    // parameters.put("grosswt", rs.getString("grosswt"));
+                    // parameters.put("fine", rs.getString("fine"));
+                    // parameters.put("netwt", rs.getString("netwt"));
+                    // parameters.put("total", rs.getString("total"));
                 }
                 ExchangeJasperContentDetails obje = new ExchangeJasperContentDetails(name, grosswt, fine, netwt, total);
                 listItems1.add(obje);
@@ -2877,16 +2950,18 @@ public class SaleScreen extends javax.swing.JFrame {
             JasperReport report = JasperCompileManager.compileReport(path);
             JasperPrint print = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
             JasperViewer.viewReport(print, false);
-            String path2 = System.getProperty("user.dir") + File.separator + "src" + File.separator + "jasper_reports" + File.separator + "jasperpdf" + File.separator;
+            String path2 = System.getProperty("user.dir") + File.separator + "src" + File.separator + "jasper_reports"
+                    + File.separator + "jasperpdf" + File.separator;
 
             JasperExportManager.exportReportToPdfFile(print, path2 + txtBill.getText().trim() + Type + ".pdf");
-//            WindowListener[] wl = viewer.getWindowListeners();
-//            for (WindowListener wl1 : wl) {
-//                viewer.removeWindowListener(wl1);
-//            }
-//            viewer.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-//            viewer.setVisible(true);
-//            JasperExportManager.exportReportToPdfFile(print, "C:\\Users\\Sachin\\Desktop\\Sale_Bill.pdf");
+            // WindowListener[] wl = viewer.getWindowListeners();
+            // for (WindowListener wl1 : wl) {
+            // viewer.removeWindowListener(wl1);
+            // }
+            // viewer.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            // viewer.setVisible(true);
+            // JasperExportManager.exportReportToPdfFile(print,
+            // "C:\\Users\\Sachin\\Desktop\\Sale_Bill.pdf");
         } catch (Exception e) {
             Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(this, e);
@@ -2913,7 +2988,8 @@ public class SaleScreen extends javax.swing.JFrame {
         try {
             JasperDesign jasperDesign = JRXmlLoader.load(jasper1);
 
-            String query1 = "select itemname,huid,netwt,bankamt,labour,netamount from sales where bill = '" + u + "' and date = '" + UtilityMethods.getCurrentDate("yyyy-MM-dd") + "';";
+            String query1 = "select itemname,huid,netwt,bankamt,labour,netamount from sales where bill = '" + u
+                    + "' and date = '" + UtilityMethods.getCurrentDate("yyyy-MM-dd") + "';";
             JRDesignQuery newQuery = new JRDesignQuery();
             newQuery.setText(query1);
             jasperDesign.setQuery(newQuery);
@@ -2989,20 +3065,20 @@ public class SaleScreen extends javax.swing.JFrame {
 
                 if ("N.A".equals(suggestion.get(0).toString())) {
 
-                    itemNameSuggestionsDetailsTableModel.addRow(new Object[]{
-                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                        itemname,
-                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                        "0",
-                        (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),});
+                    itemNameSuggestionsDetailsTableModel.addRow(new Object[] {
+                            (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                            itemname,
+                            (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                            "0",
+                            (suggestion.get(3) == null) ? "NULL" : suggestion.get(3), });
 
                 } else {
-                    itemNameSuggestionsDetailsTableModel.addRow(new Object[]{
-                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                        itemname,
-                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                        (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
-                        (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),});
+                    itemNameSuggestionsDetailsTableModel.addRow(new Object[] {
+                            (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                            itemname,
+                            (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                            (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
+                            (suggestion.get(3) == null) ? "NULL" : suggestion.get(3), });
 
                 }
             });
@@ -3012,20 +3088,20 @@ public class SaleScreen extends javax.swing.JFrame {
 
                 if ("N.A".equals(suggestion.get(0).toString())) {
 
-                    itemNameSuggestionsDetailsTableModel.addRow(new Object[]{
-                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                        itemname,
-                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                        "0",
-                        (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),});
+                    itemNameSuggestionsDetailsTableModel.addRow(new Object[] {
+                            (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                            itemname,
+                            (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                            "0",
+                            (suggestion.get(3) == null) ? "NULL" : suggestion.get(3), });
 
                 } else {
-                    itemNameSuggestionsDetailsTableModel.addRow(new Object[]{
-                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                        itemname,
-                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                        (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
-                        (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),});
+                    itemNameSuggestionsDetailsTableModel.addRow(new Object[] {
+                            (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                            itemname,
+                            (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                            (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
+                            (suggestion.get(3) == null) ? "NULL" : suggestion.get(3), });
 
                 }
             });
@@ -3036,7 +3112,7 @@ public class SaleScreen extends javax.swing.JFrame {
     }
 
     private void tblItemNameSuggestionsDetailsMouseClicked(java.awt.event.MouseEvent evt) {
-        //  if (evt.getClickCount() > 1 && evt.getClickCount() <= 2)
+        // if (evt.getClickCount() > 1 && evt.getClickCount() <= 2)
         if (evt.getClickCount() > 0) {
             txtItemName.setText(tblItemNameSuggestionsDetails.getValueAt(tblItemNameSuggestionsDetails
                     .getSelectedRow(), 1).toString());
@@ -3050,41 +3126,42 @@ public class SaleScreen extends javax.swing.JFrame {
                             .getSelectedRow(), 0).toString(),
                     tblItemNameSuggestionsDetails.getValueAt(tblItemNameSuggestionsDetails
                             .getSelectedRow(), 2).toString());
-//                txtGSTPercent.setText(itemNameSuggestionsTableModel
-//                        .getValueAt(tblItemNameSuggestions.getSelectedRow(), 2).toString().replaceAll("%", ""));
-//			
+            // txtGSTPercent.setText(itemNameSuggestionsTableModel
+            // .getValueAt(tblItemNameSuggestions.getSelectedRow(),
+            // 2).toString().replaceAll("%", ""));
+            //
             pmItemNameSuggestionsDetailsPopup.setVisible(false);
 
         }
     }
 
-	private void tblItemNameSuggestionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblItemNameSuggestionsMouseClicked
-            //   if (evt.getClickCount() > 1 && evt.getClickCount() <= 2)
-            if (evt.getClickCount() > 0) {
-                String itemName = tblItemNameSuggestions.getValueAt(tblItemNameSuggestions.getSelectedRow(), 0).toString();
-                String itemgrp = tblItemNameSuggestions.getValueAt(tblItemNameSuggestions.getSelectedRow(), 1).toString();
-                txtItemName.setText(itemName);
-                pmItemNameSuggestionsPopup.setVisible(false);
-                pmItemNameSuggestionsDetailsPopup.setVisible(true);
-                filltblItemNameSuggestionDetails(itemName, itemgrp);
-            }
-	}//GEN-LAST:event_tblItemNameSuggestionsMouseClicked
+    private void tblItemNameSuggestionsMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tblItemNameSuggestionsMouseClicked
+        // if (evt.getClickCount() > 1 && evt.getClickCount() <= 2)
+        if (evt.getClickCount() > 0) {
+            String itemName = tblItemNameSuggestions.getValueAt(tblItemNameSuggestions.getSelectedRow(), 0).toString();
+            String itemgrp = tblItemNameSuggestions.getValueAt(tblItemNameSuggestions.getSelectedRow(), 1).toString();
+            txtItemName.setText(itemName);
+            pmItemNameSuggestionsPopup.setVisible(false);
+            pmItemNameSuggestionsDetailsPopup.setVisible(true);
+            filltblItemNameSuggestionDetails(itemName, itemgrp);
+        }
+    }// GEN-LAST:event_tblItemNameSuggestionsMouseClicked
 
-	private void spTblItemNameSuggestionsContainerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTblItemNameSuggestionsContainerFocusGained
-            JOptionPane.showMessageDialog(this, "Item name suggestions table 'focus gained'");
-	}//GEN-LAST:event_spTblItemNameSuggestionsContainerFocusGained
+    private void spTblItemNameSuggestionsContainerFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_spTblItemNameSuggestionsContainerFocusGained
+        JOptionPane.showMessageDialog(this, "Item name suggestions table 'focus gained'");
+    }// GEN-LAST:event_spTblItemNameSuggestionsContainerFocusGained
 
-	private void tblPartyNameSuggestionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPartyNameSuggestionsMouseClicked
-            if (evt.getClickCount() > 0) {
-                setPartyDetails(partyNameSuggestionsTableModel.getValueAt(tblPartyNameSuggestions
-                        .getSelectedRow(), 0).toString());
-                txtPartyName.setText(partyNameSuggestionsTableModel.getValueAt(tblPartyNameSuggestions
-                        .getSelectedRow(), 0).toString());
-                pmPartyNameSuggestionsPopup.setVisible(false);
-            }
-	}//GEN-LAST:event_tblPartyNameSuggestionsMouseClicked
+    private void tblPartyNameSuggestionsMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tblPartyNameSuggestionsMouseClicked
+        if (evt.getClickCount() > 0) {
+            setPartyDetails(partyNameSuggestionsTableModel.getValueAt(tblPartyNameSuggestions
+                    .getSelectedRow(), 0).toString());
+            txtPartyName.setText(partyNameSuggestionsTableModel.getValueAt(tblPartyNameSuggestions
+                    .getSelectedRow(), 0).toString());
+            pmPartyNameSuggestionsPopup.setVisible(false);
+        }
+    }// GEN-LAST:event_tblPartyNameSuggestionsMouseClicked
 
-    private void closebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closebtnActionPerformed
+    private void closebtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_closebtnActionPerformed
         // TODO add your handling code here:
         clearTextFields();
         clearLabels();
@@ -3093,9 +3170,9 @@ public class SaleScreen extends javax.swing.JFrame {
         salesListTableModel.setRowCount(0);
         DashBoardScreen.tabbedPane.remove(DashBoardScreen.tabbedPane.getSelectedComponent());
 
-    }//GEN-LAST:event_closebtnActionPerformed
+    }// GEN-LAST:event_closebtnActionPerformed
 
-    private void txtreceiveKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtreceiveKeyReleased
+    private void txtreceiveKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtreceiveKeyReleased
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
 
@@ -3107,9 +3184,9 @@ public class SaleScreen extends javax.swing.JFrame {
             setBg();
             txtoutstanding.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtreceiveKeyReleased
+    }// GEN-LAST:event_txtreceiveKeyReleased
 
-    private void txtdiscountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtdiscountKeyReleased
+    private void txtdiscountKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtdiscountKeyReleased
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (txtdiscount.getText().trim().isEmpty()) {
@@ -3127,28 +3204,29 @@ public class SaleScreen extends javax.swing.JFrame {
                 txtgrandtotal.setBackground(Color.LIGHT_GRAY);
             }
         }
-    }//GEN-LAST:event_txtdiscountKeyReleased
+    }// GEN-LAST:event_txtdiscountKeyReleased
 
-    private void txtGSTAmtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGSTAmtKeyReleased
+    private void txtGSTAmtKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtGSTAmtKeyReleased
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtGSTAmtKeyReleased
+    }// GEN-LAST:event_txtGSTAmtKeyReleased
 
-    private void txtGSTAmtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGSTAmtFocusGained
+    private void txtGSTAmtFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtGSTAmtFocusGained
         txtGSTAmt.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtGSTAmtFocusGained
+    }// GEN-LAST:event_txtGSTAmtFocusGained
 
-    private void txtgrandtotalKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtgrandtotalKeyReleased
+    private void txtgrandtotalKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtgrandtotalKeyReleased
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             txtreceive.requestFocusInWindow();
             setBg();
             txtreceive.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtgrandtotalKeyReleased
+    }// GEN-LAST:event_txtgrandtotalKeyReleased
 
-    private void txtgrandtotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtgrandtotalActionPerformed
+    private void txtgrandtotalActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtgrandtotalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtgrandtotalActionPerformed
+    }// GEN-LAST:event_txtgrandtotalActionPerformed
+
     private void insertIntoCashAndBankPayments() {
         try {
             if (cmbTerms.getSelectedItem().toString().equalsIgnoreCase("Cash")) {
@@ -3160,8 +3238,12 @@ public class SaleScreen extends javax.swing.JFrame {
                                 Connection c = DBConnect.connect();
                                 Statement s = c.createStatement();
 
-                                String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill) VALUES ( '" + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getCardBank1() + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '" + CashAndBankPaymentsSales.getCardAmount1() + "', "
-                                        + "'1 " + CashAndBankPaymentsSales.getCard1Transectionno() + " sales Direct Payment', 'deposit','" + txtBill.getText().trim() + "');";
+                                String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill) VALUES ( '"
+                                        + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getCardBank1()
+                                        + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '"
+                                        + CashAndBankPaymentsSales.getCardAmount1() + "', "
+                                        + "'1 " + CashAndBankPaymentsSales.getCard1Transectionno()
+                                        + " sales Direct Payment', 'deposit','" + txtBill.getText().trim() + "');";
                                 s.executeUpdate(query);
                                 c.close();
                                 s.close();
@@ -3186,8 +3268,10 @@ public class SaleScreen extends javax.swing.JFrame {
 
                                 Connection cmm = DBConnect.connect();
                                 Statement stmt = cmm.createStatement();
-                                String query = "insert into receipt(Receiptno,Name,date,discount,amtpaid,mop,remarks,sales_Bill) values(-1,'" + name + "','" + date + "','" + dis + "','" + String.format("%.2f", amtpaid) + "','" + mop + "','" + remarks + "','" + txtBill.getText().trim() + "')";
-//                                JOptionPane.showMessageDialog(this, query);
+                                String query = "insert into receipt(Receiptno,Name,date,discount,amtpaid,mop,remarks,sales_Bill) values(-1,'"
+                                        + name + "','" + date + "','" + dis + "','" + String.format("%.2f", amtpaid)
+                                        + "','" + mop + "','" + remarks + "','" + txtBill.getText().trim() + "')";
+                                // JOptionPane.showMessageDialog(this, query);
                                 stmt.executeUpdate(query);
 
                                 cmm.close();
@@ -3205,8 +3289,12 @@ public class SaleScreen extends javax.swing.JFrame {
                                 Connection c = DBConnect.connect();
                                 Statement s = c.createStatement();
 
-                                String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill) VALUES ( '" + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getCardBank2() + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '" + CashAndBankPaymentsSales.getCardAmount2() + "', "
-                                        + "'2 " + CashAndBankPaymentsSales.getCard2Transectionno() + " sales Direct Payment', 'deposit','" + txtBill.getText().trim() + "');";
+                                String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill) VALUES ( '"
+                                        + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getCardBank2()
+                                        + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '"
+                                        + CashAndBankPaymentsSales.getCardAmount2() + "', "
+                                        + "'2 " + CashAndBankPaymentsSales.getCard2Transectionno()
+                                        + " sales Direct Payment', 'deposit','" + txtBill.getText().trim() + "');";
                                 s.executeUpdate(query);
                                 c.close();
                                 s.close();
@@ -3222,8 +3310,12 @@ public class SaleScreen extends javax.swing.JFrame {
                                 Connection c = DBConnect.connect();
                                 Statement s = c.createStatement();
 
-                                String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill) VALUES ( '" + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getEwalletBank() + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '" + CashAndBankPaymentsSales.geteWallteAmount() + "', "
-                                        + "'3 " + CashAndBankPaymentsSales.getEwalletTransectionno() + " sales Direct Payment', 'deposit','" + txtBill.getText().trim() + "');";
+                                String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill) VALUES ( '"
+                                        + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getEwalletBank()
+                                        + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '"
+                                        + CashAndBankPaymentsSales.geteWallteAmount() + "', "
+                                        + "'3 " + CashAndBankPaymentsSales.getEwalletTransectionno()
+                                        + " sales Direct Payment', 'deposit','" + txtBill.getText().trim() + "');";
                                 s.executeUpdate(query);
                                 c.close();
                                 s.close();
@@ -3239,8 +3331,14 @@ public class SaleScreen extends javax.swing.JFrame {
                                 Connection c = DBConnect.connect();
                                 Statement s = c.createStatement();
 
-                                String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill  ) VALUES ( '" + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getChequeBank() + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '" + CashAndBankPaymentsSales.getChequeAmount() + "', "
-                                        + "'4 " + CashAndBankPaymentsSales.getChequno() + " " + CashAndBankPaymentsSales.getChequeTransectionno() + " " + CashAndBankPaymentsSales.getChequeDate() + " sales Direct Payment', 'deposit','" + txtBill.getText().trim() + "');";
+                                String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill  ) VALUES ( '"
+                                        + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getChequeBank()
+                                        + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '"
+                                        + CashAndBankPaymentsSales.getChequeAmount() + "', "
+                                        + "'4 " + CashAndBankPaymentsSales.getChequno() + " "
+                                        + CashAndBankPaymentsSales.getChequeTransectionno() + " "
+                                        + CashAndBankPaymentsSales.getChequeDate()
+                                        + " sales Direct Payment', 'deposit','" + txtBill.getText().trim() + "');";
                                 s.executeUpdate(query);
                                 c.close();
                                 s.close();
@@ -3409,13 +3507,17 @@ public class SaleScreen extends javax.swing.JFrame {
             }
 
             Integer dataId = (Integer) item.get("id");
-//            JOptionPane.showMessageDialog(this, !LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.isVisible());
+            // JOptionPane.showMessageDialog(this,
+            // !LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.isVisible());
 
             if (dataId != null) {
                 DBController.updateTableData(DatabaseCredentials.SALES_TABLE, data, columnNames, "id", dataId);
 
                 CashAndBankPaymentsSales.deleteMethod(txtBill.getText().trim());
-//                    JOptionPane.showMessageDialog(this, LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.getCashAmount() + !LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.isDisplayable());
+                // JOptionPane.showMessageDialog(this,
+                // LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.getCashAmount()
+                // +
+                // !LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.isDisplayable());
                 insertIntoCashAndBankPayments();
 
             } else {
@@ -3423,7 +3525,8 @@ public class SaleScreen extends javax.swing.JFrame {
                     DBController.insertDataIntoTable(DatabaseCredentials.SALES_TABLE,
                             columnNames, data);
                     insertIntoCashAndBankPayments();
-//                    JOptionPane.showMessageDialog(this, LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.isDisplayable());
+                    // JOptionPane.showMessageDialog(this,
+                    // LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.isDisplayable());
 
                 } catch (Exception e) {
                     Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, e);
@@ -3446,8 +3549,9 @@ public class SaleScreen extends javax.swing.JFrame {
             DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS, DatabaseCredentials.DB_USERNAME,
                     DatabaseCredentials.DB_PASSWORD);
         }
-        List<List<Object>> result = DBController.getDataFromTable("SELECT billno FROM " + DatabaseCredentials.SALE_BILL_NO_COUNTER_TABLE
-                + " WHERE id = 1");
+        List<List<Object>> result = DBController
+                .getDataFromTable("SELECT billno FROM " + DatabaseCredentials.SALE_BILL_NO_COUNTER_TABLE
+                        + " WHERE id = 1");
 
         result.forEach((item) -> {
             txtBill.setText(item.get(0).toString());
@@ -3458,7 +3562,7 @@ public class SaleScreen extends javax.swing.JFrame {
     private void updateDueAmtFromOutstanding(double outstandingAmt) {
         data.clear();
         columnNames.clear();
-//        JOptionPane.showMessageDialog(this,outstandingAmt);
+        // JOptionPane.showMessageDialog(this,outstandingAmt);
         if (!DBController.isDatabaseConnected()) {
             DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS, DatabaseCredentials.DB_USERNAME,
                     DatabaseCredentials.DB_PASSWORD);
@@ -3490,22 +3594,23 @@ public class SaleScreen extends javax.swing.JFrame {
             String itemname = item.get("itemname").toString();
             int qty = Integer.parseInt(item.get("qty").toString());
 
+            // int qty = Integer.parseInt(txtQty.getText().toString());
+            JOptionPane.showMessageDialog(this, txtQty.getText().toString());
             Connection con;
-            List<List<Object>> notSold = DBController.getDataFromTable("SELECT SUM(CAST (item_sold as Integer)), SUM(netwt) FROM "
-                    + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE tagno ='" + tagno + "' ");
+            List<List<Object>> notSold = DBController
+                    .getDataFromTable("SELECT SUM(CAST (item_sold as Integer)), SUM(netwt) FROM "
+                            + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname ='" + itemname + "' ");
             int notsoldcount = 0;
-            for (List<Object> list : notSold) {
-
-                if (list.get(0) != null) {
-
-                    notsoldcount = Integer.parseInt(list.get(0).toString());
-                }
+            if (!notSold.isEmpty() && notSold.get(0).get(0) != null) {
+                notsoldcount = Integer.parseInt(notSold.get(0).get(0).toString());
             }
+            JOptionPane.showMessageDialog(this, "not sold => " + notsoldcount);
             try {
                 JOptionPane.showMessageDialog(this, qty);
                 con = DBConnect.connect();
                 Statement st = con.createStatement();
-                String query = "UPDATE " + DatabaseCredentials.ENTRY_ITEM_TABLE + " SET item_sold = " + ((int) (qty)) + " "
+                String query = "UPDATE " + DatabaseCredentials.ENTRY_ITEM_TABLE + " SET item_sold = " + ((int) (qty)+notsoldcount)
+                        + " "
                         + " WHERE itemname = '" + itemname + "';";
                 st.execute(query);
 
@@ -3550,7 +3655,7 @@ public class SaleScreen extends javax.swing.JFrame {
         } else {
             data.add(0);
         }
-//data.add(tagno);
+        // data.add(tagno);
         data.add(recievedAmount);
         data.add("Cash");
         data.add("Paid");
@@ -3570,32 +3675,32 @@ public class SaleScreen extends javax.swing.JFrame {
 
     }
 
-    private void txthuidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txthuidActionPerformed
+    private void txthuidActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txthuidActionPerformed
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_txthuidActionPerformed
+    }// GEN-LAST:event_txthuidActionPerformed
 
-    private void txtExtraCharge2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtExtraCharge2KeyReleased
+    private void txtExtraCharge2KeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtExtraCharge2KeyReleased
         setFocus(evt, txtExtraCharge);
-    }//GEN-LAST:event_txtExtraCharge2KeyReleased
+    }// GEN-LAST:event_txtExtraCharge2KeyReleased
 
-    private void txtExtraCharge2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtExtraCharge2FocusLost
+    private void txtExtraCharge2FocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtExtraCharge2FocusLost
         txtExtraCharge2.setBackground(Color.white);
         if (txtExtraCharge2.getText().trim().isEmpty()) {
             txtExtraCharge2.setText("0");
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_txtExtraCharge2FocusLost
+        } // TODO add your handling code here:
+    }// GEN-LAST:event_txtExtraCharge2FocusLost
 
-    private void txtExtraCharge1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtExtraCharge1KeyReleased
+    private void txtExtraCharge1KeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtExtraCharge1KeyReleased
         setFocus(evt, cmbPer);
-    }//GEN-LAST:event_txtExtraCharge1KeyReleased
+    }// GEN-LAST:event_txtExtraCharge1KeyReleased
 
-    private void txtExtraCharge1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtExtraCharge1FocusLost
+    private void txtExtraCharge1FocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtExtraCharge1FocusLost
         txtExtraCharge.setBackground(Color.white);
         if (txtExtraCharge1.getText().trim().isEmpty()) {
             txtExtraCharge1.setText("0");
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_txtExtraCharge1FocusLost
+        } // TODO add your handling code here:
+    }// GEN-LAST:event_txtExtraCharge1FocusLost
 
     private void savePurchaseListTableDataToDatabase() throws FileNotFoundException {
         if (DBController.isDatabaseConnected()) {
@@ -3620,12 +3725,12 @@ public class SaleScreen extends javax.swing.JFrame {
 
         data.add(txtBill.getText().trim());
 
-        //                if(!txtBill.getText().trim().isEmpty()) {
-        //                    data.add(txtBill.getText().trim());
-        //                }
-        //                else {
-        //                    columnNames.remove("bill");
-        //                }
+        // if(!txtBill.getText().trim().isEmpty()) {
+        // data.add(txtBill.getText().trim());
+        // }
+        // else {
+        // columnNames.remove("bill");
+        // }
         data.add(lblGST.getText());
 
         data.add(lblPreviousBalance.getText());
@@ -3749,23 +3854,24 @@ public class SaleScreen extends javax.swing.JFrame {
     private void fillNewEntryIntotblPurchasesList() {
         salesListTableModel.setRowCount(0);
         for (Map<String, Object> list : soldItemsForCurrentBill) {
-            this.salesListTableModel.addRow(new Object[]{
-                list.get("billnumber"),
-                list.get("itemname"),
-                list.get("huid"),
-                list.get("netwt"),
-                list.get("qty"),
-                list.get("discount"),
-                list.get("taxableamount"),
-                list.get("gstpercent"),
-                list.get("gstamount"),
-                list.get("netamount")
+            this.salesListTableModel.addRow(new Object[] {
+                    list.get("billnumber"),
+                    list.get("itemname"),
+                    list.get("huid"),
+                    list.get("netwt"),
+                    list.get("qty"),
+                    list.get("discount"),
+                    list.get("taxableamount"),
+                    list.get("gstpercent"),
+                    list.get("gstamount"),
+                    list.get("netamount")
             });
         }
 
     }
 
-    private void updateRequestForItemInDatabase(int entryid, Map<String, Object> item) throws SQLException, FileNotFoundException {
+    private void updateRequestForItemInDatabase(int entryid, Map<String, Object> item)
+            throws SQLException, FileNotFoundException {
         data.clear();
         columnNames.clear();
         if (DBController.isDatabaseConnected()) {
@@ -3915,10 +4021,10 @@ public class SaleScreen extends javax.swing.JFrame {
         saleRegisterRedirect(Integer.parseInt(txtBill.getText().trim()));
     }
 
-    private void txtNetAmtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNetAmtKeyReleased
+    private void txtNetAmtKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtNetAmtKeyReleased
         // TODO add your handling code here:columnNames.clear();
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//JOptionPane.showMessageDialog(this,fieldsAreValidated());
+            // JOptionPane.showMessageDialog(this,fieldsAreValidated());
             try {
                 if (fieldsAreValidated()) {
 
@@ -3947,7 +4053,8 @@ public class SaleScreen extends javax.swing.JFrame {
                     newEntry.put("billnumber", txtBill.getText().trim());
                     newEntry.put("partyname", txtPartyName.getText());
                     newEntry.put("gst", lblGST.getText());
-                    newEntry.put("previousbalance", String.format("%.2f", Double.valueOf(lblPreviousBalance.getText())));
+                    newEntry.put("previousbalance",
+                            String.format("%.2f", Double.valueOf(lblPreviousBalance.getText())));
                     newEntry.put("discount", txtDiscount.getText());
                     newEntry.put("tagno", tagno);
 
@@ -3991,45 +4098,45 @@ public class SaleScreen extends javax.swing.JFrame {
             }
         }
 
+    }// GEN-LAST:event_txtNetAmtKeyReleased
 
-    }//GEN-LAST:event_txtNetAmtKeyReleased
-
-    private void txtNetAmtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNetAmtFocusGained
+    private void txtNetAmtFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtNetAmtFocusGained
         txtNetAmt.setBackground(new Color(245, 230, 66));
         calculateNetAmount();
-    }//GEN-LAST:event_txtNetAmtFocusGained
+    }// GEN-LAST:event_txtNetAmtFocusGained
 
-    private void txtGSTPercentKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGSTPercentKeyReleased
+    private void txtGSTPercentKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtGSTPercentKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtNetAmt);
             setBg();
             txtNetAmt.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtGSTPercentKeyReleased
+    }// GEN-LAST:event_txtGSTPercentKeyReleased
 
-    private void txtTaxableAmtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTaxableAmtKeyTyped
+    private void txtTaxableAmtKeyTyped(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTaxableAmtKeyTyped
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtTaxableAmtKeyTyped
+    }// GEN-LAST:event_txtTaxableAmtKeyTyped
 
-    private void txtTaxableAmtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTaxableAmtKeyReleased
+    private void txtTaxableAmtKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtTaxableAmtKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtGSTPercent);
             setBg();
             txtGSTPercent.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtTaxableAmtKeyReleased
+    }// GEN-LAST:event_txtTaxableAmtKeyReleased
 
-    private void txtTaxableAmtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTaxableAmtFocusGained
+    private void txtTaxableAmtFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtTaxableAmtFocusGained
         txtTaxableAmt.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtTaxableAmtFocusGained
+    }// GEN-LAST:event_txtTaxableAmtFocusGained
 
     private void printbuttonclicked() {
         String typeToBePrinted = "";
         try {
-            String[] options = {"Type 1", "Type 2", "Type 3"};
-            typeToBePrinted = (String) JOptionPane.showInputDialog(null, "Select One:", "Print", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            String[] options = { "Type 1", "Type 2", "Type 3" };
+            typeToBePrinted = (String) JOptionPane.showInputDialog(null, "Select One:", "Print",
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             if (typeToBePrinted != null) {
                 if (Arrays.asList(options).contains(typeToBePrinted)) {
                     printSaleBillJasperReport(billToBePrinted, typeToBePrinted);
@@ -4058,16 +4165,17 @@ public class SaleScreen extends javax.swing.JFrame {
             tagno = re.getString("tagno");
             updateEntryItem(tagno, re.getString(2));
         }
-//        st.execute("update entryitem set item_sold=0 where id ='" + id + "';");
+        // st.execute("update entryitem set item_sold=0 where id ='" + id + "';");
     }
 
     private void updateEntryItem(String tagno, String qty) {
         try {
             Connection con = DBConnect.connect();
             Statement st = con.createStatement();
-            List<List<Object>> notSold = DBController.getDataFromTable("SELECT SUM(CAST (item_sold as Decimal(10,2))), SUM(netwt) FROM "
-                    + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE tagno ='" + tagno + "' AND "
-                    + " not tagno='N.A'");
+            List<List<Object>> notSold = DBController
+                    .getDataFromTable("SELECT SUM(CAST (item_sold as Decimal(10,2))), SUM(netwt) FROM "
+                            + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE tagno ='" + tagno + "' AND "
+                            + " not tagno='N.A'");
             double notsoldcount = 0;
 
             for (List<Object> list : notSold) {
@@ -4077,7 +4185,8 @@ public class SaleScreen extends javax.swing.JFrame {
                 }
             }
 
-            st.execute("update entryitem set item_sold=" + (notsoldcount - Integer.parseInt(qty)) + " where tagno ='" + tagno + "'");
+            st.execute("update entryitem set item_sold=" + (notsoldcount - Integer.parseInt(qty)) + " where tagno ='"
+                    + tagno + "'");
             st.close();
             con.close();
         } catch (Exception e) {
@@ -4085,16 +4194,17 @@ public class SaleScreen extends javax.swing.JFrame {
         }
 
     }
-    private void cmbTermsKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbTermsKeyReleased
+
+    private void cmbTermsKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_cmbTermsKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtPartyName);
             setBg();
             txtPartyName.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_cmbTermsKeyReleased
+    }// GEN-LAST:event_cmbTermsKeyReleased
 
-    private void cmbTermsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTermsActionPerformed
+    private void cmbTermsActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmbTermsActionPerformed
 
         if (cmbTerms.getSelectedItem().equals("Cash")) {
             fetchAccountNames("Cash");
@@ -4124,7 +4234,7 @@ public class SaleScreen extends javax.swing.JFrame {
 
             txtreceive.setText(String.format("%.3f", receive));
 
-            //  txtPartyName.setText("Cash");
+            // txtPartyName.setText("Cash");
         } else if (cmbTerms.getSelectedItem().equals("Credit")) {
             fetchAccountNames("Credit");
             paymentbtn.setEnabled(false);
@@ -4148,32 +4258,34 @@ public class SaleScreen extends javax.swing.JFrame {
             }
             double receive = grandTotal - exchange;
             txtreceive.setText(String.format("%.3f", receive));
-            //   txtPartyName.setText("Credit");
+            // txtPartyName.setText("Credit");
         }
         if (txtPartyName.getText().trim().equalsIgnoreCase("Cash")) {
-//            cmbTerms.removeAllItems();
+            // cmbTerms.removeAllItems();
             cmbTerms.setSelectedItem("Cash");
         } else {
-//            cmbTerms.removeAllItems();
-//            cmbTerms.addItem("Cash");
-//            cmbTerms.addItem("Credit");
+            // cmbTerms.removeAllItems();
+            // cmbTerms.addItem("Cash");
+            // cmbTerms.addItem("Credit");
         }
-    }//GEN-LAST:event_cmbTermsActionPerformed
+    }// GEN-LAST:event_cmbTermsActionPerformed
 
-    private void txtBillKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBillKeyReleased
+    private void txtBillKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtBillKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//            setFocus(evt, txtItemName);
+            // setFocus(evt, txtItemName);
             jComboBox1.requestFocus();
 
             setBg();
 
         }
-    }//GEN-LAST:event_txtBillKeyReleased
+    }// GEN-LAST:event_txtBillKeyReleased
+
     int selectedrow = 0;
     CashUserDetails obj = new CashUserDetails();
-    private void txtPartyNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPartyNameKeyReleased
 
-//        if (!(accountNames == null || accountNames.isEmpty())) {
+    private void txtPartyNameKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtPartyNameKeyReleased
+
+        // if (!(accountNames == null || accountNames.isEmpty())) {
         switch (evt.getKeyCode()) {
             case java.awt.event.KeyEvent.VK_BACK_SPACE:
                 pmPartyNameSuggestionsPopup.setVisible(false);
@@ -4185,20 +4297,24 @@ public class SaleScreen extends javax.swing.JFrame {
                     selectedrow++;
                 } else {
                     if (tblPartyNameSuggestions.getSelectedRow() < tblPartyNameSuggestions.getRowCount() - 1) {
-                        tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() + 1, tblPartyNameSuggestions.getSelectedRow() + 1);
+                        tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() + 1,
+                                tblPartyNameSuggestions.getSelectedRow() + 1);
                     }
                 }
-                txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
+                txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0)
+                        .toString().trim());
 
                 break;
             case KeyEvent.VK_UP:
                 tblPartyNameSuggestions.requestFocus();
 
                 if (tblPartyNameSuggestions.getSelectedRow() > 0) {
-                    tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1, tblPartyNameSuggestions.getSelectedRow() - 1);
+                    tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1,
+                            tblPartyNameSuggestions.getSelectedRow() - 1);
                 }
 
-                txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
+                txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0)
+                        .toString().trim());
 
                 break;
             case KeyEvent.VK_ENTER:
@@ -4222,10 +4338,10 @@ public class SaleScreen extends javax.swing.JFrame {
                     obj = new CashUserDetails();
                     obj.setVisible(true);
                     obj.setPass(0, Integer.parseInt(txtBill.getText().trim()));
-                    //        new CashPurchaseDialog(this, true).setVisible(true);
+                    // new CashPurchaseDialog(this, true).setVisible(true);
                 } else {
-//                    obj.setVisible(true);
-//                    obj.setPass(1,Integer.parseInt(txtBill.getText()));
+                    // obj.setVisible(true);
+                    // obj.setPass(1,Integer.parseInt(txtBill.getText()));
                 }
                 setPartyDetails(partyNameSuggestionsTableModel.getValueAt(tblPartyNameSuggestions
                         .getSelectedRow(), 0).toString());
@@ -4253,10 +4369,10 @@ public class SaleScreen extends javax.swing.JFrame {
                 });
                 break;
         }
-//        }
-    }//GEN-LAST:event_txtPartyNameKeyReleased
+        // }
+    }// GEN-LAST:event_txtPartyNameKeyReleased
 
-    private void txtPartyNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPartyNameFocusLost
+    private void txtPartyNameFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtPartyNameFocusLost
         txtPartyName.setBackground(Color.white);
         try {
             if (txtPartyName.getText().trim().isEmpty()) {
@@ -4265,18 +4381,17 @@ public class SaleScreen extends javax.swing.JFrame {
                 pmPartyNameSuggestionsPopup.setVisible(false);
                 lblPreviousBalance.setText(
                         outstandingAnalysisHelper.fillTableInDateGivenParty(
-                                (txtPartyName.getText() == null ? "" : txtPartyName.getText())
-                        ) == null ? "" : String.format("%.4f", Double.parseDouble(
-                        outstandingAnalysisHelper.fillTableInDateGivenParty(
-                                (txtPartyName.getText() == null ? "" : txtPartyName.getText())
-                        )
-                ))
-                );
-                //        int x=getSaleBillNo(txtPartyName.getText());
-                //        if(x==0){
-                //            x=getBillNo();
-                //        }
-                //        System.out.print(x);
+                                (txtPartyName.getText() == null ? "" : txtPartyName.getText())) == null
+                                        ? ""
+                                        : String.format("%.4f", Double.parseDouble(
+                                                outstandingAnalysisHelper.fillTableInDateGivenParty(
+                                                        (txtPartyName.getText() == null ? ""
+                                                                : txtPartyName.getText())))));
+                // int x=getSaleBillNo(txtPartyName.getText());
+                // if(x==0){
+                // x=getBillNo();
+                // }
+                // System.out.print(x);
                 if (save.getText().trim().equalsIgnoreCase("Save")) {
                     txtBill.setText(Integer.toString(getBillNofromSales()));
                 }
@@ -4284,21 +4399,22 @@ public class SaleScreen extends javax.swing.JFrame {
         } catch (ParseException ex) {
             Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_txtPartyNameFocusLost
+    }// GEN-LAST:event_txtPartyNameFocusLost
 
-    private void txtPartyNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPartyNameFocusGained
+    private void txtPartyNameFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtPartyNameFocusGained
         txtPartyName.setBackground(new Color(245, 230, 66));
         selectedrow = 0;
-    }//GEN-LAST:event_txtPartyNameFocusGained
+    }// GEN-LAST:event_txtPartyNameFocusGained
 
-    private void tblPurchasesListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPurchasesListMouseClicked
+    private void tblPurchasesListMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_tblPurchasesListMouseClicked
         selectedRow = tblPurchasesList.getSelectedRow();
 
         if (DBController.isDatabaseConnected()) {
-            //clearTextFields();
+            // clearTextFields();
 
             fieldsData = DBController.executeQuery("SELECT * FROM "
-                    + DatabaseCredentials.SALES_TABLE + " WHERE id = '" + tblPurchasesList.getValueAt(selectedRow, 0) + "'");
+                    + DatabaseCredentials.SALES_TABLE + " WHERE id = '" + tblPurchasesList.getValueAt(selectedRow, 0)
+                    + "'");
 
             id = Integer.valueOf(fieldsData.remove(0).toString());
 
@@ -4402,9 +4518,9 @@ public class SaleScreen extends javax.swing.JFrame {
 
             setPartyDetails(fieldsData.get(2).toString());
         }
-    }//GEN-LAST:event_tblPurchasesListMouseClicked
+    }// GEN-LAST:event_tblPurchasesListMouseClicked
 
-    private void cmbPerKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cmbPerKeyReleased
+    private void cmbPerKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_cmbPerKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtExtraCharge2);
@@ -4414,119 +4530,119 @@ public class SaleScreen extends javax.swing.JFrame {
 
             txtExtraCharge2.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_cmbPerKeyReleased
+    }// GEN-LAST:event_cmbPerKeyReleased
 
-    private void txtBasicAmtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBasicAmtKeyReleased
+    private void txtBasicAmtKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtBasicAmtKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtDiscount);
             setBg();
             txtDiscount.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtBasicAmtKeyReleased
+    }// GEN-LAST:event_txtBasicAmtKeyReleased
 
-    private void txtBasicAmtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBasicAmtFocusLost
+    private void txtBasicAmtFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtBasicAmtFocusLost
         txtBasicAmt.setBackground(Color.white);
         txtTaxableAmt.setText(txtBasicAmt.getText());
-    }//GEN-LAST:event_txtBasicAmtFocusLost
+    }// GEN-LAST:event_txtBasicAmtFocusLost
 
-    private void txtBasicAmtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBasicAmtFocusGained
+    private void txtBasicAmtFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtBasicAmtFocusGained
         txtBasicAmt.setBackground(new Color(245, 230, 66));
         calculateBasicAmount();
-    }//GEN-LAST:event_txtBasicAmtFocusGained
+    }// GEN-LAST:event_txtBasicAmtFocusGained
 
-    private void txtExtraChargeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtExtraChargeKeyReleased
+    private void txtExtraChargeKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtExtraChargeKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtBasicAmt);
             setBg();
             txtBasicAmt.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtExtraChargeKeyReleased
+    }// GEN-LAST:event_txtExtraChargeKeyReleased
 
-    private void txtExtraChargeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtExtraChargeFocusLost
+    private void txtExtraChargeFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtExtraChargeFocusLost
         txtExtraCharge.setBackground(Color.white);
         if (txtExtraCharge.getText().trim().isEmpty()) {
             txtExtraCharge.setText("0");
         }
-    }//GEN-LAST:event_txtExtraChargeFocusLost
+    }// GEN-LAST:event_txtExtraChargeFocusLost
 
-    private void txtRateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRateKeyReleased
+    private void txtRateKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtRateKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtExtraCharge1);
             setBg();
             txtExtraCharge1.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtRateKeyReleased
+    }// GEN-LAST:event_txtRateKeyReleased
 
-    private void txtItemDescriptionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtItemDescriptionKeyTyped
+    private void txtItemDescriptionKeyTyped(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtItemDescriptionKeyTyped
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtItemDescriptionKeyTyped
+    }// GEN-LAST:event_txtItemDescriptionKeyTyped
 
-    private void txtItemDescriptionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtItemDescriptionKeyReleased
+    private void txtItemDescriptionKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtItemDescriptionKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtQty);
             setBg();
             txtQty.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtItemDescriptionKeyReleased
+    }// GEN-LAST:event_txtItemDescriptionKeyReleased
 
-    private void txtGrossWtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGrossWtKeyReleased
+    private void txtGrossWtKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtGrossWtKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtBeedsWt);
             setBg();
             txtBeedsWt.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtGrossWtKeyReleased
+    }// GEN-LAST:event_txtGrossWtKeyReleased
 
-    private void txtDiamondRateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiamondRateKeyReleased
+    private void txtDiamondRateKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtDiamondRateKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtItemDescription);
             setBg();
             txtItemDescription.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtDiamondRateKeyReleased
+    }// GEN-LAST:event_txtDiamondRateKeyReleased
 
-    private void txtDiamondRateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiamondRateActionPerformed
+    private void txtDiamondRateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtDiamondRateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtDiamondRateActionPerformed
+    }// GEN-LAST:event_txtDiamondRateActionPerformed
 
-    private void txtDiamondRateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDiamondRateFocusLost
+    private void txtDiamondRateFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtDiamondRateFocusLost
         txtDiamondRate.setBackground(Color.white);
         if (txtDiamondRate.getText().trim().isEmpty()) {
             txtDiamondRate.setText("0");
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDiamondRateFocusLost
+        } // TODO add your handling code here:
+    }// GEN-LAST:event_txtDiamondRateFocusLost
 
-    private void txtDiamondWtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiamondWtKeyReleased
+    private void txtDiamondWtKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtDiamondWtKeyReleased
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtDiamondRate);
             setBg();
             txtDiamondRate.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtDiamondWtKeyReleased
+    }// GEN-LAST:event_txtDiamondWtKeyReleased
 
-    private void txtDiamondWtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDiamondWtFocusLost
+    private void txtDiamondWtFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtDiamondWtFocusLost
         txtDiamondWt.setBackground(Color.white);
         if (txtDiamondWt.getText().trim().isEmpty()) {
             txtDiamondWt.setText("0");
         }
-    }//GEN-LAST:event_txtDiamondWtFocusLost
+    }// GEN-LAST:event_txtDiamondWtFocusLost
 
-    private void txtNetWtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNetWtKeyReleased
+    private void txtNetWtKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtNetWtKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtDiamondWt);
             setBg();
             txtDiamondWt.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtNetWtKeyReleased
+    }// GEN-LAST:event_txtNetWtKeyReleased
 
-    private void txtBeedsWtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBeedsWtKeyReleased
+    private void txtBeedsWtKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtBeedsWtKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             verifyNetWeightCalculationFields();
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -4536,32 +4652,36 @@ public class SaleScreen extends javax.swing.JFrame {
             }
         }
 
-    }//GEN-LAST:event_txtBeedsWtKeyReleased
+    }// GEN-LAST:event_txtBeedsWtKeyReleased
 
-    private void txtBeedsWtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBeedsWtFocusLost
+    private void txtBeedsWtFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtBeedsWtFocusLost
         txtBeedsWt.setBackground(Color.white);
         if (txtBeedsWt.getText().trim().isEmpty()) {
             txtBeedsWt.setText("0");
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_txtBeedsWtFocusLost
+        } // TODO add your handling code here:
+    }// GEN-LAST:event_txtBeedsWtFocusLost
 
-    private void txtQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
+    private void txtQtyKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtQtyKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtRate);
             setBg();
             txtRate.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtQtyKeyReleased
+    }// GEN-LAST:event_txtQtyKeyReleased
+
     String scannedTagNo = "";
-    private void txtQtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQtyActionPerformed
+
+    private void txtQtyActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtQtyActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtQtyActionPerformed
+    }// GEN-LAST:event_txtQtyActionPerformed
+
     private void showAllItemDataWithTheHelpOfTagNo() {
-//        txtItemName.getText().toString().trim().replace("+", "");
+        // txtItemName.getText().toString().trim().replace("+", "");
         if (originalItemName.trim().contains("+")) {
             scannedTagNo += txtItemName.getText();
             txtItemName.setText(scannedTagNo.toString().trim().replace("+", ""));
-            String sql = "SELECT  itemname,huid,grosswt,beedswt,netwt,diamondwt,carats,polishpercent,taxslab FROM entryitem WHERE UPPER(tagno) LIKE UPPER('%" + scannedTagNo.toString().trim().replace("+", "") + "%')";
+            String sql = "SELECT  itemname,huid,grosswt,beedswt,netwt,diamondwt,carats,polishpercent,taxslab FROM entryitem WHERE UPPER(tagno) LIKE UPPER('%"
+                    + scannedTagNo.toString().trim().replace("+", "") + "%')";
 
             try {
                 Connection con = DBConnect.connect();
@@ -4603,10 +4723,13 @@ public class SaleScreen extends javax.swing.JFrame {
         }
         scannedTagNo = "";
 
-//        JOptionPane.showMessageDialog(this, txtItemName.getText().toString().trim().replace("+", ""));
+        // JOptionPane.showMessageDialog(this,
+        // txtItemName.getText().toString().trim().replace("+", ""));
     }
+
     String originalItemName = "";
-    private void txtItemNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtItemNameKeyReleased
+
+    private void txtItemNameKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtItemNameKeyReleased
         originalItemName += txtItemName.getText().trim();
         if (txtItemName.getText().trim().toString().contains("+")) {
 
@@ -4629,9 +4752,11 @@ public class SaleScreen extends javax.swing.JFrame {
                         EventQueue.invokeLater(() -> {
                             if (!txtItemName.getText().trim().isEmpty()) {
                                 setItemRate(txtItemName.getText().trim());
-//                            getHuid(txtItemName.getText().trim());
-                                String itemName = tblItemNameSuggestions.getValueAt(tblItemNameSuggestions.getSelectedRow(), 0).toString();
-                                String itemgrp = tblItemNameSuggestions.getValueAt(tblItemNameSuggestions.getSelectedRow(), 1).toString();
+                                // getHuid(txtItemName.getText().trim());
+                                String itemName = tblItemNameSuggestions
+                                        .getValueAt(tblItemNameSuggestions.getSelectedRow(), 0).toString();
+                                String itemgrp = tblItemNameSuggestions
+                                        .getValueAt(tblItemNameSuggestions.getSelectedRow(), 1).toString();
                                 txtItemName.setText(itemName);
                                 pmItemNameSuggestionsPopup.setVisible(false);
                                 pmItemNameSuggestionsDetailsPopup.setVisible(true);
@@ -4651,12 +4776,13 @@ public class SaleScreen extends javax.swing.JFrame {
                         });
 
                         if (!txtQty.getText().trim().isEmpty()) {
-//                        purchaseItemsDetailsDialog.setTableRowCount(Integer.parseInt(txtQty.getText().trim()));
-//                        purchaseItemsDetailsDialog.setVisible(true);
-//
-//                        purchaseItemsDetailsDialog.populateItemsDetailsTableSale("SELECT huid, "
-//                                + "grosswt, beedswt,netwt,diamondwt FROM " + DatabaseCredentials.ENTRY_ITEM_TABLE
-//                                + " WHERE itemname LIKE " + "'" + txtItemName.getText() + "'");
+                            // purchaseItemsDetailsDialog.setTableRowCount(Integer.parseInt(txtQty.getText().trim()));
+                            // purchaseItemsDetailsDialog.setVisible(true);
+                            //
+                            // purchaseItemsDetailsDialog.populateItemsDetailsTableSale("SELECT huid, "
+                            // + "grosswt, beedswt,netwt,diamondwt FROM " +
+                            // DatabaseCredentials.ENTRY_ITEM_TABLE
+                            // + " WHERE itemname LIKE " + "'" + txtItemName.getText() + "'");
                         }
                         setBg();
                         bool = false;
@@ -4674,9 +4800,10 @@ public class SaleScreen extends javax.swing.JFrame {
                                         .getSelectedRow(), 0).toString(),
                                 tblItemNameSuggestionsDetails.getValueAt(tblItemNameSuggestionsDetails
                                         .getSelectedRow(), 2).toString());
-//                txtGSTPercent.setText(itemNameSuggestionsTableModel
-//                        .getValueAt(tblItemNameSuggestions.getSelectedRow(), 2).toString().replaceAll("%", ""));
-//			txtQty.setText("1");
+                        // txtGSTPercent.setText(itemNameSuggestionsTableModel
+                        // .getValueAt(tblItemNameSuggestions.getSelectedRow(),
+                        // 2).toString().replaceAll("%", ""));
+                        // txtQty.setText("1");
                         pmItemNameSuggestionsDetailsPopup.setVisible(false);
                         setFocus(evt, txthuid);
                         setBg();
@@ -4693,25 +4820,32 @@ public class SaleScreen extends javax.swing.JFrame {
                             selectedrow++;
                         } else {
                             if (tblItemNameSuggestions.getSelectedRow() < tblItemNameSuggestions.getRowCount() - 1) {
-                                tblItemNameSuggestions.setRowSelectionInterval(tblItemNameSuggestions.getSelectedRow() + 1, tblItemNameSuggestions.getSelectedRow() + 1);
+                                tblItemNameSuggestions.setRowSelectionInterval(
+                                        tblItemNameSuggestions.getSelectedRow() + 1,
+                                        tblItemNameSuggestions.getSelectedRow() + 1);
                             }
                         }
-                        txtItemName.setText(tblItemNameSuggestions.getValueAt(tblItemNameSuggestions.getSelectedRow(), 0).toString().trim());
+                        txtItemName.setText(tblItemNameSuggestions
+                                .getValueAt(tblItemNameSuggestions.getSelectedRow(), 0).toString().trim());
                     } else {
                         tblItemNameSuggestionsDetails.requestFocus();
                         if (selectedrow == 0) {
                             tblItemNameSuggestionsDetails.setRowSelectionInterval(0, 0);
                             selectedrow++;
                         } else {
-                            if (tblItemNameSuggestionsDetails.getSelectedRow() < tblItemNameSuggestionsDetails.getRowCount() - 1) {
-                                tblItemNameSuggestionsDetails.setRowSelectionInterval(tblItemNameSuggestionsDetails.getSelectedRow() + 1, tblItemNameSuggestionsDetails.getSelectedRow() + 1);
+                            if (tblItemNameSuggestionsDetails
+                                    .getSelectedRow() < tblItemNameSuggestionsDetails.getRowCount() - 1) {
+                                tblItemNameSuggestionsDetails.setRowSelectionInterval(
+                                        tblItemNameSuggestionsDetails.getSelectedRow() + 1,
+                                        tblItemNameSuggestionsDetails.getSelectedRow() + 1);
                             }
                         }
 
-//                txtGSTPercent.setText(itemNameSuggestionsTableModel
-//                        .getValueAt(tblItemNameSuggestions.getSelectedRow(), 2).toString().replaceAll("%", ""));
-//			txtQty.setText("1");
-//                    pmItemNameSuggestionsDetailsPopup.setVisible(false);
+                        // txtGSTPercent.setText(itemNameSuggestionsTableModel
+                        // .getValueAt(tblItemNameSuggestions.getSelectedRow(),
+                        // 2).toString().replaceAll("%", ""));
+                        // txtQty.setText("1");
+                        // pmItemNameSuggestionsDetailsPopup.setVisible(false);
                     }
                     break;
                 case KeyEvent.VK_UP:
@@ -4719,15 +4853,19 @@ public class SaleScreen extends javax.swing.JFrame {
                         tblItemNameSuggestions.requestFocus();
 
                         if (tblItemNameSuggestions.getSelectedRow() > 0) {
-                            tblItemNameSuggestions.setRowSelectionInterval(tblItemNameSuggestions.getSelectedRow() - 1, tblItemNameSuggestions.getSelectedRow() - 1);
+                            tblItemNameSuggestions.setRowSelectionInterval(tblItemNameSuggestions.getSelectedRow() - 1,
+                                    tblItemNameSuggestions.getSelectedRow() - 1);
                         }
 
-                        txtItemName.setText(tblItemNameSuggestions.getValueAt(tblItemNameSuggestions.getSelectedRow(), 0).toString().trim());
+                        txtItemName.setText(tblItemNameSuggestions
+                                .getValueAt(tblItemNameSuggestions.getSelectedRow(), 0).toString().trim());
                     } else {
                         tblItemNameSuggestionsDetails.requestFocus();
 
                         if (tblItemNameSuggestionsDetails.getSelectedRow() > 0) {
-                            tblItemNameSuggestionsDetails.setRowSelectionInterval(tblItemNameSuggestionsDetails.getSelectedRow() - 1, tblItemNameSuggestionsDetails.getSelectedRow() - 1);
+                            tblItemNameSuggestionsDetails.setRowSelectionInterval(
+                                    tblItemNameSuggestionsDetails.getSelectedRow() - 1,
+                                    tblItemNameSuggestionsDetails.getSelectedRow() - 1);
                         }
                     }
                     break;
@@ -4736,10 +4874,10 @@ public class SaleScreen extends javax.swing.JFrame {
                     txtItemName.requestFocusInWindow();
                     break;
 
-//            case KeyEvent.VK_DOWN:
+                // case KeyEvent.VK_DOWN:
                 ////                pmItemNameSuggestionsPopup.requestFocusInWindow();
-//               
-////                if(pmItemNameSuggestionsPopup.getComponentCount()>0){
+                //
+                ////                if(pmItemNameSuggestionsPopup.getComponentCount()>0){
 ////                    Component com=pmItemNameSuggestionsPopup.getComponent(0);
 //////                    JOptionPane.showMessageDialog(this, com.getClass().getSimpleName());
 ////                    if(com instanceof JScrollPane){
@@ -4747,27 +4885,29 @@ public class SaleScreen extends javax.swing.JFrame {
 ////                       com.sets
 ////                    }
 ////                }
-//                
-//               if(tblItemNameSuggestions.getRowCount()>0){
-//                   SwingUtilities.invokeLater(()->{
-//                       MenuSelectionManager.defaultManager().clearSelectedPath();
-//                       MenuSelectionManager.defaultManager().setSelectedPath(new MenuElement[]{pmItemNameSuggestionsPopup,spTblItemNameSuggestionsContainer});
-//                   tblItemNameSuggestions.requestFocusInWindow();
-//                   
-//                   
-//                   });
-//               }
-//                
-////                JOptionPane.showMessageDialog(this, "vkdown");
-//                break;
-            default:
+                //
+                // if(tblItemNameSuggestions.getRowCount()>0){
+                // SwingUtilities.invokeLater(()->{
+                // MenuSelectionManager.defaultManager().clearSelectedPath();
+                // MenuSelectionManager.defaultManager().setSelectedPath(new
+                // MenuElement[]{pmItemNameSuggestionsPopup,spTblItemNameSuggestionsContainer});
+                // tblItemNameSuggestions.requestFocusInWindow();
+                //
+                //
+                // });
+                // }
+                //
+                ////                JOptionPane.showMessageDialog(this, "vkdown");
+                // break;
+                default:
                     EventQueue.invokeLater(() -> {
                         if (bool) {
                             pmItemNameSuggestionsPopup.setVisible(true);
-                            populateSuggestionsTableFromDatabase(itemNameSuggestionsTableModel, "SELECT DISTINCT itemname, "
-                                    + "itemgroup FROM " + DatabaseCredentials.ENTRY_ITEM_TABLE
-                                    + " WHERE itemname LIKE " + "'" + txtItemName.getText() + "%'");
-                        } //                        autoComplete(ITEM_NAMES, txtItemName.getText(), txtItemName);
+                            populateSuggestionsTableFromDatabase(itemNameSuggestionsTableModel,
+                                    "SELECT DISTINCT itemname, "
+                                            + "itemgroup FROM " + DatabaseCredentials.ENTRY_ITEM_TABLE
+                                            + " WHERE itemname LIKE " + "'" + txtItemName.getText() + "%'");
+                        } // autoComplete(ITEM_NAMES, txtItemName.getText(), txtItemName);
                         else {
                             pmItemNameSuggestionsDetailsPopup.setVisible(true);
                         }
@@ -4775,121 +4915,121 @@ public class SaleScreen extends javax.swing.JFrame {
                     break;
             }
         }
-    }//GEN-LAST:event_txtItemNameKeyReleased
+    }// GEN-LAST:event_txtItemNameKeyReleased
 
-    private void txtItemNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtItemNameActionPerformed
+    private void txtItemNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtItemNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtItemNameActionPerformed
+    }// GEN-LAST:event_txtItemNameActionPerformed
 
-    private void txtItemNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtItemNameFocusLost
+    private void txtItemNameFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtItemNameFocusLost
         txtItemName.setBackground(Color.white);
         pmItemNameSuggestionsPopup.setVisible(false);
         pmItemNameSuggestionsDetailsPopup.setVisible(false);
         showAllItemDataWithTheHelpOfTagNo();
-    }//GEN-LAST:event_txtItemNameFocusLost
+    }// GEN-LAST:event_txtItemNameFocusLost
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnAddActionPerformed
 
         CreateAccountScreen sc = new CreateAccountScreen();
         sc.setVisible(true);
-    }//GEN-LAST:event_btnAddActionPerformed
+    }// GEN-LAST:event_btnAddActionPerformed
 
-    private void txthuidKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txthuidKeyReleased
-//ds        // TODO add your handling code here:
+    private void txthuidKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txthuidKeyReleased
+        // ds // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtGrossWt);
             setBg();
             txtGrossWt.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txthuidKeyReleased
+    }// GEN-LAST:event_txthuidKeyReleased
 
-    private void txtItemDescriptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtItemDescriptionActionPerformed
+    private void txtItemDescriptionActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtItemDescriptionActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtItemDescriptionActionPerformed
+    }// GEN-LAST:event_txtItemDescriptionActionPerformed
 
-    private void spTblItemNameSuggestionsContainerFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_spTblItemNameSuggestionsContainerFocusLost
+    private void spTblItemNameSuggestionsContainerFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_spTblItemNameSuggestionsContainerFocusLost
         // TODO add your handling code here:
         spTblItemNameSuggestionsContainer.setVisible(false);
-    }//GEN-LAST:event_spTblItemNameSuggestionsContainerFocusLost
+    }// GEN-LAST:event_spTblItemNameSuggestionsContainerFocusLost
 
-    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_formMouseClicked
         // TODO add your handling code here:
         pmItemNameSuggestionsPopup.setVisible(false);
         pmItemNameSuggestionsDetailsPopup.setVisible(false);
-    }//GEN-LAST:event_formMouseClicked
+    }// GEN-LAST:event_formMouseClicked
 
-    private void pnlRootContainerFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pnlRootContainerFocusLost
+    private void pnlRootContainerFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_pnlRootContainerFocusLost
         // TODO add your handling code here:
         pmItemNameSuggestionsPopup.setVisible(false);
         pmItemNameSuggestionsDetailsPopup.setVisible(false);
-    }//GEN-LAST:event_pnlRootContainerFocusLost
+    }// GEN-LAST:event_pnlRootContainerFocusLost
 
-    private void pnlRootContainerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlRootContainerMouseClicked
+    private void pnlRootContainerMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_pnlRootContainerMouseClicked
         // TODO add your handling code here:
         pmItemNameSuggestionsPopup.setVisible(false);
         pmItemNameSuggestionsDetailsPopup.setVisible(false);
-    }//GEN-LAST:event_pnlRootContainerMouseClicked
+    }// GEN-LAST:event_pnlRootContainerMouseClicked
 
-    private void pmPartyNameSuggestionsPopupFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_pmPartyNameSuggestionsPopupFocusLost
+    private void pmPartyNameSuggestionsPopupFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_pmPartyNameSuggestionsPopupFocusLost
         // TODO add your handling code here:
         pmPartyNameSuggestionsPopup.setVisible(false);
-    }//GEN-LAST:event_pmPartyNameSuggestionsPopupFocusLost
+    }// GEN-LAST:event_pmPartyNameSuggestionsPopupFocusLost
 
-    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane1MouseClicked
+    private void jScrollPane1MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jScrollPane1MouseClicked
         // TODO add your handling code here:
         pmItemNameSuggestionsPopup.setVisible(false);
         pmItemNameSuggestionsDetailsPopup.setVisible(false);
         pmPartyNameSuggestionsPopup.setVisible(false);
-    }//GEN-LAST:event_jScrollPane1MouseClicked
+    }// GEN-LAST:event_jScrollPane1MouseClicked
 
-    private void txtExtraCharge2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtExtraCharge2FocusGained
+    private void txtExtraCharge2FocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtExtraCharge2FocusGained
         txtExtraCharge2.setBackground(new Color(245, 230, 66));
         double labour = getlabourcharge();
         txtExtraCharge2.setText(String.format("%.2f", labour));
-    }//GEN-LAST:event_txtExtraCharge2FocusGained
+    }// GEN-LAST:event_txtExtraCharge2FocusGained
 
-    private void exbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exbtnActionPerformed
-//        billno = getBillNo();
+    private void exbtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_exbtnActionPerformed
+        // billno = getBillNo();
         billno = Integer.parseInt(txtBill.getText().trim());
 
         ex.setVisible(true);
-        //  System.out.println("h");
-//             if(ex.isVisible()==false){
-//               txtexchange.setText(String.valueOf(exchngamt))  ;
-//             }            
-// TODO add your handling code here:
-    }//GEN-LAST:event_exbtnActionPerformed
-
-    private void txtoutstandingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtoutstandingActionPerformed
+        // System.out.println("h");
+        // if(ex.isVisible()==false){
+        // txtexchange.setText(String.valueOf(exchngamt)) ;
+        // }
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtoutstandingActionPerformed
+    }// GEN-LAST:event_exbtnActionPerformed
 
-    private void txtNetAmtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNetAmtActionPerformed
+    private void txtoutstandingActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtoutstandingActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtNetAmtActionPerformed
+    }// GEN-LAST:event_txtoutstandingActionPerformed
 
-    private void txtexchangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtexchangeActionPerformed
+    private void txtNetAmtActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtNetAmtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtexchangeActionPerformed
+    }// GEN-LAST:event_txtNetAmtActionPerformed
 
-    private void txtexchangeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtexchangeKeyReleased
+    private void txtexchangeActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtexchangeActionPerformed
+        // TODO add your handling code here:
+    }// GEN-LAST:event_txtexchangeActionPerformed
+
+    private void txtexchangeKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtexchangeKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             int t = Integer.parseInt(txtgrandtotal.getText());
             int y = Integer.parseInt(txtexchange.getText());
             txtoutstanding.setText(String.valueOf(t - y));
         }
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtexchangeKeyReleased
+    }// GEN-LAST:event_txtexchangeKeyReleased
 
-    private void txtBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBillActionPerformed
+    private void txtBillActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtBillActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBillActionPerformed
+    }// GEN-LAST:event_txtBillActionPerformed
 
-    private void txtPartyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPartyNameActionPerformed
+    private void txtPartyNameActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txtPartyNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtPartyNameActionPerformed
+    }// GEN-LAST:event_txtPartyNameActionPerformed
 
-    private void txtDiscountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDiscountFocusLost
+    private void txtDiscountFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtDiscountFocusLost
         txtDiscount.setBackground(Color.white);
 
         if (txtDiscount.getText().trim().isEmpty()) {
@@ -4898,25 +5038,25 @@ public class SaleScreen extends javax.swing.JFrame {
         double taxableAmount = Double.parseDouble(txtBasicAmt.getText()) - Double.parseDouble(txtDiscount.getText());
         txtTaxableAmt.setText(String.format("%.3f", taxableAmount));
 
-    }//GEN-LAST:event_txtDiscountFocusLost
+    }// GEN-LAST:event_txtDiscountFocusLost
 
-    private void txtDiscountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiscountKeyReleased
+    private void txtDiscountKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtDiscountKeyReleased
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtTaxableAmt);
             setBg();
             txtTaxableAmt.setBackground(Color.LIGHT_GRAY);
         }
-    }//GEN-LAST:event_txtDiscountKeyReleased
+    }// GEN-LAST:event_txtDiscountKeyReleased
 
-    private void txtQtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtQtyFocusLost
+    private void txtQtyFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtQtyFocusLost
         txtQty.setBackground(Color.white);
         if (RealSettingsHelper.gettagNoIsTrue()) {
-            txtQty.setText("1");
+            // txtQty.setText("1");
         }
-    }//GEN-LAST:event_txtQtyFocusLost
+    }// GEN-LAST:event_txtQtyFocusLost
 
-    private void txtBillFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBillFocusLost
+    private void txtBillFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtBillFocusLost
         txtBill.setBackground(Color.white);
         if (save.getText().trim().equalsIgnoreCase("Save")) {
             try {
@@ -4935,74 +5075,76 @@ public class SaleScreen extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, e);
             }
         }
-    }//GEN-LAST:event_txtBillFocusLost
+    }// GEN-LAST:event_txtBillFocusLost
 
-    private void txtBillKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBillKeyPressed
+    private void txtBillKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtBillKeyPressed
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_txtBillKeyPressed
+    }// GEN-LAST:event_txtBillKeyPressed
+
     boolean bool = true;
-    private void txtItemNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtItemNameKeyPressed
 
+    private void txtItemNameKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txtItemNameKeyPressed
 
-    }//GEN-LAST:event_txtItemNameKeyPressed
+    }// GEN-LAST:event_txtItemNameKeyPressed
 
-    private void paymentbtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_paymentbtnMouseClicked
+    private void paymentbtnMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_paymentbtnMouseClicked
         // TODO add your handling code here:
         CashAndBankPaymentsSales.fatchData(billToBePrinted);
 
-//        CashAndBankPaymentsSales.setChequeAmount("");
-//        CashAndBankPaymentsSales.setCardAmount1("");
-//        CashAndBankPaymentsSales.setCardAmount2("");
-//        CashAndBankPaymentsSales.seteWallteAmount("");
-//        CashAndBankPaymentsSales.setCashAmount("");
-//        CashAndBankPaymentsSales.setCard1Transectionno("");
-//        CashAndBankPaymentsSales.setCard2Transectionno("");
-//        CashAndBankPaymentsSales.setEwalletTransectionno("");
-//        CashAndBankPaymentsSales.setChequeTransectionno("");
-//        CashAndBankPaymentsSales.setBankName("");
-//        CashAndBankPaymentsSales.setChequno("");
-//        CashAndBankPaymentsSales.setBalanceamount("");
-//        CashAndBankPaymentsSales.fatchData(billToBePrinted);
-        CashAndBankPaymentsSales.setBalanceamount(String.valueOf((int) Double.parseDouble(txtgrandtotal.getText().trim())));
+        // CashAndBankPaymentsSales.setChequeAmount("");
+        // CashAndBankPaymentsSales.setCardAmount1("");
+        // CashAndBankPaymentsSales.setCardAmount2("");
+        // CashAndBankPaymentsSales.seteWallteAmount("");
+        // CashAndBankPaymentsSales.setCashAmount("");
+        // CashAndBankPaymentsSales.setCard1Transectionno("");
+        // CashAndBankPaymentsSales.setCard2Transectionno("");
+        // CashAndBankPaymentsSales.setEwalletTransectionno("");
+        // CashAndBankPaymentsSales.setChequeTransectionno("");
+        // CashAndBankPaymentsSales.setBankName("");
+        // CashAndBankPaymentsSales.setChequno("");
+        // CashAndBankPaymentsSales.setBalanceamount("");
+        // CashAndBankPaymentsSales.fatchData(billToBePrinted);
+        CashAndBankPaymentsSales
+                .setBalanceamount(String.valueOf((int) Double.parseDouble(txtgrandtotal.getText().trim())));
         CashAndBankPaymentsSales.setVisible(true);
-    }//GEN-LAST:event_paymentbtnMouseClicked
+    }// GEN-LAST:event_paymentbtnMouseClicked
 
-    private void exbtnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_exbtnMouseEntered
+    private void exbtnMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_exbtnMouseEntered
         // TODO add your handling code here:
         try {
-//             JOptionPane.showMessageDialog(this,LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.toString());
+            // JOptionPane.showMessageDialog(this,LoginPageRedesigned.staticdashboared.CashAndBankPaymentsSales.toString());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e);
         }
-    }//GEN-LAST:event_exbtnMouseEntered
+    }// GEN-LAST:event_exbtnMouseEntered
 
-    private void cmbTermsPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_cmbTermsPropertyChange
+    private void cmbTermsPropertyChange(java.beans.PropertyChangeEvent evt) {// GEN-FIRST:event_cmbTermsPropertyChange
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_cmbTermsPropertyChange
+    }// GEN-LAST:event_cmbTermsPropertyChange
 
-    private void cmbTermsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbTermsFocusLost
+    private void cmbTermsFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cmbTermsFocusLost
         cmbTerms.setBackground(Color.white);
         if (txtPartyName.getText().trim().equalsIgnoreCase("Cash")) {
-//            cmbTerms.removeAllItems();
+            // cmbTerms.removeAllItems();
             cmbTerms.setSelectedItem("Cash");
         } else if (txtPartyName.getText().trim().equalsIgnoreCase("Credit")) {
             cmbTerms.setSelectedItem("Credit");
         }
-    }//GEN-LAST:event_cmbTermsFocusLost
+    }// GEN-LAST:event_cmbTermsFocusLost
 
-    private void cmbTermsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbTermsMouseClicked
+    private void cmbTermsMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_cmbTermsMouseClicked
         // TODO add your handling code here:
         if (txtPartyName.getText().trim().equalsIgnoreCase("Cash")) {
-//            cmbTerms.removeAllItems();
+            // cmbTerms.removeAllItems();
             cmbTerms.setSelectedItem("Cash");
         } else if (txtPartyName.getText().trim().equalsIgnoreCase("Credit")) {
             cmbTerms.setSelectedItem("Credit");
         }
-    }//GEN-LAST:event_cmbTermsMouseClicked
+    }// GEN-LAST:event_cmbTermsMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
 
         try {
@@ -5025,10 +5167,11 @@ public class SaleScreen extends javax.swing.JFrame {
 
         }
 
+    }// GEN-LAST:event_jButton1ActionPerformed
 
-    }//GEN-LAST:event_jButton1ActionPerformed
     String Systemname = null;
-    private void SendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SendActionPerformed
+
+    private void SendActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_SendActionPerformed
         // TODO add your handling code here:
 
         try {
@@ -5047,7 +5190,8 @@ public class SaleScreen extends javax.swing.JFrame {
             Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, e);
 
         }
-        String path2 = System.getProperty("user.dir") + File.separator + "src" + File.separator + "jasper_reports" + File.separator + "jasperpdf" + File.separator;
+        String path2 = System.getProperty("user.dir") + File.separator + "src" + File.separator + "jasper_reports"
+                + File.separator + "jasperpdf" + File.separator;
         try {
             if (phnno.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Enter Phone No");
@@ -5066,9 +5210,10 @@ public class SaleScreen extends javax.swing.JFrame {
                     for (int i = 0; i < numbers.length; i++) {
                         phoneNo.add(numbers[i]);
                     }
-//                    phoneNo.add();
+                    // phoneNo.add();
 
-                    int i = wa.sendDocAndMessage(Systemname.trim(), path2 + txtBill.getText().trim() + Type + ".pdf", phoneNo, message);
+                    int i = wa.sendDocAndMessage(Systemname.trim(), path2 + txtBill.getText().trim() + Type + ".pdf",
+                            phoneNo, message);
                     JOptionPane.showMessageDialog(this, "send Message " + i + " Outoff " + phoneNo.size());
                     whatsuppanel.setVisible(false);
 
@@ -5082,14 +5227,16 @@ public class SaleScreen extends javax.swing.JFrame {
 
             e.printStackTrace();
         }
-    }//GEN-LAST:event_SendActionPerformed
+    }// GEN-LAST:event_SendActionPerformed
 
-    private void type1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_type1ActionPerformed
+    private void type1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_type1ActionPerformed
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_type1ActionPerformed
+    }// GEN-LAST:event_type1ActionPerformed
+
     String Type = "";
-    private void type2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_type2MouseClicked
+
+    private void type2MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_type2MouseClicked
 
         if (type2.isSelected()) {
             type1.setSelected(false);
@@ -5100,10 +5247,10 @@ public class SaleScreen extends javax.swing.JFrame {
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_type2MouseClicked
+        } // TODO add your handling code here:
+    }// GEN-LAST:event_type2MouseClicked
 
-    private void type3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_type3MouseClicked
+    private void type3MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_type3MouseClicked
         if (type3.isSelected()) {
             try {
                 type1.setSelected(false);
@@ -5115,9 +5262,9 @@ public class SaleScreen extends javax.swing.JFrame {
                 Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_type3MouseClicked
+    }// GEN-LAST:event_type3MouseClicked
 
-    private void type1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_type1MouseClicked
+    private void type1MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_type1MouseClicked
         if (type1.isSelected()) {
             try {
                 type2.setSelected(false);
@@ -5129,9 +5276,9 @@ public class SaleScreen extends javax.swing.JFrame {
                 Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_type1MouseClicked
+    }// GEN-LAST:event_type1MouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         try {
             if (jTextField1.getText().trim().isEmpty()) {
@@ -5156,36 +5303,35 @@ public class SaleScreen extends javax.swing.JFrame {
         catch (Exception ex) {
             Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }// GEN-LAST:event_jButton2ActionPerformed
 
-    private void jLabel41MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel41MouseClicked
+    private void jLabel41MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jLabel41MouseClicked
         // TODO add your handling code here:
         jPanel2.setVisible(false);
-    }//GEN-LAST:event_jLabel41MouseClicked
+    }// GEN-LAST:event_jLabel41MouseClicked
 
-    private void jLabel42MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel42MouseClicked
-        whatsuppanel.setVisible(false);        // TODO add your handling code here:
-    }//GEN-LAST:event_jLabel42MouseClicked
+    private void jLabel42MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jLabel42MouseClicked
+        whatsuppanel.setVisible(false); // TODO add your handling code here:
+    }// GEN-LAST:event_jLabel42MouseClicked
 
-    private void jLabel40MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel40MouseClicked
+    private void jLabel40MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jLabel40MouseClicked
         // TODO add your handling code here:
         jPanel2.setVisible(true);
         jButton2.setText("Update");
-    }//GEN-LAST:event_jLabel40MouseClicked
+    }// GEN-LAST:event_jLabel40MouseClicked
 
-    private void txtItemNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtItemNameFocusGained
+    private void txtItemNameFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtItemNameFocusGained
         txtItemName.setBackground(new Color(245, 230, 66));
         selectedrow = 0;
         bool = true;
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtItemNameFocusGained
+    }// GEN-LAST:event_txtItemNameFocusGained
 
-    private void txthuidKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txthuidKeyPressed
+    private void txthuidKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txthuidKeyPressed
 
+    }// GEN-LAST:event_txthuidKeyPressed
 
-    }//GEN-LAST:event_txthuidKeyPressed
-
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jButton3MouseClicked
         if (selectedRow != -1) {
 
             if (!DBController.isDatabaseConnected()) {
@@ -5204,9 +5350,8 @@ public class SaleScreen extends javax.swing.JFrame {
                     Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                boolean rowDeleted
-                        = DBController.removeDataFromTable(DatabaseCredentials.SALES_TABLE,
-                                "id", tblPurchasesList.getValueAt(selectedRow, 0));
+                boolean rowDeleted = DBController.removeDataFromTable(DatabaseCredentials.SALES_TABLE,
+                        "id", tblPurchasesList.getValueAt(selectedRow, 0));
 
                 if (rowDeleted) {
                     try {
@@ -5234,14 +5379,14 @@ public class SaleScreen extends javax.swing.JFrame {
                 }
 
             }
-        }        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3MouseClicked
+        } // TODO add your handling code here:
+    }// GEN-LAST:event_jButton3MouseClicked
 
-    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-        printbuttonclicked();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4MouseClicked
+    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jButton4MouseClicked
+        printbuttonclicked(); // TODO add your handling code here:
+    }// GEN-LAST:event_jButton4MouseClicked
 
-    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
+    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jButton5MouseClicked
         clearTextFields();
         clearLabels();
         soldItemsForCurrentBill.clear();
@@ -5249,27 +5394,27 @@ public class SaleScreen extends javax.swing.JFrame {
         txtBill.setText(String.valueOf(getBillNofromSales()));
         salesListTableModel.setRowCount(0);
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5MouseClicked
+    }// GEN-LAST:event_jButton5MouseClicked
 
-    private void txtBillFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBillFocusGained
+    private void txtBillFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtBillFocusGained
         txtBill.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtBillFocusGained
+    }// GEN-LAST:event_txtBillFocusGained
 
-    private void cmbTermsFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbTermsFocusGained
+    private void cmbTermsFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cmbTermsFocusGained
         cmbTerms.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_cmbTermsFocusGained
+    }// GEN-LAST:event_cmbTermsFocusGained
 
-    private void txthuidFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txthuidFocusGained
+    private void txthuidFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txthuidFocusGained
         txthuid.setBackground(new Color(245, 230, 66));
         if (!txtItemName.getText().trim().isEmpty()) {
 
             Object itemRate = setItemRate(txtItemName.getText().trim());
 
             if ((itemRate == null)) {
-//                txtNetAmt.setText("");
+                // txtNetAmt.setText("");
                 try {
                     if (originalItemName.trim().contains("+")) {
-//                        txtRate.setText("0");
+                        // txtRate.setText("0");
 
                         JOptionPane.showMessageDialog(this, "Please Go To Home Page And Add Today Price");
                     }
@@ -5281,206 +5426,206 @@ public class SaleScreen extends javax.swing.JFrame {
             originalItemName = "";
         }
 
-    }//GEN-LAST:event_txthuidFocusGained
+    }// GEN-LAST:event_txthuidFocusGained
 
-    private void txthuidFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txthuidFocusLost
+    private void txthuidFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txthuidFocusLost
         txthuid.setBackground(Color.white);
-    }//GEN-LAST:event_txthuidFocusLost
+    }// GEN-LAST:event_txthuidFocusLost
 
-    private void txtGrossWtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGrossWtFocusGained
+    private void txtGrossWtFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtGrossWtFocusGained
         txtGrossWt.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtGrossWtFocusGained
+    }// GEN-LAST:event_txtGrossWtFocusGained
 
-    private void txtGrossWtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGrossWtFocusLost
+    private void txtGrossWtFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtGrossWtFocusLost
         txtGrossWt.setBackground(Color.white);
-    }//GEN-LAST:event_txtGrossWtFocusLost
+    }// GEN-LAST:event_txtGrossWtFocusLost
 
-    private void txtBeedsWtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBeedsWtFocusGained
+    private void txtBeedsWtFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtBeedsWtFocusGained
         txtBeedsWt.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtBeedsWtFocusGained
+    }// GEN-LAST:event_txtBeedsWtFocusGained
 
-    private void txtNetWtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNetWtFocusGained
+    private void txtNetWtFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtNetWtFocusGained
         txtNetWt.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtNetWtFocusGained
+    }// GEN-LAST:event_txtNetWtFocusGained
 
-    private void txtNetWtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNetWtFocusLost
+    private void txtNetWtFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtNetWtFocusLost
         txtNetWt.setBackground(Color.white);
-    }//GEN-LAST:event_txtNetWtFocusLost
+    }// GEN-LAST:event_txtNetWtFocusLost
 
-    private void txtDiamondWtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDiamondWtFocusGained
+    private void txtDiamondWtFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtDiamondWtFocusGained
         txtDiamondWt.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtDiamondWtFocusGained
+    }// GEN-LAST:event_txtDiamondWtFocusGained
 
-    private void txtDiamondRateFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDiamondRateFocusGained
+    private void txtDiamondRateFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtDiamondRateFocusGained
         txtDiamondRate.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtDiamondRateFocusGained
+    }// GEN-LAST:event_txtDiamondRateFocusGained
 
-    private void txtItemDescriptionFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtItemDescriptionFocusGained
+    private void txtItemDescriptionFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtItemDescriptionFocusGained
         txtItemDescription.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtItemDescriptionFocusGained
+    }// GEN-LAST:event_txtItemDescriptionFocusGained
 
-    private void txtItemDescriptionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtItemDescriptionFocusLost
+    private void txtItemDescriptionFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtItemDescriptionFocusLost
         txtItemDescription.setBackground(Color.white);
-    }//GEN-LAST:event_txtItemDescriptionFocusLost
+    }// GEN-LAST:event_txtItemDescriptionFocusLost
 
-    private void txtQtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtQtyFocusGained
+    private void txtQtyFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtQtyFocusGained
         txtQty.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtQtyFocusGained
+    }// GEN-LAST:event_txtQtyFocusGained
 
-    private void txtRateFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRateFocusGained
+    private void txtRateFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtRateFocusGained
         txtRate.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtRateFocusGained
+    }// GEN-LAST:event_txtRateFocusGained
 
-    private void txtRateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRateFocusLost
+    private void txtRateFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtRateFocusLost
         txtRate.setBackground(Color.white);
-    }//GEN-LAST:event_txtRateFocusLost
+    }// GEN-LAST:event_txtRateFocusLost
 
-    private void txtExtraCharge1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtExtraCharge1FocusGained
+    private void txtExtraCharge1FocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtExtraCharge1FocusGained
         txtExtraCharge1.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtExtraCharge1FocusGained
+    }// GEN-LAST:event_txtExtraCharge1FocusGained
 
-    private void cmbPerFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbPerFocusGained
+    private void cmbPerFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cmbPerFocusGained
         cmbPer.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_cmbPerFocusGained
+    }// GEN-LAST:event_cmbPerFocusGained
 
-    private void cmbPerFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbPerFocusLost
+    private void cmbPerFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_cmbPerFocusLost
         cmbPer.setBackground(Color.white);
-    }//GEN-LAST:event_cmbPerFocusLost
+    }// GEN-LAST:event_cmbPerFocusLost
 
-    private void txtExtraChargeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtExtraChargeFocusGained
+    private void txtExtraChargeFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtExtraChargeFocusGained
         txtExtraCharge.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtExtraChargeFocusGained
+    }// GEN-LAST:event_txtExtraChargeFocusGained
 
-    private void txtDiscountFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDiscountFocusGained
+    private void txtDiscountFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtDiscountFocusGained
         txtDiscount.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtDiscountFocusGained
+    }// GEN-LAST:event_txtDiscountFocusGained
 
-    private void txtTaxableAmtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTaxableAmtFocusLost
+    private void txtTaxableAmtFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtTaxableAmtFocusLost
         txtTaxableAmt.setBackground(Color.white);
-    }//GEN-LAST:event_txtTaxableAmtFocusLost
+    }// GEN-LAST:event_txtTaxableAmtFocusLost
 
-    private void txtGSTPercentFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGSTPercentFocusGained
+    private void txtGSTPercentFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtGSTPercentFocusGained
         txtGSTPercent.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtGSTPercentFocusGained
+    }// GEN-LAST:event_txtGSTPercentFocusGained
 
-    private void txtGSTPercentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGSTPercentFocusLost
+    private void txtGSTPercentFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtGSTPercentFocusLost
         txtGSTPercent.setBackground(Color.white);
-    }//GEN-LAST:event_txtGSTPercentFocusLost
+    }// GEN-LAST:event_txtGSTPercentFocusLost
 
-    private void txtGSTAmtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtGSTAmtFocusLost
+    private void txtGSTAmtFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtGSTAmtFocusLost
         txtGSTAmt.setBackground(Color.white);
-    }//GEN-LAST:event_txtGSTAmtFocusLost
+    }// GEN-LAST:event_txtGSTAmtFocusLost
 
-    private void txtNetAmtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNetAmtFocusLost
+    private void txtNetAmtFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtNetAmtFocusLost
         txtNetAmt.setBackground(Color.white);
-    }//GEN-LAST:event_txtNetAmtFocusLost
+    }// GEN-LAST:event_txtNetAmtFocusLost
 
-    private void txtdiscountFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtdiscountFocusGained
+    private void txtdiscountFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtdiscountFocusGained
         txtdiscount.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtdiscountFocusGained
+    }// GEN-LAST:event_txtdiscountFocusGained
 
-    private void txtdiscountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtdiscountFocusLost
+    private void txtdiscountFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtdiscountFocusLost
         txtdiscount.setBackground(Color.white);
-    }//GEN-LAST:event_txtdiscountFocusLost
+    }// GEN-LAST:event_txtdiscountFocusLost
 
-    private void txtgrandtotalFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtgrandtotalFocusGained
+    private void txtgrandtotalFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtgrandtotalFocusGained
         txtgrandtotal.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtgrandtotalFocusGained
+    }// GEN-LAST:event_txtgrandtotalFocusGained
 
-    private void txtgrandtotalFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtgrandtotalFocusLost
+    private void txtgrandtotalFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtgrandtotalFocusLost
         txtgrandtotal.setBackground(Color.white);
-    }//GEN-LAST:event_txtgrandtotalFocusLost
+    }// GEN-LAST:event_txtgrandtotalFocusLost
 
-    private void txtreceiveFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtreceiveFocusGained
+    private void txtreceiveFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtreceiveFocusGained
         txtreceive.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtreceiveFocusGained
+    }// GEN-LAST:event_txtreceiveFocusGained
 
-    private void txtreceiveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtreceiveFocusLost
+    private void txtreceiveFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtreceiveFocusLost
         txtreceive.setBackground(Color.white);
-    }//GEN-LAST:event_txtreceiveFocusLost
+    }// GEN-LAST:event_txtreceiveFocusLost
 
-    private void txtoutstandingFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtoutstandingFocusGained
+    private void txtoutstandingFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtoutstandingFocusGained
         txtoutstanding.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtoutstandingFocusGained
+    }// GEN-LAST:event_txtoutstandingFocusGained
 
-    private void txtoutstandingFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtoutstandingFocusLost
+    private void txtoutstandingFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtoutstandingFocusLost
         txtoutstanding.setBackground(Color.white);
-    }//GEN-LAST:event_txtoutstandingFocusLost
+    }// GEN-LAST:event_txtoutstandingFocusLost
 
-    private void txtcountFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtcountFocusGained
+    private void txtcountFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtcountFocusGained
         txtcount.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtcountFocusGained
+    }// GEN-LAST:event_txtcountFocusGained
 
-    private void txtcountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtcountFocusLost
+    private void txtcountFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtcountFocusLost
         txtcount.setBackground(Color.white);
-    }//GEN-LAST:event_txtcountFocusLost
+    }// GEN-LAST:event_txtcountFocusLost
 
-    private void txtnetwtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtnetwtFocusGained
+    private void txtnetwtFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtnetwtFocusGained
         txtnetwt.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtnetwtFocusGained
+    }// GEN-LAST:event_txtnetwtFocusGained
 
-    private void txtnetwtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtnetwtFocusLost
+    private void txtnetwtFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtnetwtFocusLost
         txtnetwt.setBackground(Color.white);
-    }//GEN-LAST:event_txtnetwtFocusLost
+    }// GEN-LAST:event_txtnetwtFocusLost
 
-    private void txtexchangeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtexchangeFocusGained
+    private void txtexchangeFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtexchangeFocusGained
         txtexchange.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_txtexchangeFocusGained
+    }// GEN-LAST:event_txtexchangeFocusGained
 
-    private void txtexchangeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtexchangeFocusLost
+    private void txtexchangeFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtexchangeFocusLost
         txtexchange.setBackground(Color.white);
-    }//GEN-LAST:event_txtexchangeFocusLost
+    }// GEN-LAST:event_txtexchangeFocusLost
 
-    private void phnnoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_phnnoFocusGained
+    private void phnnoFocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_phnnoFocusGained
         phnno.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_phnnoFocusGained
+    }// GEN-LAST:event_phnnoFocusGained
 
-    private void phnnoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_phnnoFocusLost
+    private void phnnoFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_phnnoFocusLost
         phnno.setBackground(Color.white);
-    }//GEN-LAST:event_phnnoFocusLost
+    }// GEN-LAST:event_phnnoFocusLost
 
-    private void jTextField2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusGained
+    private void jTextField2FocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_jTextField2FocusGained
         jTextField2.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_jTextField2FocusGained
+    }// GEN-LAST:event_jTextField2FocusGained
 
-    private void jTextField2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField2FocusLost
+    private void jTextField2FocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_jTextField2FocusLost
         jTextField2.setBackground(Color.white);
-    }//GEN-LAST:event_jTextField2FocusLost
+    }// GEN-LAST:event_jTextField2FocusLost
 
-    private void jComboBox1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboBox1FocusGained
+    private void jComboBox1FocusGained(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_jComboBox1FocusGained
         jComboBox1.setBackground(new Color(245, 230, 66));
-    }//GEN-LAST:event_jComboBox1FocusGained
+    }// GEN-LAST:event_jComboBox1FocusGained
 
-    private void jComboBox1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboBox1FocusLost
+    private void jComboBox1FocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_jComboBox1FocusLost
         jComboBox1.setBackground(Color.white);
-    }//GEN-LAST:event_jComboBox1FocusLost
+    }// GEN-LAST:event_jComboBox1FocusLost
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jComboBox1ActionPerformed
         if (jComboBox1.getSelectedItem().equals("No GST")) {
 
             txtGSTPercent.setText("0");
 
         }
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }// GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jComboBox1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jComboBox1KeyReleased
+    private void jComboBox1KeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_jComboBox1KeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             setFocus(evt, txtItemName);
             setBg();
 
         }
 
-    }//GEN-LAST:event_jComboBox1KeyReleased
+    }// GEN-LAST:event_jComboBox1KeyReleased
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }// GEN-LAST:event_jButton6ActionPerformed
 
-    private void jButton6KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton6KeyPressed
+    private void jButton6KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_jButton6KeyPressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6KeyPressed
+    }// GEN-LAST:event_jButton6KeyPressed
 
-    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton6MouseClicked
+    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jButton6MouseClicked
         try {
             Connection con = DBConnect.connect();
             Statement stmt = con.createStatement();
@@ -5500,23 +5645,24 @@ public class SaleScreen extends javax.swing.JFrame {
         Thread th = new Thread(() -> {
             Whatsupblaster wa = new Whatsupblaster();
 
-            //wa.openQRCODE(Systemname.trim());
+            // wa.openQRCODE(Systemname.trim());
         });
         th.start();
-    }//GEN-LAST:event_jButton6MouseClicked
+    }// GEN-LAST:event_jButton6MouseClicked
 
-    private void saveMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveMouseEntered
+    private void saveMouseEntered(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_saveMouseEntered
         // TODO add your handling code here:
-    }//GEN-LAST:event_saveMouseEntered
+    }// GEN-LAST:event_saveMouseEntered
 
-    private void saveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveMouseClicked
+    private void saveMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_saveMouseClicked
         try {
             if (txtPartyName.getText() == null || "".equals(txtPartyName.getText().trim())) {
                 JOptionPane.showMessageDialog(this, "Invalid Sale Entry !");
                 return;
             }
 
-            if (cmbTerms.getSelectedItem().equals("Cash") && (!txtoutstanding.getText().trim().equals("") && !txtoutstanding.getText().trim().equals(txtgrandtotal.getText().trim())
+            if (cmbTerms.getSelectedItem().equals("Cash") && (!txtoutstanding.getText().trim().equals("")
+                    && !txtoutstanding.getText().trim().equals(txtgrandtotal.getText().trim())
                     && !txtreceive.getText().trim().equals("0.00") && !txtreceive.getText().trim().equals(""))) {
                 JOptionPane.showMessageDialog(this, "Please select Credit Option to use Received and Credit Amount.");
                 return;
@@ -5535,13 +5681,13 @@ public class SaleScreen extends javax.swing.JFrame {
 
             }
             // if(txtecxchange.getText() != null)
-            //            if (cmbTerms.getSelectedItem().equals("Cash")) {
+            // if (cmbTerms.getSelectedItem().equals("Cash")) {
             ////            txtoutstanding.setText(String.valueOf(Double.parseDouble(txtgrandtotal.getText())
                 ////                    - Double.parseDouble(txtreceive.getText())));
-        //                txtreceive.setText("0");
-        //            }
-        // -Double.parseDouble(txtexchange.getText())
-        billToBePrinted = Integer.parseInt(txtBill.getText().trim());
+            // txtreceive.setText("0");
+            // }
+            // -Double.parseDouble(txtexchange.getText())
+            billToBePrinted = Integer.parseInt(txtBill.getText().trim());
 
             try {
                 insertDataFromPurchaseTableToDatabase();
@@ -5570,7 +5716,8 @@ public class SaleScreen extends javax.swing.JFrame {
 
                 Connection con = null;
                 con = connect();
-                String statement = "UPDATE `sales` SET `terms` = '" + cmbTerms.getSelectedItem() + "' WHERE bill =" + txtBill.getText().trim();
+                String statement = "UPDATE `sales` SET `terms` = '" + cmbTerms.getSelectedItem() + "' WHERE bill ="
+                        + txtBill.getText().trim();
                 try {
                     Statement stmt = con.createStatement();
                     stmt.executeUpdate(statement);
@@ -5579,14 +5726,14 @@ public class SaleScreen extends javax.swing.JFrame {
                 }
                 // write query here
             }
-            //        CashUserDetails obj = null;
-            //        if ("Cash".equalsIgnoreCase(txtPartyName.getText())){
-            //         obj  = new CashUserDetails();
+            // CashUserDetails obj = null;
+            // if ("Cash".equalsIgnoreCase(txtPartyName.getText())){
+            // obj = new CashUserDetails();
             //
-            //        }
-            //        JDialog d = new JDialog(obj,"Input",true);
-            //        d.add(obj);
-            //        d.setVisible(true);
+            // }
+            // JDialog d = new JDialog(obj,"Input",true);
+            // d.add(obj);
+            // d.setVisible(true);
             if (!"".equals(txtexchange.getText())) {
                 if (save.getText().equals("Save")) {
                     try {
@@ -5603,7 +5750,8 @@ public class SaleScreen extends javax.swing.JFrame {
                 }
             }
 
-            int reply = JOptionPane.showConfirmDialog(pnlRootContainer, "Do you want a Print Preview ?", "Select Print", JOptionPane.YES_NO_OPTION);
+            int reply = JOptionPane.showConfirmDialog(pnlRootContainer, "Do you want a Print Preview ?", "Select Print",
+                    JOptionPane.YES_NO_OPTION);
             if (reply == JOptionPane.YES_OPTION) {
                 printbuttonclicked();
             }
@@ -5639,11 +5787,11 @@ public class SaleScreen extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(this, e);
         }
-    }//GEN-LAST:event_saveMouseClicked
+    }// GEN-LAST:event_saveMouseClicked
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }// GEN-LAST:event_jButton4ActionPerformed
 
     private void spTblItemNameSuggestionsDetailsContainerFocusLost(java.awt.event.FocusEvent evt) {
         // TODO add your handling code here:
@@ -5768,12 +5916,17 @@ public class SaleScreen extends javax.swing.JFrame {
     private javax.swing.JCheckBox type2;
     private javax.swing.JCheckBox type3;
     private javax.swing.JPanel whatsuppanel;
+
     // End of variables declaration//GEN-END:variables
- public static void main(String args[]) {
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -5783,15 +5936,19 @@ public class SaleScreen extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DashBoardScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

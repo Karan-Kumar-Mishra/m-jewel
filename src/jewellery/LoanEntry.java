@@ -12,9 +12,10 @@ import java.awt.event.KeyListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -27,8 +28,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
 import jewellery.GetInterestAmount;
-
 import jewellery.ID_generator;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+import net.sf.jasperreports.engine.JREmptyDataSource;
 
 public class LoanEntry extends javax.swing.JPanel {
 
@@ -1113,53 +1123,42 @@ public class LoanEntry extends javax.swing.JPanel {
     }
 
     public void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {
-        java.awt.print.PrinterJob printerJob = java.awt.print.PrinterJob.getPrinterJob();
-        printerJob.setPrintable(new java.awt.print.Printable() {
-            @Override
-            public int print(java.awt.Graphics graphics, java.awt.print.PageFormat pageFormat, int pageIndex) throws java.awt.print.PrinterException {
-                if (pageIndex > 0) {
-                    return java.awt.print.Printable.NO_SUCH_PAGE;
-                }
+        try {
+            // Load and compile the JasperReport template
 
-                java.awt.Graphics2D g2d = (java.awt.Graphics2D) graphics;
-                g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+            String reportPath = System.getProperty("user.dir") + File.separator + "src" + File.separator
+                    + "jasper_reports" + File.separator + "PartyDetailsReport.jrxml";
+            JasperReport jasperReport = JasperCompileManager.compileReport(reportPath);
 
-                // Set font and position for printing
-                g2d.setFont(new java.awt.Font("Serif", java.awt.Font.PLAIN, 12));
-                int y = 20;
+            // Prepare parameters for the report
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("PartyName", jLabelPartyName.getText().isEmpty() ? "N/A" : jLabelPartyName.getText());
+            parameters.put("PartyAddress", jLabelPartyAddress.getText().isEmpty() ? "N/A" : jLabelPartyAddress.getText());
+            parameters.put("PartyCity", jLabelPartyCity.getText().isEmpty() ? "N/A" : jLabelPartyCity.getText());
+            parameters.put("PartyMobile", jLabelPartyMobile.getText().isEmpty() ? "N/A" : jLabelPartyMobile.getText());
+            parameters.put("PartyEmail", jLabelPartyEmail.getText().isEmpty() ? "N/A" : jLabelPartyEmail.getText());
+            parameters.put("PartyLedgerBalance", jLabelPartyLedgerBalance.getText().isEmpty() ? "N/A" : jLabelPartyLedgerBalance.getText());
+            parameters.put("PartyLastEntry", jLabelPartyLastEntry.getText().isEmpty() ? "N/A" : jLabelPartyLastEntry.getText());
 
-                // Print party details
-                g2d.drawString("Party Details", 100, y);
-                y += 20;
-                g2d.drawString("Name: " + (jLabelPartyName.getText().isEmpty() ? "N/A" : jLabelPartyName.getText()), 100, y);
-                y += 20;
-                g2d.drawString("Address: " + (jLabelPartyAddress.getText().isEmpty() ? "N/A" : jLabelPartyAddress.getText()), 100, y);
-                y += 20;
-                g2d.drawString("City: " + (jLabelPartyCity.getText().isEmpty() ? "N/A" : jLabelPartyCity.getText()), 100, y);
-                y += 20;
-                g2d.drawString("Mobile: " + (jLabelPartyMobile.getText().isEmpty() ? "N/A" : jLabelPartyMobile.getText()), 100, y);
-                y += 20;
-                g2d.drawString("Email: " + (jLabelPartyEmail.getText().isEmpty() ? "N/A" : jLabelPartyEmail.getText()), 100, y);
-                y += 20;
-                g2d.drawString("Ledger Balance: " + (jLabelPartyLedgerBalance.getText().isEmpty() ? "N/A" : jLabelPartyLedgerBalance.getText()), 100, y);
-                y += 20;
-                g2d.drawString("Last Entry: " + (jLabelPartyLastEntry.getText().isEmpty() ? "N/A" : jLabelPartyLastEntry.getText()), 100, y);
+            // Since we're using UI data, use an empty data source
+            JREmptyDataSource dataSource = new JREmptyDataSource();
 
-                return java.awt.print.Printable.PAGE_EXISTS;
-            }
-        });
+            // Fill the report
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
-        // Show print dialog and initiate printing
-        if (printerJob.printDialog()) {
-            try {
-                printerJob.print();
-                JOptionPane.showMessageDialog(this, "Printing completed successfully", "Print Success", JOptionPane.INFORMATION_MESSAGE);
-            } catch (java.awt.print.PrinterException pe) {
-                JOptionPane.showMessageDialog(this, "Error while printing: " + pe.getMessage(), "Print Error", JOptionPane.ERROR_MESSAGE);
-                pe.printStackTrace();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Printing was cancelled", "Print Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            // Display the report in JasperViewer
+            JasperViewer viewer = new JasperViewer(jasperPrint, false);
+            viewer.setTitle("Party Details Report");
+            viewer.setVisible(true);
+
+            // Optionally, print the report directly (uncomment to enable printing)
+            /*
+            JasperPrintManager.printReport(jasperPrint, true); // true to show print dialog
+            JOptionPane.showMessageDialog(this, "Printing completed successfully", "Print Success", JOptionPane.INFORMATION_MESSAGE);
+             */
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error generating report: " + e.getMessage(), "Report Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

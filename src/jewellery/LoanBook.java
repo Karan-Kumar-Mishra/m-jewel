@@ -193,7 +193,7 @@ public class LoanBook extends javax.swing.JPanel {
 
             // Load the JasperReport template based on reportType
             String reportPath = System.getProperty("user.dir") + File.separator + "src" + File.separator
-                    + "jasper_reports" + File.separator + "loanBook.jrxml";
+                    + "jasper_reports" + File.separator + "PartyDetailsReport.jrxml";
             if (!new File(reportPath).exists()) {
                 JOptionPane.showMessageDialog(this, "Report template not found at: " + reportPath,
                         "Error", JOptionPane.ERROR_MESSAGE);

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PartyDetailsReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a1b2c3d4-e5f6-7890-abcd-ef1234567890">
+    <parameter name="PartyName" class="java.lang.String" />
+    <parameter name="PartyAddress" class="java.lang.String" />
+    <parameter name="PartyCity" class="java.lang.String" />
+    <parameter name="PartyMobile" class="java.lang.String" />
+    <parameter name="PartyEmail" class="java.lang.String" />
+    <parameter name="PartyLedgerBalance" class="java.lang.String" />
+    <parameter name="PartyLastEntry" class="java.lang.String" />
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="60" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="30" uuid="b2c3d4e5-f6a7-8901-bcde-f23456789012"/>
+                <textElement>
+                    <font size="18" isBold="true"/>
+                    <paragraph lineSpacing="Single"/>
+                </textElement>
+                <text><![CDATA[Party Details Report]]></text>
+            </staticText>
+        </band>
+    </title>
+    <detail>
+        <band height="200" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="20" uuid="c3d4e5f6-a7b8-9012-cdef-345678901234"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Name:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="110" y="0" width="445" height="20" uuid="d4e5f6a7-b8c9-0123-def0-456789012345"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PartyName}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="30" width="100" height="20" uuid="e5f6a7b8-c9d0-1234-ef01-567890123456"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Address:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="110" y="30" width="445" height="20" uuid="f6a7b8c9-d0e1-2345-f012-678901234567"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PartyAddress}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="60" width="100" height="20" uuid="a7b8c9d0-e1f2-3456-0123-789012345678"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[City:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="110" y="60" width="445" height="20" uuid="b8c9d0e1-f2a3-4567-1234-890123456789"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PartyCity}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="90" width="100" height="20" uuid="c9d0e1f2-a3b4-5678-2345-901234567890"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Mobile:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="110" y="90" width="445" height="20" uuid="d0e1f2a3-b4c5-6789-3456-012345678901"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PartyMobile}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="120" width="100" height="20" uuid="e1f2a3b4-c5d6-7890-4567-123456789012"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Email:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="110" y="120" width="445" height="20" uuid="f2a3b4c5-d6e7-8901-5678-234567890123"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PartyEmail}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="150" width="100" height="20" uuid="a3b4c5d6-e7f8-9012-6789-345678901234"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Ledger Balance:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="110" y="150" width="445" height="20" uuid="b4c5d6e7-f8a9-0123-7890-456789012345"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PartyLedgerBalance}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="0" y="180" width="100" height="20" uuid="c5d6e7f8-a9b0-1234-8901-567890123456"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Last Entry:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="110" y="180" width="445" height="20" uuid="d6e7f8a9-b0c1-2345-9012-678901234567"/>
+                <textElement>
+                    <font size="12"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PartyLastEntry}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="30" splitType="Stretch">
+            <textField>
+                <reportElement x="500" y="0" width="55" height="20" uuid="e7f8a9b0-c1d2-3456-0123-789012345678"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

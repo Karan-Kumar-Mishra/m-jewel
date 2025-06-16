@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class GetInterestAmount {
+    static int loanentrytime=0;
 
     public static BigDecimal RECEIPT_totalLoanAmount = BigDecimal.ZERO;
     public static BigDecimal RECEIPT_totalInterestAmount = BigDecimal.ZERO;
@@ -188,8 +189,12 @@ public class GetInterestAmount {
         String CR_AMT2 = (!RECEIPT_DATA.isEmpty() && RECEIPT_DATA.get(2) != null)
                 ? RECEIPT_DATA.get(2).toString()
                 : "0.0";
-
+        
         String BALANCE1 = String.valueOf(Double.parseDouble(DR_AMT1) - Double.parseDouble(CR_AMT1));
+        if(loanentrytime>=2)
+        {
+            BALANCE1=" ";
+        }
         String BALANCE2 = String.valueOf(Double.parseDouble(DR_AMT2) - Double.parseDouble(CR_AMT2));
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
