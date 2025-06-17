@@ -56,7 +56,7 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
 
     public SaleRegisterScreen() {
         initComponents();
-        System.out.println("Hello");
+     
         salesListTableModel = (DefaultTableModel) tblSalesList.getModel();
         centerTableCells();
         currentDate = getCurrentDate("yyyy-MM-dd");
@@ -98,7 +98,6 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
             DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS,
                     DatabaseCredentials.DB_USERNAME, DatabaseCredentials.DB_PASSWORD);
         }
-        
 
         selectedDatesData = DBController.getDataFromTable("SELECT date,"
                 + "bill, partyname, netwt, diamondwt,"
@@ -106,7 +105,7 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
                 + DatabaseCredentials.SALES_TABLE
                 + " WHERE date BETWEEN " + "'" + fromDate + "'" + " AND "
                 + "'" + toDate + "'");
-        
+
         for (int j = 0; j < selectedDatesData.size(); j++) {
             double labour_amt_discount = 0.0;
             Double netwt = 0.0,
@@ -153,7 +152,7 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
                 if (selectedDatesData.get(i).get(8) != null) {
                     try {
                         // Ensure qty is not null and contains only numeric characters
-                        if (qty ==0) {
+                        if (qty == 0) {
                             qty = 0;  // Default to 0 if qty is null or empty
                         }
 
@@ -171,14 +170,14 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
                         qty = (qtyValue + dataValueInt);
 
                     } catch (NumberFormatException e) {
-                       
+
                         qty = 0;  // You can choose to assign a default value or handle it differently
                     }
                 }
 
                 i++;
             }
-              String statement = "SELECT total FROM `exchange` WHERE bill = " + String.valueOf(bill) + ";";
+            String statement = "SELECT total FROM `exchange` WHERE bill = " + String.valueOf(bill) + ";";
             Connection con = connect();
             String total = "0";
             try {
@@ -196,24 +195,24 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 Logger.getLogger(ExChange.class.getName()).log(Level.SEVERE, "Failed", ex);
             }
-                salesListTableModel.addRow(new Object[]{
-                    selectedDatesData.get(j).get(0),
-                    selectedDatesData.get(j).get(1),
-                    selectedDatesData.get(j).get(2),
-                    netwt,
-                    diamondwt,
-                    String.format("%.2f", taxableamount),
-                    labour_amt_discount,
-                    (int)qty,
-                    gst_amount,
-                    (netamount-Double.parseDouble(total))
-                });
+            salesListTableModel.addRow(new Object[]{
+                selectedDatesData.get(j).get(0),
+                selectedDatesData.get(j).get(1),
+                selectedDatesData.get(j).get(2),
+                netwt,
+                diamondwt,
+                String.format("%.2f", taxableamount),
+                labour_amt_discount,
+                (int) qty,
+                gst_amount,
+                (netamount - Double.parseDouble(total))
+            });
 
-                j = i - 1;
+            j = i - 1;
         }
         System.out.println("167");
-     //   fillgrandtotal();
-     
+        //   fillgrandtotal();
+
         System.out.println("169");
     }
 
@@ -362,7 +361,7 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
                     taxableamount,
                     labour,
                     labour_amt_discount,
-                    (int)qty,
+                    (int) qty,
                     gst_amount,
                     netamount
                 });
@@ -372,7 +371,7 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
 
         }
         System.out.println("any1");
-      //  fillgrandtotal();
+        //  fillgrandtotal();
         System.out.println("any");
     }
 
@@ -383,7 +382,7 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
         txtRecords.setText(Integer.toString(j));
         txtBillNo.setText(Integer.toString(j));
         //txtNetWt.setText(Integer.toString(salesListTableModel.getRowCount()));
-        
+
         for (int i = 0; i < j; i++) {
             netAmt += Double.parseDouble(tblSalesList.getValueAt(i, 9).toString());
 //            lbrAmt += 
@@ -394,9 +393,9 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
             txtqty += Double.parseDouble(tblSalesList.getValueAt(i, 7).toString());
             netwt += Double.parseDouble(tblSalesList.getValueAt(i, 3).toString());
         }
-      // column numbering issue
+        // column numbering issue
         txtNetWt.setText(Integer.toString(j));
-       // txtNetWt.setText("8.0");
+        // txtNetWt.setText("8.0");
         txtDiscount.setText(Double.toString(totalDis));
         txtTotalQty.setText(Integer.toString(txtqty));
         txtGrossWt.setText(Double.toString(netwt));
@@ -848,7 +847,7 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
                 cell.setCellValue(object.toString());
             }
 
-            try ( FileOutputStream fos = new FileOutputStream(new File(paths));) {
+            try (FileOutputStream fos = new FileOutputStream(new File(paths));) {
 
                 wb.write(fos);
             } catch (Exception e) {
@@ -859,19 +858,19 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
 
     }
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        System.out.println("works");
-        try{
-        if (UtilityMethods.hasDateBeenPicked(dateFrom)
-                && UtilityMethods.hasDateBeenPicked(dateTo)) {
 
-            populateSalesListTable(dateFormat.format(dateFrom.getDate()),
-                    dateFormat.format(dateTo.getDate()));
-            System.out.println("779");
-        }
-        System.out.println("781");
-        fillgrandtotal();
-        System.out.println("782");
-        }catch(Exception e){
+        try {
+            if (UtilityMethods.hasDateBeenPicked(dateFrom)
+                    && UtilityMethods.hasDateBeenPicked(dateTo)) {
+
+                populateSalesListTable(dateFormat.format(dateFrom.getDate()),
+                        dateFormat.format(dateTo.getDate()));
+
+            }
+            System.out.println("781");
+            fillgrandtotal();
+            System.out.println("782");
+        } catch (Exception e) {
             Logger.getLogger(SaleRegisterScreen.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(this, e);
         }
@@ -879,7 +878,7 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
 
     private void closebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_closebtnActionPerformed
         // TODO add your handling code here:
-                DashBoardScreen.tabbedPane.remove(DashBoardScreen.tabbedPane.getSelectedComponent());
+        DashBoardScreen.tabbedPane.remove(DashBoardScreen.tabbedPane.getSelectedComponent());
 
         dispose();
     }//GEN-LAST:event_closebtnActionPerformed
@@ -967,10 +966,11 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
     private void txtBillNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBillNoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBillNoActionPerformed
- private final  List<Object> columnNames = new ArrayList<>();
-    private final  List<Object> data = new ArrayList<>();
-    private void updatedueamountminus(String partyname ,String netamt){
-      data.clear();
+    private final List<Object> columnNames = new ArrayList<>();
+    private final List<Object> data = new ArrayList<>();
+
+    private void updatedueamountminus(String partyname, String netamt) {
+        data.clear();
         columnNames.clear();
 //        JOptionPane.showMessageDialog(this,outstandingAmt);
         if (!DBController.isDatabaseConnected()) {
@@ -996,29 +996,30 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
         data.add(dueamount);
         DBController.updateTableData(DatabaseCredentials.ACCOUNT_TABLE, data, columnNames,
                 "accountname", partyname);
- }
+    }
     ArrayList<String> itemname = new ArrayList<>();
-    ArrayList<String> tagno=new ArrayList<>();
-    private void deleteBill(int billnumber ,String netamount) {
+    ArrayList<String> tagno = new ArrayList<>();
+
+    private void deleteBill(int billnumber, String netamount) {
 
         Connection con;
         try {
-            con =DBConnect.connect();
+            con = DBConnect.connect();
             Statement stmt = con.createStatement();
             String sql = "select itemname,tagno,terms,partyname from sales where bill=" + billnumber + "";
             ResultSet re = stmt.executeQuery(sql);
             tagno.removeAll(tagno);
-            String term="Cash";
-            String parrty="test";
+            String term = "Cash";
+            String parrty = "test";
             while (re.next()) {
                 itemname.add(re.getString("itemname"));
                 tagno.add(re.getString("tagno"));
-                term=re.getString("terms");
-                parrty=re.getString("partyname");
+                term = re.getString("terms");
+                parrty = re.getString("partyname");
 //                 JOptionPane.showMessageDialog(this, itemname);
             }
-            if(term.trim().equalsIgnoreCase("Credit")){
-                updatedueamountminus(parrty,netamount);
+            if (term.trim().equalsIgnoreCase("Credit")) {
+                updatedueamountminus(parrty, netamount);
             }
             con.close();
             re.close();
@@ -1053,7 +1054,7 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
 //            ResultSet re = stmt.executeQuery(sql);
 //            while (re.next()) {
 //                solditem =re.getInt("item_sold");
-////                JOptionPane.showMessageDialog(this, solditem);
+        ////                JOptionPane.showMessageDialog(this, solditem);
 //            }
 //            con.close();
 //            re.close();
@@ -1063,13 +1064,12 @@ public class SaleRegisterScreen extends javax.swing.JFrame {
         try {
             con = DBConnect.connect();
             Statement st = con.createStatement();
-            for(int i=0;i<tagno.size();i++){
-              int result=st.executeUpdate("update entryitem set item_sold = 0 where itemname='"+ itemname.get(i) +"' and tagno='"+tagno.get(i)+"'");  
+            for (int i = 0; i < tagno.size(); i++) {
+                int result = st.executeUpdate("update entryitem set item_sold = 0 where itemname='" + itemname.get(i) + "' and tagno='" + tagno.get(i) + "'");
 //              JOptionPane.showMessageDialog(this, "deleting tag "+tagno.get(i)+" with result "+result);
             }
-           
+
 //         Logger.getLogger(SaleRegisterScreen.class.getName()).log(Level.SEVERE, null, (byte)(solditem - Integer.parseInt(tmodel.getValueAt(tblSalesList.getSelectedRow(), 7).toString())));
-        
         } catch (SQLException ex) {
             Logger.getLogger(SaleRegisterScreen.class.getName()).log(Level.SEVERE, null, ex);
         }

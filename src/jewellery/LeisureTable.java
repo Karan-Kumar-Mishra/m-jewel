@@ -818,7 +818,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 query += " ";
             }
             if (party.equals("Cash")) {
-                query = "select distinct(bill) from sales where terms='Cash'";
+                query = "select distinct(bill) from sales where partyname='Cash'";
             }
 //JOptionPane.showMessageDialog(this, query);
             ResultSet rs = stmt.executeQuery(query);

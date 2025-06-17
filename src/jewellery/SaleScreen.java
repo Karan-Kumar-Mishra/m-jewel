@@ -3604,11 +3604,18 @@ public class SaleScreen extends javax.swing.JFrame {
             if (!notSold.isEmpty() && notSold.get(0).get(0) != null) {
                 notsoldcount = Integer.parseInt(notSold.get(0).get(0).toString());
             }
-            JOptionPane.showMessageDialog(this, "not sold => " + notsoldcount);
+            if(notsoldcount<0)
+            {
+                  JOptionPane.showMessageDialog(this, "not sold in negative => " + notsoldcount);
+                  notsoldcount=0;
+            }
+          
             try {
                 JOptionPane.showMessageDialog(this, qty);
                 con = DBConnect.connect();
                 Statement st = con.createStatement();
+                int final_sold_value=(int) (qty)+notsoldcount;
+                
                 String query = "UPDATE " + DatabaseCredentials.ENTRY_ITEM_TABLE + " SET item_sold = " + ((int) (qty)+notsoldcount)
                         + " "
                         + " WHERE itemname = '" + itemname + "';";
