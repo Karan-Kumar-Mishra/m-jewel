@@ -57,6 +57,7 @@ import net.sf.jasperreports.engine.design.JRDesignQuery;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
+import jewellery.DBController;
 
 /**
  *
@@ -280,17 +281,17 @@ public class SaleScreen extends javax.swing.JFrame {
                     + DatabaseCredentials.SALES_TABLE + " WHERE bill= " + "'" + bill + "'");
 
             salesItems.forEach((item) -> {
-                salesListTableModel.addRow(new Object[] {
-                        (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
-                        (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
-                        (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
-                        (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
-                        (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
-                        (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // taxableAmount
-                        (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // gst
-                        (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gstamt
-                        (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8),
-                        (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
+                salesListTableModel.addRow(new Object[]{
+                    (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
+                    (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
+                    (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
+                    (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
+                    (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
+                    (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // taxableAmount
+                    (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // gst
+                    (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gstamt
+                    (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8),
+                    (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
                 });
             });
         } else {
@@ -302,17 +303,17 @@ public class SaleScreen extends javax.swing.JFrame {
                     + DatabaseCredentials.SALES_TABLE + " WHERE bill= " + "'" + bill + "'");
 
             salesItems.forEach((item) -> {
-                salesListTableModel.addRow(new Object[] {
-                        (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
-                        (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
-                        (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
-                        (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
-                        (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
-                        (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // taxableAmount
-                        (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // gst
-                        (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gstamt
-                        (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8),
-                        (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
+                salesListTableModel.addRow(new Object[]{
+                    (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
+                    (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
+                    (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
+                    (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
+                    (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
+                    (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // taxableAmount
+                    (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // gst
+                    (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gstamt
+                    (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8),
+                    (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
                 });
             });
         }
@@ -732,17 +733,17 @@ public class SaleScreen extends javax.swing.JFrame {
                         + txtBill.getText().trim() + "'");
 
                 salesItems.forEach((item) -> {
-                    salesListTableModel.addRow(new Object[] {
-                            (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
-                            (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
-                            (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
-                            (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
-                            (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
-                            (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // discount
-                            (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // taxableAmount
-                            (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gst
-                            (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8), // gstamt
-                            (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
+                    salesListTableModel.addRow(new Object[]{
+                        (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
+                        (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
+                        (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
+                        (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
+                        (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
+                        (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // discount
+                        (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // taxableAmount
+                        (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gst
+                        (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8), // gstamt
+                        (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
                     });
                 });
             } else {
@@ -756,17 +757,17 @@ public class SaleScreen extends javax.swing.JFrame {
                         + txtBill.getText().trim() + "'");
 
                 salesItems.forEach((item) -> {
-                    salesListTableModel.addRow(new Object[] {
-                            (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
-                            (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
-                            (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
-                            (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
-                            (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
-                            (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // discount
-                            (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // taxableAmount
-                            (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gst
-                            (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8), // gstamt
-                            (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
+                    salesListTableModel.addRow(new Object[]{
+                        (item.get(0) == null || item.get(0).toString().trim().isEmpty()) ? "NULL" : item.get(0),
+                        (item.get(1) == null || item.get(1).toString().trim().isEmpty()) ? "NULL" : item.get(1), // itemname
+                        (item.get(2) == null || item.get(2).toString().trim().isEmpty()) ? "NULL" : item.get(2), // grosswt
+                        (item.get(3) == null || item.get(3).toString().trim().isEmpty()) ? "NULL" : item.get(3), // netwt
+                        (item.get(4) == null || item.get(4).toString().trim().isEmpty()) ? "NULL" : item.get(4), // qty
+                        (item.get(5) == null || item.get(5).toString().trim().isEmpty()) ? "NULL" : item.get(5), // discount
+                        (item.get(6) == null || item.get(6).toString().trim().isEmpty()) ? "NULL" : item.get(6), // taxableAmount
+                        (item.get(7) == null || item.get(7).toString().trim().isEmpty()) ? "NULL" : item.get(7), // gst
+                        (item.get(8) == null || item.get(8).toString().trim().isEmpty()) ? "NULL" : item.get(8), // gstamt
+                        (item.get(9) == null || item.get(9).toString().trim().isEmpty()) ? "NULL" : item.get(9),// netamount
                     });
                 });
             }
@@ -1004,12 +1005,12 @@ public class SaleScreen extends javax.swing.JFrame {
         pmItemNameSuggestionsDetailsPopup.setMinimumSize(new java.awt.Dimension(200, 200));
 
         tblItemNameSuggestionsDetails.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {},
-                new String[] {
-                        "Tag No.", "Item Name", "Item Group", "Net.W", "Huid"
+                new Object[][]{},
+                new String[]{
+                    "Tag No.", "Item Name", "Item Group", "Net.W", "Huid"
                 }) {
-            boolean[] canEdit = new boolean[] {
-                    false, false, false, false, false
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -2476,9 +2477,9 @@ public class SaleScreen extends javax.swing.JFrame {
         suggestionsTable.setRowCount(0);
 
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[] {
-                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1), });
+            suggestionsTable.addRow(new Object[]{
+                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),});
         });
         spTblItemNameSuggestionsContainer.setVisible(true);
 
@@ -2497,10 +2498,10 @@ public class SaleScreen extends javax.swing.JFrame {
         suggestionsTable.setRowCount(0);
 
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[] {
-                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2), });
+            suggestionsTable.addRow(new Object[]{
+                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),});
         });
         fillgrandtotal();
 
@@ -2764,7 +2765,7 @@ public class SaleScreen extends javax.swing.JFrame {
                 }
                 hsnst.close();
                 DecimalFormat df = new DecimalFormat("0.#"); // This will remove the decimal point if it's a whole
-                                                             // number
+                // number
                 String result = df.format(rs.getFloat("gstpercent"));
 
                 SaleJasperContentDetails obj = new SaleJasperContentDetails(
@@ -3065,20 +3066,20 @@ public class SaleScreen extends javax.swing.JFrame {
 
                 if ("N.A".equals(suggestion.get(0).toString())) {
 
-                    itemNameSuggestionsDetailsTableModel.addRow(new Object[] {
-                            (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                            itemname,
-                            (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                            "0",
-                            (suggestion.get(3) == null) ? "NULL" : suggestion.get(3), });
+                    itemNameSuggestionsDetailsTableModel.addRow(new Object[]{
+                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                        itemname,
+                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                        "0",
+                        (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),});
 
                 } else {
-                    itemNameSuggestionsDetailsTableModel.addRow(new Object[] {
-                            (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                            itemname,
-                            (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                            (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
-                            (suggestion.get(3) == null) ? "NULL" : suggestion.get(3), });
+                    itemNameSuggestionsDetailsTableModel.addRow(new Object[]{
+                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                        itemname,
+                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                        (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
+                        (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),});
 
                 }
             });
@@ -3088,20 +3089,20 @@ public class SaleScreen extends javax.swing.JFrame {
 
                 if ("N.A".equals(suggestion.get(0).toString())) {
 
-                    itemNameSuggestionsDetailsTableModel.addRow(new Object[] {
-                            (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                            itemname,
-                            (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                            "0",
-                            (suggestion.get(3) == null) ? "NULL" : suggestion.get(3), });
+                    itemNameSuggestionsDetailsTableModel.addRow(new Object[]{
+                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                        itemname,
+                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                        "0",
+                        (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),});
 
                 } else {
-                    itemNameSuggestionsDetailsTableModel.addRow(new Object[] {
-                            (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                            itemname,
-                            (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                            (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
-                            (suggestion.get(3) == null) ? "NULL" : suggestion.get(3), });
+                    itemNameSuggestionsDetailsTableModel.addRow(new Object[]{
+                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                        itemname,
+                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                        (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
+                        (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),});
 
                 }
             });
@@ -3593,37 +3594,20 @@ public class SaleScreen extends javax.swing.JFrame {
             String tag = item.get("tagno").toString();
             String itemname = item.get("itemname").toString();
             int qty = Integer.parseInt(item.get("qty").toString());
+            // JOptionPane.showMessageDialog(this, "tag => "+tag+" item name=> "+itemname+" qty => "+qty);
+            List<Object> soledItems = DBController.executeQuery("select qty from sales where itemname='" + itemname + "'");
+            int totalItemSoled = 0;
+            for (Object i : soledItems) {
+                // JOptionPane.showMessageDialog(this, "item =>" + i);
+                totalItemSoled = totalItemSoled + Integer.parseInt(i.toString());
+            }
+            if (totalItemSoled < 0) {
+                totalItemSoled = 0;
+            }
+            JOptionPane.showMessageDialog(this, "prev total item sold =>" + totalItemSoled);
+            JOptionPane.showMessageDialog(this, "current  item sold =>" + qty);
+            DBController.executeQueryUpdate("update entryitem set item_sold='" + totalItemSoled + "' where itemname='" + itemname + "'");
 
-            // int qty = Integer.parseInt(txtQty.getText().toString());
-            JOptionPane.showMessageDialog(this, txtQty.getText().toString());
-            Connection con;
-            List<List<Object>> notSold = DBController
-                    .getDataFromTable("SELECT SUM(CAST (item_sold as Integer)), SUM(netwt) FROM "
-                            + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname ='" + itemname + "' ");
-            int notsoldcount = 0;
-            if (!notSold.isEmpty() && notSold.get(0).get(0) != null) {
-                notsoldcount = Integer.parseInt(notSold.get(0).get(0).toString());
-            }
-            if(notsoldcount<0)
-            {
-                  JOptionPane.showMessageDialog(this, "not sold in negative => " + notsoldcount);
-                  notsoldcount=0;
-            }
-          
-            try {
-                JOptionPane.showMessageDialog(this, qty);
-                con = DBConnect.connect();
-                Statement st = con.createStatement();
-                int final_sold_value=(int) (qty)+notsoldcount;
-                
-                String query = "UPDATE " + DatabaseCredentials.ENTRY_ITEM_TABLE + " SET item_sold = " + ((int) (qty)+notsoldcount)
-                        + " "
-                        + " WHERE itemname = '" + itemname + "';";
-                st.execute(query);
-
-            } catch (SQLException ex) {
-                Logger.getLogger(SaleScreen.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 
@@ -3861,17 +3845,17 @@ public class SaleScreen extends javax.swing.JFrame {
     private void fillNewEntryIntotblPurchasesList() {
         salesListTableModel.setRowCount(0);
         for (Map<String, Object> list : soldItemsForCurrentBill) {
-            this.salesListTableModel.addRow(new Object[] {
-                    list.get("billnumber"),
-                    list.get("itemname"),
-                    list.get("huid"),
-                    list.get("netwt"),
-                    list.get("qty"),
-                    list.get("discount"),
-                    list.get("taxableamount"),
-                    list.get("gstpercent"),
-                    list.get("gstamount"),
-                    list.get("netamount")
+            this.salesListTableModel.addRow(new Object[]{
+                list.get("billnumber"),
+                list.get("itemname"),
+                list.get("huid"),
+                list.get("netwt"),
+                list.get("qty"),
+                list.get("discount"),
+                list.get("taxableamount"),
+                list.get("gstpercent"),
+                list.get("gstamount"),
+                list.get("netamount")
             });
         }
 
@@ -4141,7 +4125,7 @@ public class SaleScreen extends javax.swing.JFrame {
     private void printbuttonclicked() {
         String typeToBePrinted = "";
         try {
-            String[] options = { "Type 1", "Type 2", "Type 3" };
+            String[] options = {"Type 1", "Type 2", "Type 3"};
             typeToBePrinted = (String) JOptionPane.showInputDialog(null, "Select One:", "Print",
                     JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
             if (typeToBePrinted != null) {
@@ -4389,11 +4373,11 @@ public class SaleScreen extends javax.swing.JFrame {
                 lblPreviousBalance.setText(
                         outstandingAnalysisHelper.fillTableInDateGivenParty(
                                 (txtPartyName.getText() == null ? "" : txtPartyName.getText())) == null
-                                        ? ""
-                                        : String.format("%.4f", Double.parseDouble(
-                                                outstandingAnalysisHelper.fillTableInDateGivenParty(
-                                                        (txtPartyName.getText() == null ? ""
-                                                                : txtPartyName.getText())))));
+                        ? ""
+                        : String.format("%.4f", Double.parseDouble(
+                                outstandingAnalysisHelper.fillTableInDateGivenParty(
+                                        (txtPartyName.getText() == null ? ""
+                                        : txtPartyName.getText())))));
                 // int x=getSaleBillNo(txtPartyName.getText());
                 // if(x==0){
                 // x=getBillNo();
@@ -4912,8 +4896,8 @@ public class SaleScreen extends javax.swing.JFrame {
                             pmItemNameSuggestionsPopup.setVisible(true);
                             populateSuggestionsTableFromDatabase(itemNameSuggestionsTableModel,
                                     "SELECT DISTINCT itemname, "
-                                            + "itemgroup FROM " + DatabaseCredentials.ENTRY_ITEM_TABLE
-                                            + " WHERE itemname LIKE " + "'" + txtItemName.getText() + "%'");
+                                    + "itemgroup FROM " + DatabaseCredentials.ENTRY_ITEM_TABLE
+                                    + " WHERE itemname LIKE " + "'" + txtItemName.getText() + "%'");
                         } // autoComplete(ITEM_NAMES, txtItemName.getText(), txtItemName);
                         else {
                             pmItemNameSuggestionsDetailsPopup.setVisible(true);

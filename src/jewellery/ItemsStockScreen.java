@@ -142,24 +142,25 @@ public class ItemsStockScreen extends javax.swing.JFrame {
                     List<List<Object>> totalcount = DBController.getDataFromTable(q);
                     totalcount.forEach((itemcount) -> {
                         if (!itemcount.isEmpty() && itemcount.get(0) != null) {  // Null check
-                            double notSoldCount = 0;
+                            int notSoldCount = 0;
                             double netRemainingWt = 0;
 
-                            List<List<Object>> notSold = DBController.getDataFromTable("SELECT SUM(CAST(item_sold as Decimal(10,2))), SUM(netwt) FROM "
+                            List<List<Object>> notSold = DBController.getDataFromTable("SELECT SUM(CAST(item_sold as Integer)), SUM(netwt) FROM "
                                     + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = '" + itemname + "' AND not opqty='0' ");
-                            List<List<Object>> notSold1 = DBController.getDataFromTable("SELECT SUM(CAST(item_sold as Decimal(10,2))), SUM(netwt) FROM "
-                                    + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = '" + itemname + "'  ");
+                            List<Object> soledItems = DBController.executeQuery("select qty from sales where itemname='" + itemname + "'");
 
                             for (List<Object> list : notSold) {
                                 if (list.get(1) != null) {
                                     netRemainingWt = Double.parseDouble(list.get(1).toString());
                                 }
                             }
-                            for (List<Object> list : notSold1) {
-                                if (list.get(0) != null) {
-                                    notSoldCount = Double.parseDouble(list.get(0).toString());
-                                }
+                         
+                            for (Object i : soledItems) {
+                                // JOptionPane.showMessageDialog(this, "item =>" + i);
+                                notSoldCount = notSoldCount + Integer.parseInt(i.toString());
                             }
+
+                            JOptionPane.showMessageDialog(this, "sold value  => " + notSoldCount);
 
                             if (!RealSettingsHelper.gettagNoIsTrue()) {
                                 String query12 = "SELECT tagnoItems, qty, netwt FROM purchasehistory WHERE itemname='" + itemname + "'";
@@ -614,7 +615,7 @@ public class ItemsStockScreen extends javax.swing.JFrame {
                                     notSoldCount = Double.parseDouble(list.get(0).toString());
                                 }
                             }
-
+                            JOptionPane.showMessageDialog(this, "not sold in negative => " + notSoldCount);
                             String query12 = "SELECT tagnoItems, qty, netwt FROM purchasehistory WHERE itemname='" + itemname + "'";
                             try (Connection con = DBConnect.connect(); Statement stmt2 = con.createStatement(); ResultSet rt = stmt2.executeQuery(query12)) {
 

@@ -820,7 +820,7 @@ public class LeisureTable extends javax.swing.JFrame {
             if (party.equals("Cash")) {
                 query = "select distinct(bill) from sales where partyname='Cash'";
             }
-//JOptionPane.showMessageDialog(this, query);
+
             ResultSet rs = stmt.executeQuery(query);
             DecimalFormat df = new DecimalFormat("0.00");
             while (rs.next()) {
@@ -1131,16 +1131,16 @@ public class LeisureTable extends javax.swing.JFrame {
                     if (i.creditOrDebit == 0) // credit
                     {
                         if (balance <= 0) {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit,(int) i.debit, String.format("%.2f", -balance) + " Cr"});
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit, String.format("%.2f", balance) + " Cr"});
                         } else {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int)i.debit, String.format("%.2f", balance) + " Dr"});
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit, String.format("%.2f", balance) + " Dr"});
                         }
 
                     } else {
                         if (balance <= 0) {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int)i.debit, String.format("%.2f", -balance) + " Cr"});
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit, String.format("%.2f", balance) + " Cr"});
                         } else {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit,(int)i.debit, String.format("%.2f", balance) + " Dr"});
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit, String.format("%.2f", balance) + " Dr"});
                         }
                     }
                 }
@@ -1154,10 +1154,6 @@ public class LeisureTable extends javax.swing.JFrame {
                 OpBal.setText(String.format("%.2f", -(balance - (debit - credit))) + " Cr");
             } else {
                 OpBal.setText(String.format("%.2f", balance - (debit - credit)) + " Dr");
-//        JOptionPane.showMessageDialog(this,balance);
-//        JOptionPane.showMessageDialog(this,debit-credit);
-//        JOptionPane.showMessageDialog(this,balance-(debit-credit));
-
             }
 
             totalcreditfield.setText(String.format("%.2f", credit));
