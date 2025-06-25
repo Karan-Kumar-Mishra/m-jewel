@@ -160,7 +160,7 @@ public class ItemsStockScreen extends javax.swing.JFrame {
                                 notSoldCount = notSoldCount + Integer.parseInt(i.toString());
                             }
 
-                            JOptionPane.showMessageDialog(this, "sold value  => " + notSoldCount);
+                          //  JOptionPane.showMessageDialog(this, "sold value  => " + notSoldCount);
 
                             if (!RealSettingsHelper.gettagNoIsTrue()) {
                                 String query12 = "SELECT tagnoItems, qty, netwt FROM purchasehistory WHERE itemname='" + itemname + "'";

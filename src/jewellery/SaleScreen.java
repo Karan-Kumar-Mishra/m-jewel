@@ -3604,8 +3604,8 @@ public class SaleScreen extends javax.swing.JFrame {
             if (totalItemSoled < 0) {
                 totalItemSoled = 0;
             }
-            JOptionPane.showMessageDialog(this, "prev total item sold =>" + totalItemSoled);
-            JOptionPane.showMessageDialog(this, "current  item sold =>" + qty);
+          //  JOptionPane.showMessageDialog(this, "prev total item sold =>" + totalItemSoled);
+          //  JOptionPane.showMessageDialog(this, "current  item sold =>" + qty);
             DBController.executeQueryUpdate("update entryitem set item_sold='" + totalItemSoled + "' where itemname='" + itemname + "'");
 
         }
