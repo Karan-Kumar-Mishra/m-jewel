@@ -53,7 +53,7 @@ public class ItemsStockScreen extends javax.swing.JFrame {
         getContentPane().setBackground(customColor);
         model = (DefaultTableModel) jTable2.getModel();
         fillStockTable("");
-        //stocklbl.setBackground(Color.YELLOW);
+        // stocklbl.setBackground(Color.YELLOW);
         customizeTable();
     }
 
@@ -88,165 +88,111 @@ public class ItemsStockScreen extends javax.swing.JFrame {
     private void fillStockTable(String selectedItem) {
         DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         model.setRowCount(0);
-        Double[] op_Qty = {0.0}, purchase_Qty = {0.0}, sale_Qty = {0.0}, cl_Stock = {0.0}, cl_Wt = {0.0}, total_Wt = {0.0};
+        Double[] op_Qty = { 0.0 }, purchase_Qty = { 0.0 }, sale_Qty = { 0.0 }, cl_Stock = { 0.0 }, cl_Wt = { 0.0 },
+                total_Wt = { 0.0 };
+
         try {
             if (!DBController.isDatabaseConnected()) {
                 DBController.connectToDatabase(DatabaseCredentials.DB_ADDRESS, DatabaseCredentials.DB_USERNAME,
                         DatabaseCredentials.DB_PASSWORD);
             }
 
+            // Fetch distinct item names
             String query = "SELECT DISTINCT(itemname) FROM " + DatabaseCredentials.ENTRY_ITEM_TABLE
                     + " WHERE itemname LIKE '" + selectedItem + "%';";
             List<List<Object>> items = DBController.getDataFromTable(query);
 
-            items.forEach((item) -> {
-                if (item.get(0) != null) {  // Null check
-                    String itemname = item.get(0).toString();
+            for (List<Object> item : items) {
+                if (item.get(0) == null)
+                    continue; // Skip null items
+                String itemname = item.get(0).toString();
 
-                    String openingQtyQuery = "SELECT opqty FROM " + DatabaseCredentials.ENTRY_ITEM_TABLE
-                            + " WHERE itemname='" + itemname + "';";
-
-                    // Fetching data from the table
-                    List<List<Object>> opening = DBController.getDataFromTable(openingQtyQuery);
-                    double temp = 0;
-
-                    if (!opening.isEmpty()) {
-                        // Iterate through the result set to sum the quantities
-                        for (List<Object> row : opening) {
-                            if (row.get(0) != null) {
-                                String opqtyStr = row.get(0).toString();
-                                try {
-                                    // Attempt to parse the value as a Double
-                                    temp += Double.parseDouble(opqtyStr);
-                                } catch (NumberFormatException e) {
-                                    // Handle parsing error if needed
-                                }
-                            }
-                        }
-                    }
-
-                    String closingWtQuery = "SELECT netwt FROM sales WHERE itemname='" + itemname + "' ";
-                    List<List<Object>> netwet = DBController.getDataFromTable(closingWtQuery);
-                    double totalSalesWeight = 0;
-                    for (List<Object> list : netwet) {
-                        if (list.get(0) != null) {
-                            totalSalesWeight += Double.parseDouble(list.get(0).toString());
-                        }
-                    }
-
-                    double opqty = temp;
-                    double weight = totalSalesWeight;
-                    String q = "SELECT opqty FROM " + DatabaseCredentials.ENTRY_ITEM_TABLE
-                            + " WHERE itemname='" + itemname + "';";
-
-                    List<List<Object>> totalcount = DBController.getDataFromTable(q);
-                    totalcount.forEach((itemcount) -> {
-                        if (!itemcount.isEmpty() && itemcount.get(0) != null) {  // Null check
-                            int notSoldCount = 0;
-                            double netRemainingWt = 0;
-
-                            List<List<Object>> notSold = DBController.getDataFromTable("SELECT SUM(CAST(item_sold as Integer)), SUM(netwt) FROM "
-                                    + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = '" + itemname + "' AND not opqty='0' ");
-                            List<Object> soledItems = DBController.executeQuery("select qty from sales where itemname='" + itemname + "'");
-
-                            for (List<Object> list : notSold) {
-                                if (list.get(1) != null) {
-                                    netRemainingWt = Double.parseDouble(list.get(1).toString());
-                                }
-                            }
-                         
-                            for (Object i : soledItems) {
-                                // JOptionPane.showMessageDialog(this, "item =>" + i);
-                                notSoldCount = notSoldCount + Integer.parseInt(i.toString());
-                            }
-
-                          //  JOptionPane.showMessageDialog(this, "sold value  => " + notSoldCount);
-
-                            if (!RealSettingsHelper.gettagNoIsTrue()) {
-                                String query12 = "SELECT tagnoItems, qty, netwt FROM purchasehistory WHERE itemname='" + itemname + "'";
-                                try (Connection con = DBConnect.connect(); Statement stmt2 = con.createStatement(); ResultSet rt = stmt2.executeQuery(query12)) {
-
-                                    int op = 0;
-                                    int nwt = 0;
-                                    while (rt.next()) {
-                                        op += rt.getInt(2);
-                                        nwt += rt.getDouble(3);
-                                    }
-                                    if (notSoldCount < 0) {
-                                        notSoldCount = 0;
-                                    }
-                                    int soldCount = (int) (opqty + op - notSoldCount);
-                                    netRemainingWt += nwt;
-
-                                    // Update totals for labels below the table
-                                    op_Qty[0] += opqty;
-                                    purchase_Qty[0] += op;
-                                    sale_Qty[0] += notSoldCount;
-                                    cl_Stock[0] += soldCount;
-                                    cl_Wt[0] += (netRemainingWt - weight);
-                                    total_Wt[0] += netRemainingWt;
-
-                                    // Add row to the table
-                                    model.addRow(new Object[]{
-                                        itemname,
-                                        (int) opqty, // Cast to int
-                                        op, // Already an int
-                                        (int) notSoldCount, // Cast to int
-                                        soldCount, // Already an int
-                                        String.format("%.2f", netRemainingWt), // Keep as double with 2 decimal places
-                                        String.format("%.2f", (netRemainingWt - weight)) // Keep as double with 2 decimal places
-                                    });
-                                } catch (SQLException ex) {
-                                    Logger.getLogger(ItemsStockScreen.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            } else {
-                                String query12 = "SELECT tagnoItems, qty, netwt FROM purchasehistory WHERE itemname='" + itemname + "'";
-                                try (Connection con = DBConnect.connect(); Statement stmt2 = con.createStatement(); ResultSet rt = stmt2.executeQuery(query12)) {
-
-                                    int op = 0;
-                                    int nwt = 0;
-                                    while (rt.next()) {
-                                        op += rt.getInt(2);
-                                        nwt += rt.getDouble(3);
-                                    }
-                                    int soldCount = (int) (opqty + op - notSoldCount);
-                                    netRemainingWt += nwt;
-
-                                    // Update totals for labels below the table
-                                    op_Qty[0] += opqty;
-                                    purchase_Qty[0] += op;
-                                    sale_Qty[0] += notSoldCount;
-                                    cl_Stock[0] += soldCount;
-                                    cl_Wt[0] += (netRemainingWt - weight);
-                                    total_Wt[0] += netRemainingWt;
-
-                                    // Add row to the table
-                                    model.addRow(new Object[]{
-                                        itemname,
-                                        (int) opqty, // Cast to int
-                                        op, // Already an int
-                                        (int) notSoldCount, // Cast to int
-                                        soldCount, // Already an int
-                                        String.format("%.2f", netRemainingWt), // Keep as double with 2 decimal places
-                                        String.format("%.2f", (netRemainingWt - weight)) // Keep as double with 2 decimal places
-                                    });
-                                } catch (SQLException ex) {
-                                    Logger.getLogger(ItemsStockScreen.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
-                        }
-                    });
+                // Aggregate opening quantity
+                String openingQtyQuery = "SELECT SUM(CAST(opqty AS DECIMAL(10,2))) FROM "
+                        + DatabaseCredentials.ENTRY_ITEM_TABLE
+                        + " WHERE itemname = '" + itemname + "';";
+                List<List<Object>> opening = DBController.getDataFromTable(openingQtyQuery);
+                double opqty = 0.0;
+                if (!opening.isEmpty() && opening.get(0).get(0) != null) {
+                    opqty = Double.parseDouble(opening.get(0).get(0).toString());
                 }
-            });
+
+                // Aggregate sales weight
+                String closingWtQuery = "SELECT SUM(CAST(netwt AS DECIMAL(10,2))) FROM sales WHERE itemname = '"
+                        + itemname + "';";
+                List<List<Object>> netwet = DBController.getDataFromTable(closingWtQuery);
+                double totalSalesWeight = 0.0;
+                if (!netwet.isEmpty() && netwet.get(0).get(0) != null) {
+                    totalSalesWeight = Double.parseDouble(netwet.get(0).get(0).toString());
+                }
+
+                // Aggregate not sold items and net weight
+                String notSoldQuery = "SELECT SUM(CAST(item_sold AS DECIMAL(10,2))), SUM(CAST(netwt AS DECIMAL(10,2))) FROM "
+                        + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = '" + itemname + "';";
+                List<List<Object>> notSold = DBController.getDataFromTable(notSoldQuery);
+                double notSoldCount = 0.0;
+                double netRemainingWt = 0.0;
+                if (!notSold.isEmpty()) {
+                    if (notSold.get(0).get(0) != null) {
+                        notSoldCount = Double.parseDouble(notSold.get(0).get(0).toString());
+                    }
+                    if (notSold.get(0).get(1) != null) {
+                        netRemainingWt = Double.parseDouble(notSold.get(0).get(1).toString());
+                    }
+                }
+
+                // Aggregate purchase quantity and weight
+                String purchaseQuery = "SELECT SUM(CAST(qty AS DECIMAL(10,2))), SUM(CAST(netwt AS DECIMAL(10,2))) FROM purchasehistory WHERE itemname = '"
+                        + itemname + "';";
+                List<List<Object>> purchaseData = DBController.getDataFromTable(purchaseQuery);
+                double purchaseQty = 0.0;
+                double purchaseNetWt = 0.0;
+                if (!purchaseData.isEmpty()) {
+                    if (purchaseData.get(0).get(0) != null) {
+                        purchaseQty = Double.parseDouble(purchaseData.get(0).get(0).toString());
+                    }
+                    if (purchaseData.get(0).get(1) != null) {
+                        purchaseNetWt = Double.parseDouble(purchaseData.get(0).get(1).toString());
+                    }
+                }
+
+                // Calculate closing stock and weights
+                double soldCount = opqty + purchaseQty - notSoldCount;
+                netRemainingWt += purchaseNetWt;
+                double closingWt = netRemainingWt - totalSalesWeight;
+
+                // Update totals for labels
+                op_Qty[0] += opqty;
+                purchase_Qty[0] += purchaseQty;
+                sale_Qty[0] += notSoldCount;
+                cl_Stock[0] += soldCount;
+                cl_Wt[0] += closingWt;
+                total_Wt[0] += netRemainingWt;
+
+                // Add single row to the table
+                model.addRow(new Object[] {
+                        itemname,
+                        (int) opqty,
+                        (int) purchaseQty,
+                        (int) notSoldCount,
+                        (int) soldCount,
+                        String.format("%.2f", netRemainingWt),
+                        String.format("%.2f", closingWt)
+                });
+            }
+
+            // Update text fields with totals
+            opQtytextField.setText(String.valueOf((int) op_Qty[0].doubleValue()));
+            purchaseQtytext.setText(String.valueOf((int) purchase_Qty[0].doubleValue()));
+            saleQtytext.setText(String.valueOf((int) sale_Qty[0].doubleValue()));
+            clStocktext.setText(String.valueOf((int) cl_Stock[0].doubleValue()));
+            clWttext.setText(String.format("%.2f", cl_Wt[0]));
+            totalWttext.setText(String.format("%.2f", total_Wt[0]));
+
         } catch (Exception e) {
             Logger.getLogger(ItemsStockScreen.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(null, "Error: " + e.getMessage());
         }
-        opQtytextField.setText(String.valueOf((int) op_Qty[0].doubleValue())); // Cast to int
-        purchaseQtytext.setText(String.valueOf((int) purchase_Qty[0].doubleValue())); // Cast to int
-        saleQtytext.setText(String.valueOf((int) sale_Qty[0].doubleValue())); // Cast to int
-        clStocktext.setText(String.valueOf((int) cl_Stock[0].doubleValue())); // Cast to int
-        clWttext.setText(String.format("%.2f", cl_Wt[0])); // Keep as double with 2 decimal places
-        totalWttext.setText(String.format("%.2f", total_Wt[0])); // Keep as double with 2 decimal places
     }
 
     /**
@@ -255,7 +201,8 @@ public class ItemsStockScreen extends javax.swing.JFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         stocklbl = new javax.swing.JLabel();
@@ -292,22 +239,21 @@ public class ItemsStockScreen extends javax.swing.JFrame {
 
         jTable2.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "Item Name", "Op Qty", "Purchase Qty", "Sale Qty", "Cl Stock", "Total Wt.", "Closing wt"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
+                new Object[][] {
+                        { null, null, null, null, null, null, null },
+                        { null, null, null, null, null, null, null },
+                        { null, null, null, null, null, null, null },
+                        { null, null, null, null, null, null, null }
+                },
+                new String[] {
+                        "Item Name", "Op Qty", "Purchase Qty", "Sale Qty", "Cl Stock", "Total Wt.", "Closing wt"
+                }) {
+            boolean[] canEdit = new boolean[] {
+                    false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -409,88 +355,120 @@ public class ItemsStockScreen extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(opQtytextField, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(purchaseQtytext, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saleQtytext, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clStocktext, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(totalWttext, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clWttext, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 969, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(stocklbl, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(84, 84, 84)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(searchbar, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(15, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(34, 34, 34)
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(opQtytextField, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(30, 30, 30)
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(purchaseQtytext, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(30, 30, 30)
+                                                .addComponent(jLabel4)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(saleQtytext, javax.swing.GroupLayout.PREFERRED_SIZE, 60,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(33, 33, 33)
+                                                .addComponent(jLabel5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(clStocktext, javax.swing.GroupLayout.PREFERRED_SIZE, 60,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(35, 35, 35)
+                                                .addComponent(jLabel7)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(totalWttext, javax.swing.GroupLayout.PREFERRED_SIZE, 60,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(31, 31, 31)
+                                                .addComponent(jLabel6)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(clWttext, javax.swing.GroupLayout.PREFERRED_SIZE, 60,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(49, 49, 49)
+                                                .addGroup(layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jScrollPane2,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE, 969,
+                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(stocklbl,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 317,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(84, 84, 84)
+                                                                .addComponent(jLabel1,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 61,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(
+                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(searchbar,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 211,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(jButton1)
+                                                                .addPreferredGap(
+                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(jButton3)
+                                                                .addPreferredGap(
+                                                                        javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(jButton2,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 70,
+                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addContainerGap(15, Short.MAX_VALUE)));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(stocklbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(searchbar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(purchaseQtytext, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel2)
-                        .addComponent(opQtytextField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4)
-                        .addComponent(saleQtytext, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5)
-                        .addComponent(clStocktext, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6)
-                        .addComponent(clWttext, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(totalWttext, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(stocklbl, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(searchbar, javax.swing.GroupLayout.PREFERRED_SIZE, 39,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 38,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 443,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(purchaseQtytext, javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(jLabel2)
+                                                .addComponent(opQtytextField, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                        32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel4)
+                                                .addComponent(saleQtytext, javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel5)
+                                                .addComponent(clStocktext, javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel6)
+                                                .addComponent(clWttext, javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel3))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                .addComponent(totalWttext, javax.swing.GroupLayout.PREFERRED_SIZE, 32,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jLabel7)))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTable2MouseClicked
         // TODO add your handling code here:
         // opens itementryscreen
         if (evt.getClickCount() == 2) {
@@ -501,43 +479,43 @@ public class ItemsStockScreen extends javax.swing.JFrame {
             ob.ItemListsRedirect(itemname);
             ob.setVisible(true);
         }
-    }//GEN-LAST:event_jTable2MouseClicked
+    }// GEN-LAST:event_jTable2MouseClicked
 
-    private void searchbarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchbarActionPerformed
+    private void searchbarActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_searchbarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_searchbarActionPerformed
+    }// GEN-LAST:event_searchbarActionPerformed
 
-    private void searchbarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchbarKeyReleased
+    private void searchbarKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_searchbarKeyReleased
         // TODO add your handling code here:
         if (searchbar.getText() == null) {
             return;
         }
         fillStockTable(searchbar.getText());
-    }//GEN-LAST:event_searchbarKeyReleased
+    }// GEN-LAST:event_searchbarKeyReleased
 
-    private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
+    private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_jButton1KeyPressed
         model = (DefaultTableModel) jTable2.getModel();
         fillStockTable("");
         InsertTableHidingFields("false");
-        customizeTable();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1KeyPressed
+        customizeTable(); // TODO add your handling code here:
+    }// GEN-LAST:event_jButton1KeyPressed
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jButton1MouseClicked
         model = (DefaultTableModel) jTable2.getModel();
         fillStockTable("");
         InsertTableHidingFields("false");
         customizeTable();
-    }//GEN-LAST:event_jButton1MouseClicked
+    }// GEN-LAST:event_jButton1MouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
         DashBoardScreen.tabbedPane.remove(DashBoardScreen.tabbedPane.getSelectedComponent());
         dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }// GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jButton2MouseClicked
         // TODO add your handling code here:
         dispose();
-    }//GEN-LAST:event_jButton2MouseClicked
+    }// GEN-LAST:event_jButton2MouseClicked
 
     private void printx() {
         Connection connection = null;
@@ -552,7 +530,7 @@ public class ItemsStockScreen extends javax.swing.JFrame {
             List<List<Object>> items = DBController.getDataFromTable(query);
 
             items.forEach((item) -> {
-                if (item.get(0) != null) {  // Null check
+                if (item.get(0) != null) { // Null check
                     String itemname = item.get(0).toString();
 
                     String openingQtyQuery = "SELECT opqty FROM " + DatabaseCredentials.ENTRY_ITEM_TABLE
@@ -593,15 +571,19 @@ public class ItemsStockScreen extends javax.swing.JFrame {
                             + " WHERE itemname='" + itemname + "';";
                     List<List<Object>> totalcount = DBController.getDataFromTable(q);
                     totalcount.forEach((itemcount) -> {
-                        if (!itemcount.isEmpty() && itemcount.get(0) != null) {  // Null check
+                        if (!itemcount.isEmpty() && itemcount.get(0) != null) { // Null check
 
                             double notSoldCount = 0;
                             double netRemainingWt = 0;
 
-                            List<List<Object>> notSold = DBController.getDataFromTable("SELECT SUM(CAST(item_sold as Decimal(10,2))), SUM(netwt) FROM "
-                                    + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = '" + itemname + "' AND not opqty='0' ");
-                            List<List<Object>> notSold1 = DBController.getDataFromTable("SELECT SUM(CAST(item_sold as Decimal(10,2))), SUM(netwt) FROM "
-                                    + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = '" + itemname + "'  ");
+                            List<List<Object>> notSold = DBController
+                                    .getDataFromTable("SELECT SUM(CAST(item_sold as Decimal(10,2))), SUM(netwt) FROM "
+                                            + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = '" + itemname
+                                            + "' AND not opqty='0' ");
+                            List<List<Object>> notSold1 = DBController
+                                    .getDataFromTable("SELECT SUM(CAST(item_sold as Decimal(10,2))), SUM(netwt) FROM "
+                                            + DatabaseCredentials.ENTRY_ITEM_TABLE + " WHERE itemname = '" + itemname
+                                            + "'  ");
 
                             for (List<Object> list : notSold) {
                                 if (list.get(1) != null) {
@@ -616,8 +598,11 @@ public class ItemsStockScreen extends javax.swing.JFrame {
                                 }
                             }
                             JOptionPane.showMessageDialog(this, "not sold in negative => " + notSoldCount);
-                            String query12 = "SELECT tagnoItems, qty, netwt FROM purchasehistory WHERE itemname='" + itemname + "'";
-                            try (Connection con = DBConnect.connect(); Statement stmt2 = con.createStatement(); ResultSet rt = stmt2.executeQuery(query12)) {
+                            String query12 = "SELECT tagnoItems, qty, netwt FROM purchasehistory WHERE itemname='"
+                                    + itemname + "'";
+                            try (Connection con = DBConnect.connect();
+                                    Statement stmt2 = con.createStatement();
+                                    ResultSet rt = stmt2.executeQuery(query12)) {
 
                                 double op = 0;
                                 int nwt = 0;
@@ -666,7 +651,8 @@ public class ItemsStockScreen extends javax.swing.JFrame {
             design.setQuery(updateQuery);
 
             // Set the real path for any images used in the report
-            String realPath = System.getProperty("user.dir") + File.separator + "jasper_reports" + File.separator + "img" + File.separator;
+            String realPath = System.getProperty("user.dir") + File.separator + "jasper_reports" + File.separator
+                    + "img" + File.separator;
             parameters.put("imagePath", realPath);
 
             // Compile the Jasper report
@@ -686,22 +672,26 @@ public class ItemsStockScreen extends javax.swing.JFrame {
         }
     }
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton3ActionPerformed
         printx();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }// GEN-LAST:event_jButton3ActionPerformed
 
-    private void purchaseQtytextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_purchaseQtytextActionPerformed
+    private void purchaseQtytextActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_purchaseQtytextActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_purchaseQtytextActionPerformed
+    }// GEN-LAST:event_purchaseQtytextActionPerformed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -711,16 +701,20 @@ public class ItemsStockScreen extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ItemsStockScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ItemsStockScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ItemsStockScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ItemsStockScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ItemsStockScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ItemsStockScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ItemsStockScreen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ItemsStockScreen.class.getName()).log(java.util.logging.Level.SEVERE,
+                    null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
+        // </editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
