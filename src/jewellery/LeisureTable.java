@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 //import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -109,7 +110,7 @@ public class LeisureTable extends javax.swing.JFrame {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(
                     "select startfinancialyear from " + DatabaseCredentials.COMPANY_TABLE + " where companyname = '"
-                    + GLOBAL_VARS.SELECTED_COMPANY + "';");
+                            + GLOBAL_VARS.SELECTED_COMPANY + "';");
             LocalDate localDate = LocalDate.now();
             Date todayDate = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.toString());
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.toString());
@@ -137,12 +138,12 @@ public class LeisureTable extends javax.swing.JFrame {
         tblPartyNameSuggestions = new javax.swing.JTable();
 
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{},
-                new String[]{
-                    "Party Name", "State", "GRP"
+                new Object[][] {},
+                new String[] {
+                        "Party Name", "State", "GRP"
                 }) {
-            boolean[] canEdit = new boolean[]{
-                false, false, false
+            boolean[] canEdit = new boolean[] {
+                    false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -568,10 +569,10 @@ public class LeisureTable extends javax.swing.JFrame {
         suggestionsTable.setRowCount(0);
 
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[]{
-                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),});
+            suggestionsTable.addRow(new Object[] {
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2), });
         });
 
     }
@@ -810,13 +811,13 @@ public class LeisureTable extends javax.swing.JFrame {
         suggestionsTable.setRowCount(0);
 
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[]{
-                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
-                0,
-                status1, // (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),
-            // (suggestion.get(3) == null) ? "NULL" : suggestion.get(4),
+            suggestionsTable.addRow(new Object[] {
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
+                    0,
+                    status1, // (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),
+                    // (suggestion.get(3) == null) ? "NULL" : suggestion.get(4),
             });
         });
     }
@@ -832,13 +833,13 @@ public class LeisureTable extends javax.swing.JFrame {
 
         // suggestionsTable.setRowCount(0);
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[]{
-                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                0,
-                (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
-                status2, // (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),
-            // (suggestion.get(3) == null) ? "NULL" : suggestion.get(4),
+            suggestionsTable.addRow(new Object[] {
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                    0,
+                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
+                    status2, // (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),
+                    // (suggestion.get(3) == null) ? "NULL" : suggestion.get(4),
             });
         });
     }
@@ -874,7 +875,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 query += " ";
             }
             if (party.equals("Cash")) {
-                query = "select distinct(bill) from sales where partyname='Cash'";
+                query = "select distinct(bill) from sales where terms='Cash'";
             }
 
             ResultSet rs = stmt.executeQuery(query);
@@ -883,7 +884,9 @@ public class LeisureTable extends javax.swing.JFrame {
                 Statement st = con.createStatement();
                 int billno = rs.getInt("bill");
                 query = "select sum(netamount),date,partyname,receivedamount,terms from sales where bill=" + billno;
-//                query = "select sum(sales.netamount),sales.date,sales.partyname from sales join receipt on sales.bill=receipt.sales_Bill where not receipt.sales_Bill=" + billno;
+                // query = "select sum(sales.netamount),sales.date,sales.partyname from sales
+                // join receipt on sales.bill=receipt.sales_Bill where not receipt.sales_Bill="
+                // + billno;
 
                 ResultSet rest = st.executeQuery(query);
                 Date date = new Date();
@@ -899,9 +902,9 @@ public class LeisureTable extends javax.swing.JFrame {
                     receivedamt = rest.getDouble("receivedamount");
                     terms = rest.getString("terms");
 
-//                    date = rest.getDate("sales.date");
-//                    netamount = rest.getDouble("sum(sales.netamount)");
-//                      partyName=rest.getString("sales.partyname");
+                    // date = rest.getDate("sales.date");
+                    // netamount = rest.getDouble("sum(sales.netamount)");
+                    // partyName=rest.getString("sales.partyname");
                 }
                 rest.close();
                 st.close();
@@ -918,12 +921,15 @@ public class LeisureTable extends javax.swing.JFrame {
                     Statement stmtt = con.createStatement();
                     Statement stmttt = con.createStatement();
                     ResultSet r = stmtt.executeQuery("select sales_Bill from receipt where sales_Bill=" + billno + "");
-                    ResultSet r2 = stmttt.executeQuery("select sales_Bill from bankledger where sales_Bill=" + billno + "");
+                    ResultSet r2 = stmttt
+                            .executeQuery("select sales_Bill from bankledger where sales_Bill=" + billno + "");
                     if (!r.next() && !r2.next()) {
-//                        JOptionPane.showMessageDialog(this, "running sales1");
+                        // JOptionPane.showMessageDialog(this, "running sales1");
                         if (netamount != 0) {
-//                   JOptionPane.showMessageDialog(this, remark);
-                            tableObject tableObj = new tableObject(date, partyName, 0.0, (int) netamount - receivedamt - exchangeAmt, 1, remark + "," + netamount, "Sale");
+                            // JOptionPane.showMessageDialog(this, remark);
+                          
+                            tableObject tableObj = new tableObject(date, partyName, 0.0,
+                                    (int) netamount, 1, remark + "," + netamount, "Sale");
                             initialTableData.add(tableObj);
                         }
                     }
@@ -932,12 +938,15 @@ public class LeisureTable extends javax.swing.JFrame {
                 } else {
 
                     if (netamount != 0) {
-//                    JOptionPane.showMessageDialog(this, remark);
+                        // JOptionPane.showMessageDialog(this, remark);
                         if (terms.trim().equalsIgnoreCase("Cash")) {
                             Statement stmtt = con.createStatement();
                             Statement stmttt = con.createStatement();
-                            ResultSet r = stmtt.executeQuery("select sales_Bill,amtpaid from receipt where sales_Bill='" + billno + "'");
-                            ResultSet r2 = stmttt.executeQuery("select sales_Bill,SUM(amt) as am from bankledger where sales_Bill='" + billno + "' group by sales_Bill");
+                            ResultSet r = stmtt.executeQuery(
+                                    "select sales_Bill,amtpaid from receipt where sales_Bill='" + billno + "'");
+                            ResultSet r2 = stmttt
+                                    .executeQuery("select sales_Bill,SUM(amt) as am from bankledger where sales_Bill='"
+                                            + billno + "' group by sales_Bill");
                             double money1 = 0;
                             double money2 = 0.0;
                             while (r.next()) {
@@ -950,14 +959,18 @@ public class LeisureTable extends javax.swing.JFrame {
                             r.close();
                             stmtt.close();
                             stmttt.close();
-                            tableObject tableObj = new tableObject(date, partyName, 0.0, netamount, 1, remark + ", " + (netamount), "Sale");
-                            initialTableData.add(tableObj);
+                            tableObject tableObj = new tableObject(date, partyName, 0.0, netamount, 1,
+                                    remark + ", " + (netamount), "Sale");
+                          //  initialTableData.add(tableObj);
                             if (money1 != 0 && money2 != 0) {
-                                tableObject tableObj1 = new tableObject(date, partyName, 0.0, Double.parseDouble(df.format((int) netamount - money1 - money2 - exchangeAmt)), 1, remark + "," + netamount, "Sale");
+                                tableObject tableObj1 = new tableObject(date, partyName, 0.0,
+                                        Double.parseDouble(df.format((int) netamount - money1 - money2 - exchangeAmt)),
+                                        1, remark + "," + netamount, "Sale ");
                                 initialTableData.add(tableObj1);
                             }
                         } else {
-                            tableObject tableObj = new tableObject(date, partyName, 0.0, netamount - receivedamt - exchangeAmt, 1, remark + "," + netamount, "Sale");
+                            tableObject tableObj = new tableObject(date, partyName, 0.0,
+                                    netamount, 1, remark + "," + netamount, "Sale");
                             initialTableData.add(tableObj);
                         }
 
@@ -987,12 +1000,17 @@ public class LeisureTable extends javax.swing.JFrame {
                 if (!getGroupName(mop).equals("Bank") && party.equals("Cash")) {
                     if (salesbill > -1) {
                         remark = "Bill No." + String.valueOf(salesbill);
-//                        hjg
-//                    remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
-                        tableObject tableObj1 = new tableObject(date, name, 0, 0, 1, remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)), "Sale");
+                        // hjg
+                        // remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " +
+                        // rs1.getString("mop");
+                        tableObject tableObj1 = new tableObject(date, name, 0, outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)), 1,
+                                remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)),
+                                "Sale ");
                         initialTableData.add(tableObj1);
-                        tableObject tableObj = new tableObject(date, name, 0, amount, 1, remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)), "Sale");
-                        initialTableData.add(tableObj);
+                        // tableObject tableObj = new tableObject(date, name, 0, amount, 1,
+                        //         remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)),
+                        //         "Sale ch7");
+                      //  initialTableData.add(tableObj);
                     } else {
                         remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
                         tableObject tableObj = new tableObject(date, name, amount, 0.0, 0, remark, "Receipt");
@@ -1056,10 +1074,14 @@ public class LeisureTable extends javax.swing.JFrame {
                 if (salesbill > -1) {
                     remark = "Bill No. " + String.valueOf(salesbill);
                     if ("withdraw".equals(type)) {
-                        tableObj = new tableObject(date, name, 0.0, amount, 1, remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)), "Sale");
+                        tableObj = new tableObject(date, name, 0.0, amount, 1,
+                                remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)),
+                                "Sale");
 
                     } else {
-                        tableObj = new tableObject(date, name, amount, 0.0, 0, remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)), "Sale");
+                        tableObj = new tableObject(date, name, amount, 0.0, 0,
+                                remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)),
+                                "Sale");
                     }
                 } else {
                     if ("withdraw".equals(type)) {
@@ -1091,15 +1113,18 @@ public class LeisureTable extends javax.swing.JFrame {
 
                 String remark = null;
                 remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
-                // tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment");
-//                if (getGroupName(party).equals("Bank") || getGroupName(party).equals("Customer")) {
+                // tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark,
+                // "Payment");
+                // if (getGroupName(party).equals("Bank") ||
+                // getGroupName(party).equals("Customer")) {
                 ////                   JOptionPane.showMessageDialog(this, party+ "  running bank");
-//                    tableObject tableObj = new tableObject(date, name, amount, 0.0, 0, remark, "Payment");
-//                    initialTableData.add(tableObj);
-//                } else {
-                    tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment");
+                // tableObject tableObj = new tableObject(date, name, amount, 0.0, 0, remark,
+                // "Payment");
+                // initialTableData.add(tableObj);
+                // } else {
+                tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment");
                 initialTableData.add(tableObj);
-                //           }
+                // }
 
             }
 
@@ -1114,11 +1139,11 @@ public class LeisureTable extends javax.swing.JFrame {
             if (!party.equals("Cash")) {
                 query = "select distinct(bill) from purchasehistory where partyname = '" + party + "'";
                 query += " and  terms = 'Credit'";
-//                JOptionPane.showMessageDialog(this, query);
+                // JOptionPane.showMessageDialog(this, query);
 
             } else {
                 query = "select distinct(bill) from purchasehistory where ";
-                //notjing write previous coder
+                // notjing write previous coder
                 query += "  terms = 'Cash'";
             }
 
@@ -1126,7 +1151,8 @@ public class LeisureTable extends javax.swing.JFrame {
             while (rs1.next()) {
                 Statement st = c.createStatement();
                 int billno = rs1.getInt("bill");
-                query = "select sum(Cast(net_amount as decimal(10,2))) as nt,date from purchasehistory where bill='" + billno + "'";
+                query = "select sum(Cast(net_amount as decimal(10,2))) as nt,date from purchasehistory where bill='"
+                        + billno + "'";
 
                 ResultSet rest = st.executeQuery(query);
                 Date date = new Date();
@@ -1177,7 +1203,7 @@ public class LeisureTable extends javax.swing.JFrame {
 
             for (tableObject i : initialTableData) {
 
-                balance += i.debit - i.credit ;
+                balance += i.debit - i.credit;
                 if ((i.date.compareTo(start) >= 0 || i.date.after(start))
                         && (i.date.compareTo(to) <= 0)) {
                     credit += i.credit;
@@ -1185,16 +1211,20 @@ public class LeisureTable extends javax.swing.JFrame {
                     if (i.creditOrDebit == 0) // credit
                     {
                         if (balance <= 0) {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit, String.format("%.2f", balance) + " Cr"});
+                            m.addRow(new Object[] { i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
+                                    String.format("%.2f", balance) + " Cr" });
                         } else {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit, String.format("%.2f", balance) + " Dr"});
+                            m.addRow(new Object[] { i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
+                                    String.format("%.2f", balance) + " Dr" });
                         }
 
                     } else {
                         if (balance <= 0) {
-                           m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit, String.format("%.2f", balance) + " Cr"});
+                            m.addRow(new Object[] { i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
+                                    String.format("%.2f", balance) + " Cr" });
                         } else {
-                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit, String.format("%.2f", balance) + " Dr"});
+                            m.addRow(new Object[] { i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
+                                    String.format("%.2f", balance) + " Dr" });
                         }
                     }
                 }
@@ -1327,7 +1357,7 @@ public class LeisureTable extends javax.swing.JFrame {
             // if (ok) {
             // try {
             // job.print();
-         ////                logger.info("reached");
+            ////                logger.info("reached");
             // } catch (PrinterException ex) {
             // ex.printStackTrace();
             // }
@@ -1346,15 +1376,15 @@ public class LeisureTable extends javax.swing.JFrame {
         TreeMap<String, Object[]> map = new TreeMap<>();
 
         map.put("0",
-                new Object[]{model.getColumnName(0), model.getColumnName(1), model.getColumnName(2),
-                    model.getColumnName(3),
-                    model.getColumnName(4), model.getColumnName(5)});
+                new Object[] { model.getColumnName(0), model.getColumnName(1), model.getColumnName(2),
+                        model.getColumnName(3),
+                        model.getColumnName(4), model.getColumnName(5) });
 
         for (int i = 1; i < model.getRowCount(); i++) {
             map.put(Integer.toString(i),
-                    new Object[]{model.getValueAt(i, 0), model.getValueAt(i, 1), model.getValueAt(i, 2),
-                        model.getValueAt(i, 3), model.getValueAt(i, 4), model.getValueAt(i, 5),
-                        model.getValueAt(i, 6),});
+                    new Object[] { model.getValueAt(i, 0), model.getValueAt(i, 1), model.getValueAt(i, 2),
+                            model.getValueAt(i, 3), model.getValueAt(i, 4), model.getValueAt(i, 5),
+                            model.getValueAt(i, 6), });
         }
 
         Set<String> id = map.keySet();

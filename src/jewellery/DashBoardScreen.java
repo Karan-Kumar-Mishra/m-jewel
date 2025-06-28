@@ -153,9 +153,9 @@ public class DashBoardScreen extends javax.swing.JFrame {
             @Override
             public void run() {
                 if (checklicense()) {
-//                    disableHomepage();
-//                    license();
-//                    timer.cancel();
+                    disableHomepage();
+                    license();
+                    timer.cancel();
                 }
             }
         }, 0, 60000);//wait 0 ms before doing the action and do it evry 60000ms (60second)
