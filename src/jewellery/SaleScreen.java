@@ -3238,7 +3238,7 @@ public class SaleScreen extends javax.swing.JFrame {
                             try {
                                 Connection c = DBConnect.connect();
                                 Statement s = c.createStatement();
-
+ JOptionPane.showMessageDialog(null,"inserting into bankledger..");
                                 String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill) VALUES ( '"
                                         + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getCardBank1()
                                         + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '"

@@ -1875,22 +1875,43 @@ public class DashBoardScreen extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        // TODO add your handling code here:
         try {
-            int index = tabbedPane.indexOfTab("Loan Entry");
+            int index = tabbedPane.indexOfTab("Loan Ledger");
             if (index == -1) {
-                LoanEntry loanEntryPanel = new LoanEntry(); // Create a new instance of LoanEntry
-                tabbedPane.addTab("Loan Entry", loanEntryPanel); // Add it to the tabbed pane
-                tabbedPane.setSelectedComponent(loanEntryPanel); // Select the newly added tab
+                LoanLedger loan_ledger = new LoanLedger();
+                tabbedPane.addTab("Loan Ledger", loan_ledger.getContentPane());
+                tabbedPane.setSelectedComponent(loan_ledger.getContentPane());
             } else {
-                tabbedPane.setSelectedIndex(index); // If it exists, select the existing tab
+                tabbedPane.setSelectedIndex(index);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Print the stack trace for debugging
-            JOptionPane.showMessageDialog(this, "Error creating Loan Entry: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Error opening Loan Book:\n" + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
 
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // TODO add your handling code here:
+        try {
+            int index = tabbedPane.indexOfTab("Loan Receipt");
+            if (index == -1) {
+                LoanReceipt loan_receipt = new LoanReceipt();
+                tabbedPane.addTab("Loan Receipt", loan_receipt.getContentPane());
+                tabbedPane.setSelectedComponent(loan_receipt.getContentPane());
+            } else {
+                tabbedPane.setSelectedIndex(index);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Error opening Loan Book:\n" + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
 
@@ -1907,49 +1928,26 @@ public class DashBoardScreen extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,
-                    "Error opening Loan Book:\n" + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                "Error opening Loan Book:\n" + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
-    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
-        // TODO add your handling code here:
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         try {
-            int index = tabbedPane.indexOfTab("Loan Receipt");
+            int index = tabbedPane.indexOfTab("Loan Entry");
             if (index == -1) {
-                LoanReceipt loan_receipt = new LoanReceipt();
-                tabbedPane.addTab("Loan Receipt", loan_receipt.getContentPane());
-                tabbedPane.setSelectedComponent(loan_receipt.getContentPane());
+                LoanEntry loanEntryPanel = new LoanEntry(); // Create a new instance of LoanEntry
+                tabbedPane.addTab("Loan Entry", loanEntryPanel); // Add it to the tabbed pane
+                tabbedPane.setSelectedComponent(loanEntryPanel); // Select the newly added tab
             } else {
-                tabbedPane.setSelectedIndex(index);
+                tabbedPane.setSelectedIndex(index); // If it exists, select the existing tab
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                    "Error opening Loan Book:\n" + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace(); // Print the stack trace for debugging
+            JOptionPane.showMessageDialog(this, "Error creating Loan Entry: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_jMenuItem9ActionPerformed
-
-    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        // TODO add your handling code here:
-           try {
-            int index = tabbedPane.indexOfTab("Loan Ledger");
-            if (index == -1) {
-                LoanLedger loan_ledger = new LoanLedger();
-                tabbedPane.addTab("Loan Ledger", loan_ledger.getContentPane());
-                tabbedPane.setSelectedComponent(loan_ledger.getContentPane());
-            } else {
-                tabbedPane.setSelectedIndex(index);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                    "Error opening Loan Book:\n" + e.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_jMenuItem10ActionPerformed
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     /**
      * @param args the command line arguments

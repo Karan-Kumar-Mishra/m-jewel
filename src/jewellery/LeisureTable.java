@@ -110,7 +110,7 @@ public class LeisureTable extends javax.swing.JFrame {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(
                     "select startfinancialyear from " + DatabaseCredentials.COMPANY_TABLE + " where companyname = '"
-                            + GLOBAL_VARS.SELECTED_COMPANY + "';");
+                    + GLOBAL_VARS.SELECTED_COMPANY + "';");
             LocalDate localDate = LocalDate.now();
             Date todayDate = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.toString());
             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(localDate.toString());
@@ -138,12 +138,12 @@ public class LeisureTable extends javax.swing.JFrame {
         tblPartyNameSuggestions = new javax.swing.JTable();
 
         tblPartyNameSuggestions.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {},
-                new String[] {
-                        "Party Name", "State", "GRP"
+                new Object[][]{},
+                new String[]{
+                    "Party Name", "State", "GRP"
                 }) {
-            boolean[] canEdit = new boolean[] {
-                    false, false, false
+            boolean[] canEdit = new boolean[]{
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -569,10 +569,10 @@ public class LeisureTable extends javax.swing.JFrame {
         suggestionsTable.setRowCount(0);
 
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[] {
-                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2), });
+            suggestionsTable.addRow(new Object[]{
+                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),});
         });
 
     }
@@ -811,13 +811,13 @@ public class LeisureTable extends javax.swing.JFrame {
         suggestionsTable.setRowCount(0);
 
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[] {
-                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
-                    0,
-                    status1, // (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),
-                    // (suggestion.get(3) == null) ? "NULL" : suggestion.get(4),
+            suggestionsTable.addRow(new Object[]{
+                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
+                0,
+                status1, // (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),
+            // (suggestion.get(3) == null) ? "NULL" : suggestion.get(4),
             });
         });
     }
@@ -833,13 +833,13 @@ public class LeisureTable extends javax.swing.JFrame {
 
         // suggestionsTable.setRowCount(0);
         suggestions.forEach((suggestion) -> {
-            suggestionsTable.addRow(new Object[] {
-                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                    0,
-                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
-                    status2, // (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),
-                    // (suggestion.get(3) == null) ? "NULL" : suggestion.get(4),
+            suggestionsTable.addRow(new Object[]{
+                (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                0,
+                (suggestion.get(2) == null) ? "NULL" : suggestion.get(2),
+                status2, // (suggestion.get(3) == null) ? "NULL" : suggestion.get(3),
+            // (suggestion.get(3) == null) ? "NULL" : suggestion.get(4),
             });
         });
     }
@@ -927,7 +927,7 @@ public class LeisureTable extends javax.swing.JFrame {
                         // JOptionPane.showMessageDialog(this, "running sales1");
                         if (netamount != 0) {
                             // JOptionPane.showMessageDialog(this, remark);
-                          
+
                             tableObject tableObj = new tableObject(date, partyName, 0.0,
                                     (int) netamount, 1, remark + "," + netamount, "Sale");
                             initialTableData.add(tableObj);
@@ -961,7 +961,7 @@ public class LeisureTable extends javax.swing.JFrame {
                             stmttt.close();
                             tableObject tableObj = new tableObject(date, partyName, 0.0, netamount, 1,
                                     remark + ", " + (netamount), "Sale");
-                          //  initialTableData.add(tableObj);
+                            //  initialTableData.add(tableObj);
                             if (money1 != 0 && money2 != 0) {
                                 tableObject tableObj1 = new tableObject(date, partyName, 0.0,
                                         Double.parseDouble(df.format((int) netamount - money1 - money2 - exchangeAmt)),
@@ -1010,11 +1010,17 @@ public class LeisureTable extends javax.swing.JFrame {
                         // tableObject tableObj = new tableObject(date, name, 0, amount, 1,
                         //         remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)),
                         //         "Sale ch7");
-                      //  initialTableData.add(tableObj);
+                        //  initialTableData.add(tableObj);
                     } else {
                         remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
-                        tableObject tableObj = new tableObject(date, name, amount, 0.0, 0, remark, "Receipt");
-                        initialTableData.add(tableObj);
+                        if (name.equals("Cash")) {
+                            tableObject tableObj = new tableObject(date, name, 0.0, amount, 0, remark, "Receipt");
+                            initialTableData.add(tableObj);
+                        } else {
+                            tableObject tableObj = new tableObject(date, name, amount, 0.0, 0, remark, "Receipt");
+                            initialTableData.add(tableObj);
+                        }
+
                     }
                 } else if (!party.equals("Cash") && getGroupName(party).equals("Bank")) {
                     remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
@@ -1122,10 +1128,15 @@ public class LeisureTable extends javax.swing.JFrame {
                 // "Payment");
                 // initialTableData.add(tableObj);
                 // } else {
-                tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment");
-                initialTableData.add(tableObj);
-                // }
+                if (name.equals("Cash")) {
+                    tableObject tableObj = new tableObject(date, name, amount, 0.0, 1, remark, "Payment");
+                    initialTableData.add(tableObj);
+                } else {
+                    tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment");
+                    initialTableData.add(tableObj);
+                }
 
+                // }
             }
 
             c.close();
@@ -1211,20 +1222,20 @@ public class LeisureTable extends javax.swing.JFrame {
                     if (i.creditOrDebit == 0) // credit
                     {
                         if (balance <= 0) {
-                            m.addRow(new Object[] { i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
-                                    String.format("%.2f", balance) + " Cr" });
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
+                                String.format("%.2f", balance) + " Cr"});
                         } else {
-                            m.addRow(new Object[] { i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
-                                    String.format("%.2f", balance) + " Dr" });
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
+                                String.format("%.2f", balance) + " Dr"});
                         }
 
                     } else {
                         if (balance <= 0) {
-                            m.addRow(new Object[] { i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
-                                    String.format("%.2f", balance) + " Cr" });
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
+                                String.format("%.2f", balance) + " Cr"});
                         } else {
-                            m.addRow(new Object[] { i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
-                                    String.format("%.2f", balance) + " Dr" });
+                            m.addRow(new Object[]{i.date, i.type, i.name, i.remark, i.credit, (int) i.debit,
+                                String.format("%.2f", balance) + " Dr"});
                         }
                     }
                 }
@@ -1322,7 +1333,8 @@ public class LeisureTable extends javax.swing.JFrame {
             JasperViewer.viewReport(jprint, false);
 
         } catch (Exception e) {
-            Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(LeisureTable.class
+                    .getName()).log(Level.SEVERE, null, e);
 
         }
     }
@@ -1357,13 +1369,16 @@ public class LeisureTable extends javax.swing.JFrame {
             // if (ok) {
             // try {
             // job.print();
-            ////                logger.info("reached");
+         ////                logger.info("reached");
             // } catch (PrinterException ex) {
             // ex.printStackTrace();
             // }
             // }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, ex);
+
+
+} catch (FileNotFoundException ex) {
+            Logger.getLogger(LeisureTable.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
     }// GEN-LAST:event_printbuttonMouseClicked
@@ -1376,15 +1391,15 @@ public class LeisureTable extends javax.swing.JFrame {
         TreeMap<String, Object[]> map = new TreeMap<>();
 
         map.put("0",
-                new Object[] { model.getColumnName(0), model.getColumnName(1), model.getColumnName(2),
-                        model.getColumnName(3),
-                        model.getColumnName(4), model.getColumnName(5) });
+                new Object[]{model.getColumnName(0), model.getColumnName(1), model.getColumnName(2),
+                    model.getColumnName(3),
+                    model.getColumnName(4), model.getColumnName(5)});
 
         for (int i = 1; i < model.getRowCount(); i++) {
             map.put(Integer.toString(i),
-                    new Object[] { model.getValueAt(i, 0), model.getValueAt(i, 1), model.getValueAt(i, 2),
-                            model.getValueAt(i, 3), model.getValueAt(i, 4), model.getValueAt(i, 5),
-                            model.getValueAt(i, 6), });
+                    new Object[]{model.getValueAt(i, 0), model.getValueAt(i, 1), model.getValueAt(i, 2),
+                        model.getValueAt(i, 3), model.getValueAt(i, 4), model.getValueAt(i, 5),
+                        model.getValueAt(i, 6),});
         }
 
         Set<String> id = map.keySet();
@@ -1529,20 +1544,28 @@ public class LeisureTable extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LeisureTable.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
+            java.util.logging.Logger.getLogger(LeisureTable.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null,
+                            ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LeisureTable.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
+            java.util.logging.Logger.getLogger(LeisureTable.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null,
+                            ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LeisureTable.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
+            java.util.logging.Logger.getLogger(LeisureTable.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null,
+                            ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LeisureTable.class.getName()).log(java.util.logging.Level.SEVERE, null,
-                    ex);
+            java.util.logging.Logger.getLogger(LeisureTable.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null,
+                            ex);
         }
         // </editor-fold>
         // </editor-fold>
