@@ -962,18 +962,18 @@ public class LeisureTable extends javax.swing.JFrame {
                         tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
                                 remark + ", " + (money1), "Sale s2");
 
-                       initialTableData.add(tableObj);  
+                        initialTableData.add(tableObj);
                     }
 
                     if (money1 != 0 && money2 != 0) {
                         tableObject tableObj1 = new tableObject(date, partyName, 0.0,
                                 Double.parseDouble(df.format((int) netamount - money1 - money2 - exchangeAmt)),
                                 1, remark + "," + netamount, "Sale s3");
-                     //     initialTableData.add(tableObj1);
-                      tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
-                                remark + ", " + (money1), "Sale s2");
+                             initialTableData.add(tableObj1);
+                        tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
+                                remark + ", " + (money1), "Sale s2 2");
 
-                       initialTableData.add(tableObj); 
+                       // initialTableData.add(tableObj);
                     }
                 } else {
                     // JOptionPane.showMessageDialog(this, "else block");
@@ -1000,10 +1000,12 @@ public class LeisureTable extends javax.swing.JFrame {
                             stmtt.close();
                             stmttt.close();
                             //    JOptionPane.showMessageDialog(this, "money1 money2 " + money1 + " " + money2);
-                            tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
-                                    remark + ", " + (money1), "Sale");
-                              initialTableData.add(tableObj);
-                            
+                            if (getGroupName(party).equals("Bank")) {
+                                tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
+                                        remark + ", " + (money1), "Sale");
+                                initialTableData.add(tableObj);
+                            }
+
                             if (money1 != 0 && money2 != 0) {
                                 int finalamount = (int) (netamount - money1 - money2 - exchangeAmt);
                                 if (finalamount < 0) {
@@ -1014,7 +1016,7 @@ public class LeisureTable extends javax.swing.JFrame {
                                         1, remark + "," + netamount, "Sale s4");
                                 initialTableData.add(tableObj1);
                             }
-                             
+
                         } else {
                             tableObject tableObj = new tableObject(date, partyName, 0.0,
                                     netamount, 1, remark + "," + netamount, "Sale s5");
@@ -1088,7 +1090,7 @@ public class LeisureTable extends javax.swing.JFrame {
 
                     if (!party.equals("Cash") && !getGroupName(party).equals("Bank")) {
                         remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
-                        tableObject tableObj = new tableObject(date, name, amount,0.0, 1, remark, "Receipt r4");
+                        tableObject tableObj = new tableObject(date, name, amount, 0.0, 1, remark, "Receipt r4");
                         initialTableData.add(tableObj);
                     } else {
                         if (getGroupName(rs1.getString("mop")).equals("Bank")) {
@@ -1208,17 +1210,14 @@ public class LeisureTable extends javax.swing.JFrame {
                     tableObject tableObj = new tableObject(date, name, amount, 0.0, 1, remark, "Payment p1");
                     initialTableData.add(tableObj);
                 } else {
-                    if(getGroupName(party).equals("Bank"))
-                    {
-                     tableObject tableObj = new tableObject(date, name, amount,0.0, 1, remark, "Payment p2");
-                     initialTableData.add(tableObj);  
+                    if (getGroupName(party).equals("Bank")) {
+                        tableObject tableObj = new tableObject(date, name, amount, 0.0, 1, remark, "Payment p2");
+                        initialTableData.add(tableObj);
+                    } else {
+                        tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment p2 2");
+                        initialTableData.add(tableObj);
                     }
-                    else
-                    {
-                      tableObject tableObj = new tableObject(date, name, 0.0,amount, 1, remark, "Payment p2 2");
-                     initialTableData.add(tableObj);  
-                    }
-                    
+
                 }
 
                 // }
