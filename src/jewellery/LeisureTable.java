@@ -966,14 +966,19 @@ public class LeisureTable extends javax.swing.JFrame {
                     }
 
                     if (money1 != 0 && money2 != 0) {
-                        tableObject tableObj1 = new tableObject(date, partyName, 0.0,
-                                Double.parseDouble(df.format((int) netamount - money1 - money2 - exchangeAmt)),
-                                1, remark + "," + netamount, "Sale s3");
-                             initialTableData.add(tableObj1);
-                        tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
-                                remark + ", " + (money1), "Sale s2 2");
 
-                       // initialTableData.add(tableObj);
+                        if (!partyName.equals("Cash")) {
+
+                            tableObject tableObj1 = new tableObject(date, partyName, 0.0, money1,
+                                    1, remark + "," + netamount, "Sale s3");
+                            initialTableData.add(tableObj1);
+                        } else {
+                            tableObject tableObj1 = new tableObject(date, partyName, 0.0,
+                                    Double.parseDouble(df.format((int) netamount - money1 - money2 - exchangeAmt)),
+                                    1, remark + "," + netamount, "Sale s3");
+                            initialTableData.add(tableObj1);
+                        }
+
                     }
                 } else {
                     // JOptionPane.showMessageDialog(this, "else block");

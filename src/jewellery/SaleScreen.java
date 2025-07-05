@@ -3238,7 +3238,7 @@ public class SaleScreen extends javax.swing.JFrame {
                             try {
                                 Connection c = DBConnect.connect();
                                 Statement s = c.createStatement();
- JOptionPane.showMessageDialog(null,"inserting into bankledger..");
+                                JOptionPane.showMessageDialog(null, "inserting into bankledger..");
                                 String query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`,sales_Bill) VALUES ( '"
                                         + txtPartyName.getText() + "','" + CashAndBankPaymentsSales.getCardBank1()
                                         + "', '" + dateFormat.format(datePurchaseDate.getDate()) + "', '"
@@ -3604,8 +3604,8 @@ public class SaleScreen extends javax.swing.JFrame {
             if (totalItemSoled < 0) {
                 totalItemSoled = 0;
             }
-          //  JOptionPane.showMessageDialog(this, "prev total item sold =>" + totalItemSoled);
-          //  JOptionPane.showMessageDialog(this, "current  item sold =>" + qty);
+            //  JOptionPane.showMessageDialog(this, "prev total item sold =>" + totalItemSoled);
+            //  JOptionPane.showMessageDialog(this, "current  item sold =>" + qty);
             DBController.executeQueryUpdate("update entryitem set item_sold='" + totalItemSoled + "' where itemname='" + itemname + "'");
 
         }
@@ -5043,8 +5043,14 @@ public class SaleScreen extends javax.swing.JFrame {
     private void txtQtyFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtQtyFocusLost
         txtQty.setBackground(Color.white);
         if (RealSettingsHelper.gettagNoIsTrue()) {
-            // txtQty.setText("1");
+            txtQty.setText("1");
         }
+        if (txtQty.getText() == null || txtQty.getText().isEmpty() || txtQty.getText().length() == 0) {
+            JOptionPane.showMessageDialog(null, "Please Enter the qty!", "Warning", JOptionPane.WARNING_MESSAGE);
+            txtQty.requestFocusInWindow();
+            return;
+        }
+
     }// GEN-LAST:event_txtQtyFocusLost
 
     private void txtBillFocusLost(java.awt.event.FocusEvent evt) {// GEN-FIRST:event_txtBillFocusLost
@@ -5272,6 +5278,7 @@ public class SaleScreen extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         try {
+
             if (jTextField1.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Enter System name");
             } else {
