@@ -115,8 +115,12 @@ public class ReceiptScreen extends javax.swing.JFrame {
             if (rs.next()) {
                 receiptNo = rs.getInt("maxReceiptno") + 1;
             }
-
+            if(receiptNo<=0)
+            {
+                receiptNo=1;
+            }
             jTextField1.setText(String.valueOf(receiptNo));
+            jTextField1.setEditable(false);
 
             rs.close();
             stmt.close();
@@ -187,6 +191,9 @@ public class ReceiptScreen extends javax.swing.JFrame {
 
     public void fillByRedirect(String recp) {
 
+        if (Integer.parseInt(recp) <= 0) {
+            recp = (Integer.parseInt(recp) + 1) + "";
+        }
         jTextField1.setText(recp);
         savebtn.setText("Update");
         deletebutton.setVisible(true);
@@ -242,7 +249,10 @@ public class ReceiptScreen extends javax.swing.JFrame {
             while (rs.next()) {
                 lastRec = rs.getInt("max(Receiptno)");
             }
-            lastRec=lastRec + 1;
+            lastRec = lastRec + 1;
+            if (lastRec <= 0) {
+                lastRec = 1;
+            }
             jTextField1.setText("" + lastRec);
             c.close();
             s.close();
@@ -260,7 +270,7 @@ public class ReceiptScreen extends javax.swing.JFrame {
             String bill_no = jTextField1.getText();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(jDateChooser1.getDate());
-            String query = "select * from receipt where date='" + date + "' AND Receiptno = '" + bill_no+ "' ";
+            String query = "select * from receipt where date='" + date + "' AND Receiptno = '" + bill_no + "' ";
 //            JOptionPane.showMessageDialog(this, query);
             InputStream input = new FileInputStream(new File("jasper_reports" + File.separator + "receipt.jrxml"));
             JasperDesign design = JRXmlLoader.load(input);
@@ -281,7 +291,7 @@ public class ReceiptScreen extends javax.swing.JFrame {
 //            for(StackTraceElement e: ex.getStackTrace()){
 //              JOptionPane.showMessageDialog(this, "running12 " + e);   
 //            }
-           
+
             Logger.getLogger(ReceiptScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -341,7 +351,10 @@ public class ReceiptScreen extends javax.swing.JFrame {
         } catch (SQLException e) {
             Logger.getLogger(ReceiptScreen.class.getName()).log(Level.SEVERE, null, e);
         }
-        lastReceiptNo= lastReceiptNo+1;
+        lastReceiptNo = lastReceiptNo + 1;
+        if (lastReceiptNo <= 0) {
+            lastReceiptNo = 1;
+        }
         jTextField1.setText("" + lastReceiptNo);
         txtPartyName.requestFocus();
     }
@@ -771,7 +784,7 @@ public class ReceiptScreen extends javax.swing.JFrame {
         pmPartyNameSuggestionsPopup.setVisible(false);        // TODO add your handling code here:
     }//GEN-LAST:event_txtPartyNameFocusLost
 
-    int selectedrow=0;
+    int selectedrow = 0;
     private void txtPartyNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPartyNameKeyReleased
         try {
             fetchAccountNames();
@@ -780,29 +793,29 @@ public class ReceiptScreen extends javax.swing.JFrame {
                     case java.awt.event.KeyEvent.VK_BACK_SPACE:
                         pmPartyNameSuggestionsPopup.setVisible(false);
                         break;
-                        case KeyEvent.VK_DOWN:
-                tblPartyNameSuggestions.requestFocus();
-                if (selectedrow == 0) {
-                    tblPartyNameSuggestions.setRowSelectionInterval(0, 0);
-                    selectedrow++;
-                } else {
-                    if (tblPartyNameSuggestions.getSelectedRow() < tblPartyNameSuggestions.getRowCount() - 1) {
-                        tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() + 1, tblPartyNameSuggestions.getSelectedRow() + 1);
-                    }
-                }
-                txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
+                    case KeyEvent.VK_DOWN:
+                        tblPartyNameSuggestions.requestFocus();
+                        if (selectedrow == 0) {
+                            tblPartyNameSuggestions.setRowSelectionInterval(0, 0);
+                            selectedrow++;
+                        } else {
+                            if (tblPartyNameSuggestions.getSelectedRow() < tblPartyNameSuggestions.getRowCount() - 1) {
+                                tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() + 1, tblPartyNameSuggestions.getSelectedRow() + 1);
+                            }
+                        }
+                        txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
 
-                break;
-            case KeyEvent.VK_UP:
-                tblPartyNameSuggestions.requestFocus();
+                        break;
+                    case KeyEvent.VK_UP:
+                        tblPartyNameSuggestions.requestFocus();
 
-                if (tblPartyNameSuggestions.getSelectedRow() > 0) {
-                    tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1, tblPartyNameSuggestions.getSelectedRow() - 1);
-                }
+                        if (tblPartyNameSuggestions.getSelectedRow() > 0) {
+                            tblPartyNameSuggestions.setRowSelectionInterval(tblPartyNameSuggestions.getSelectedRow() - 1, tblPartyNameSuggestions.getSelectedRow() - 1);
+                        }
 
-                txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
+                        txtPartyName.setText(tblPartyNameSuggestions.getValueAt(tblPartyNameSuggestions.getSelectedRow(), 0).toString().trim());
 
-                break;
+                        break;
                     case KeyEvent.VK_ENTER:
                         jTextField5.requestFocusInWindow();
                         break;
@@ -847,6 +860,9 @@ public class ReceiptScreen extends javax.swing.JFrame {
         String recp = model2.getValueAt(selectedrow, 0).toString();
         String partyname
                 = model2.getValueAt(selectedrow, 1).toString();
+        if (Integer.parseInt(recp) <= 0) {
+            recp = (Integer.parseInt(recp) + 1) + "";
+        }
         jTextField1.setText(recp);
         txtPartyName.setText(partyname);
         try {
@@ -878,11 +894,15 @@ public class ReceiptScreen extends javax.swing.JFrame {
 
     private void savebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savebtnActionPerformed
         try {
-              int recpno = Integer.parseInt(jTextField1.getText());
+            int recpno = Integer.parseInt(jTextField1.getText());
+            if(recpno<=0)
+            {
+                recpno=1;
+            }
             String name = txtPartyName.getText();
             double dueamt = Double.parseDouble(jTextField3.getText());
-            
-            double dis ;
+
+            double dis;
             if (!jTextField4.getText().trim().isEmpty()) {
                 dis = Double.parseDouble(jTextField4.getText());
             } else {
@@ -900,7 +920,6 @@ public class ReceiptScreen extends javax.swing.JFrame {
             if (savebtn.getText().equals("Update")) {
                 transactionType = "Update";
             }
-            
 
             try {
 
@@ -941,10 +960,13 @@ public class ReceiptScreen extends javax.swing.JFrame {
                 String buttonText = savebtn.getText();
                 savebtn.setText("Save");
                 deletebutton.setVisible(false);
-                recpno=recpno+1;
+                recpno = recpno + 1;
                 String showInBox = "Transaction Saved!";
                 if (buttonText.equals("Update")) {
                     showInBox = "Transaction Updated !";
+                }
+                if (recpno <= 0) {
+                    recpno = (recpno + 1);
                 }
                 jTextField1.setText(Integer.toString(recpno));
                 JFrame f = new JFrame();
@@ -1049,7 +1071,7 @@ public class ReceiptScreen extends javax.swing.JFrame {
 
     private void txtPartyNameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPartyNameFocusGained
         txtPartyName.setBackground(new Color(245, 230, 66));
-        selectedrow=0;        // TODO add your handling code here:
+        selectedrow = 0;        // TODO add your handling code here:
     }//GEN-LAST:event_txtPartyNameFocusGained
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
@@ -1088,19 +1110,19 @@ public class ReceiptScreen extends javax.swing.JFrame {
         if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
             String name = txtPartyName.getText();
             double dueAmount = 0.0;
-        try {
-            Connection c = DBConnect.connect();
-            Statement s = c.createStatement();
-            ResultSet rs = s.executeQuery("SELECT dueamt FROM account WHERE accountname = '" + name + "';");
-            if (rs.next()) {
-                dueAmount = rs.getDouble("dueamt");
+            try {
+                Connection c = DBConnect.connect();
+                Statement s = c.createStatement();
+                ResultSet rs = s.executeQuery("SELECT dueamt FROM account WHERE accountname = '" + name + "';");
+                if (rs.next()) {
+                    dueAmount = rs.getDouble("dueamt");
+                }
+                c.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-            c.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        jTextField3.setText(String.valueOf(dueAmount));
-           
+            jTextField3.setText(String.valueOf(dueAmount));
+
         }
     }//GEN-LAST:event_txtPartyNameKeyPressed
 

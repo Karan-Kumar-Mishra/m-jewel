@@ -957,10 +957,14 @@ public class LeisureTable extends javax.swing.JFrame {
                     r.close();
                     stmtt.close();
                     stmttt.close();
-                    //  JOptionPane.showMessageDialog(this, "money1 money2 " + money1 + " " + money2);
+                
                     if (partyName.equals("Cash")) {
+                        
+                       //    
+                       int finalamount= ((int)netamount - (int)money1 - (int)money2 );
+                         JOptionPane.showMessageDialog(this, "final amount=> "+finalamount);
                         tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
-                                remark + ", " + (money1), "Sale s2");
+                                remark + ", " + (finalamount), "Sale s2 ch");
 
                         initialTableData.add(tableObj);
                     }
@@ -973,8 +977,12 @@ public class LeisureTable extends javax.swing.JFrame {
                                     1, remark + "," + netamount, "Sale s3");
                             initialTableData.add(tableObj1);
                         } else {
-                            tableObject tableObj1 = new tableObject(date, partyName, 0.0,
-                                    Double.parseDouble(df.format((int) netamount - money1 - money2 - exchangeAmt)),
+                            int finalamount= ((int)netamount - (int)money1 - (int)money2 - (int)exchangeAmt);
+                            if(finalamount<0)
+                            {
+                                finalamount=0;
+                            }
+                            tableObject tableObj1 = new tableObject(date, partyName, 0.0,finalamount,
                                     1, remark + "," + netamount, "Sale s3");
                             initialTableData.add(tableObj1);
                         }
@@ -1010,6 +1018,14 @@ public class LeisureTable extends javax.swing.JFrame {
                                         remark + ", " + (money1), "Sale");
                                 initialTableData.add(tableObj);
                             }
+                            else
+                            {
+                                double finalamount=money1+money2;
+                                tableObject tableObj = new tableObject(date, partyName, 0.0, 0, 1,
+                                        remark + ", " +finalamount, "Sale s9");
+                                initialTableData.add(tableObj); 
+                            }
+                            
 
                             if (money1 != 0 && money2 != 0) {
                                 int finalamount = (int) (netamount - money1 - money2 - exchangeAmt);
@@ -1019,7 +1035,7 @@ public class LeisureTable extends javax.swing.JFrame {
                                 tableObject tableObj1 = new tableObject(date, partyName, 0.0,
                                         Double.parseDouble(df.format(finalamount)),
                                         1, remark + "," + netamount, "Sale s4");
-                                initialTableData.add(tableObj1);
+                               // initialTableData.add(tableObj1);
                             }
 
                         } else {
