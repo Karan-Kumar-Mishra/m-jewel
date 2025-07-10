@@ -933,7 +933,10 @@ public class ReceiptScreen extends javax.swing.JFrame {
                 while (rs.next()) {
                     lastRec = rs.getInt("max(Receiptno)");
                 }
-
+                if(lastRec<=0)
+                {
+//                    lastRec=1;
+                }
                 if (transactionType.equals("Update")) {
                     s.executeUpdate("update receipt set Name = '" + name + "', date = '" + date + "', discount = " + dis
                             + ", amtpaid = " + String.format("%.2f", amtpaid) + ", remarks = '" + remarks + "', mop = '" + mop + "' "

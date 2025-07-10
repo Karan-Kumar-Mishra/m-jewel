@@ -669,7 +669,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                sc.setVisible(true);
+                //   sc.setVisible(true);
                 sc.closebtn.setVisible(false);
             } else if (type.equals("Payment")) {
                 String value = m.getValueAt(row, 3).toString();
@@ -682,7 +682,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 }
                 int selectedReceiptNumber = Integer.parseInt(value.substring(9, end));
                 PaymentScreen paymentScreen = new PaymentScreen();
-                paymentScreen.setVisible(true);
+                //    paymentScreen.setVisible(true);
                 paymentScreen.paymentHistoryRedirectFill(selectedReceiptNumber);
             } else if (type.trim().equalsIgnoreCase("withdraw") || type.trim().equalsIgnoreCase("deposit")) {
                 String value = m.getValueAt(row, 3).toString();
@@ -700,7 +700,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 } catch (Exception ex) {
                     Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                bg.setVisible(true);
+                //     bg.setVisible(true);
                 bg.fillByRedirect(selectedReceiptNumber);
 
             } else if (type.trim().equals("Purchase")) {
@@ -709,7 +709,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 // JOptionPane.showMessageDialog(this,recp);
                 PurchaseScreen sc = new PurchaseScreen();
                 sc.sale_Bill(Integer.parseInt(recp));
-                sc.setVisible(true);
+                //  sc.setVisible(true);
 
                 // nothing write
             } else { // receipt
@@ -728,7 +728,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 } catch (Exception ex) {
                     Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                rc.setVisible(true);
+                //   rc.setVisible(true);
                 rc.fillByRedirect(selectedReceiptNumber);
             }
         }
@@ -957,16 +957,34 @@ public class LeisureTable extends javax.swing.JFrame {
                     r.close();
                     stmtt.close();
                     stmttt.close();
-                
-                    if (partyName.equals("Cash")) {
-                        
-                       //    
-                       int finalamount= ((int)netamount - (int)money1 - (int)money2 );
-                         JOptionPane.showMessageDialog(this, "final amount=> "+finalamount);
-                        tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
-                                remark + ", " + (finalamount), "Sale s2 ch");
 
-                        initialTableData.add(tableObj);
+                    if (partyName.equals("Cash")) {
+
+                        double finalamount = 0;
+                        try {
+                            // Properly concatenate the partyName variable in the query
+                            List<Object> db = DBController.executeQuery("SELECT SUM(netamount) FROM sales WHERE bill='" + billno + "'");
+
+                            if (db != null && !db.isEmpty() && db.get(0) != null) {
+                                // Handle potential decimal values by parsing to double first
+                                double amount = Double.parseDouble(db.get(0).toString());
+                                finalamount = amount;
+
+                                //  JOptionPane.showMessageDialog(this, "Final amount: " + finalamount);
+                            } else {
+                                JOptionPane.showMessageDialog(this, "No records found for party: " + partyName);
+                            }
+
+                            tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
+                                    remark + ", " + finalamount, "Sale s2 ch");
+                            initialTableData.add(tableObj);
+
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(this, "Error parsing amount: " + e.getMessage());
+                        } catch (Exception e) {
+                            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+                        }
+
                     }
 
                     if (money1 != 0 && money2 != 0) {
@@ -977,12 +995,11 @@ public class LeisureTable extends javax.swing.JFrame {
                                     1, remark + "," + netamount, "Sale s3");
                             initialTableData.add(tableObj1);
                         } else {
-                            int finalamount= ((int)netamount - (int)money1 - (int)money2 - (int)exchangeAmt);
-                            if(finalamount<0)
-                            {
-                                finalamount=0;
+                            int finalamount = ((int) netamount - (int) money1 - (int) money2 - (int) exchangeAmt);
+                            if (finalamount < 0) {
+                                finalamount = 0;
                             }
-                            tableObject tableObj1 = new tableObject(date, partyName, 0.0,finalamount,
+                            tableObject tableObj1 = new tableObject(date, partyName, 0.0, finalamount,
                                     1, remark + "," + netamount, "Sale s3");
                             initialTableData.add(tableObj1);
                         }
@@ -1017,15 +1034,37 @@ public class LeisureTable extends javax.swing.JFrame {
                                 tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
                                         remark + ", " + (money1), "Sale");
                                 initialTableData.add(tableObj);
+                            } else {
+
+                                try {
+
+                                    double finaldbamount = 0;
+
+                                    // Properly concatenate the partyName variable in the query
+                                    List<Object> db = DBController.executeQuery("SELECT SUM(netamount) FROM sales WHERE bill='" + billno + "'");
+
+                                    if (db != null && !db.isEmpty() && db.get(0) != null) {
+                                        // Handle potential decimal values by parsing to double first
+                                        double amount = Double.parseDouble(db.get(0).toString());
+                                        finaldbamount = amount;
+
+                                        //  JOptionPane.showMessageDialog(this, "Final amount: " + finalamount);
+                                    } else {
+                                        JOptionPane.showMessageDialog(this, "No records found for party: " + partyName);
+                                    }
+
+                                    double finalamount = money1 + money2;
+                                    tableObject tableObj = new tableObject(date, partyName, 0.0, 0, 1,
+                                            remark + ", " + finaldbamount, "Sale s9");
+                                    initialTableData.add(tableObj);
+
+                                } catch (NumberFormatException e) {
+                                    JOptionPane.showMessageDialog(this, "Error parsing amount: " + e.getMessage());
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+                                }
+
                             }
-                            else
-                            {
-                                double finalamount=money1+money2;
-                                tableObject tableObj = new tableObject(date, partyName, 0.0, 0, 1,
-                                        remark + ", " +finalamount, "Sale s9");
-                                initialTableData.add(tableObj); 
-                            }
-                            
 
                             if (money1 != 0 && money2 != 0) {
                                 int finalamount = (int) (netamount - money1 - money2 - exchangeAmt);
@@ -1035,7 +1074,7 @@ public class LeisureTable extends javax.swing.JFrame {
                                 tableObject tableObj1 = new tableObject(date, partyName, 0.0,
                                         Double.parseDouble(df.format(finalamount)),
                                         1, remark + "," + netamount, "Sale s4");
-                               // initialTableData.add(tableObj1);
+                                // initialTableData.add(tableObj1);
                             }
 
                         } else {
