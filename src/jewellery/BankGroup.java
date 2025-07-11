@@ -175,7 +175,7 @@ public class BankGroup extends javax.swing.JFrame {
                 String amt = re.getString("amt");
                 String remark = re.getString("remarks");
                 String type = re.getString("type");
-                String id=re.getString("rno");
+                String id = re.getString("rno");
                 String drAmt = null, crAmt = null;
 
                 if (type.equals("deposit")) {
@@ -188,7 +188,7 @@ public class BankGroup extends javax.swing.JFrame {
                     totalcr += Double.parseDouble(amt);
                     System.out.println("cr" + totalcr);
                 }
-                String[] data = {date, name, Bank, drAmt, crAmt, remark,id};
+                String[] data = {date, name, Bank, drAmt, crAmt, remark, id};
                 model.addRow(data);
                 totaldebitfield.setText("");
                 totalcreditfield.setText("");
@@ -227,10 +227,17 @@ public class BankGroup extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(BankGroup.class.getName()).log(Level.SEVERE, null, ex);
         }
+        JOptionPane.showMessageDialog(this, "Type is => " + entry.getSelectedItem());
+        entry.getSelectedItem();
         if (!jButton3.getText().trim().equalsIgnoreCase("Update")) {
             if (entry.getSelectedIndex() == 1) {
                 try {
-                    query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`) VALUES ('" + txtPartyName.getText() + "','" + v.get(jComboBox1.getSelectedIndex()) + "', '" + dateFormat.format(date.getDate()) + "', '" + jTextField1.getText() + "', '" + jTextField2.getText() + "', 'deposit');";
+                    String type = "deposit";
+                    if (entry.getSelectedItem() == "Online Transfer") {
+                        type = "Online Transfer";
+                    }
+
+                    query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`) VALUES ('" + txtPartyName.getText() + "','" + v.get(jComboBox1.getSelectedIndex()) + "', '" + dateFormat.format(date.getDate()) + "', '" + jTextField1.getText() + "', '" + jTextField2.getText() + "', '+type+');";
                     s.executeUpdate(query);
                 } catch (SQLException ex) {
                     Logger.getLogger(BankGroup.class.getName()).log(Level.SEVERE, null, ex);
@@ -264,7 +271,11 @@ public class BankGroup extends javax.swing.JFrame {
                 }
 //            if(amt >Double.parseDouble(jTextField1.getText())){
                 try {
-                    query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`) VALUES ( '" + txtPartyName.getText() + "','" + v.get(jComboBox1.getSelectedIndex()) + "', '" + dateFormat.format(date.getDate()) + "', '" + jTextField1.getText() + "', '', 'withdraw');";
+                     String type = "deposit";
+                    if (entry.getSelectedItem() == "Online Transfer") {
+                        type = "Online Transfer";
+                    }
+                    query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`) VALUES ( '" + txtPartyName.getText() + "','" + v.get(jComboBox1.getSelectedIndex()) + "', '" + dateFormat.format(date.getDate()) + "', '" + jTextField1.getText() + "', '', '+type+');";
                     s.executeUpdate(query);
                 } catch (SQLException ex) {
                     Logger.getLogger(BankGroup.class.getName()).log(Level.SEVERE, null, ex);
@@ -281,11 +292,12 @@ public class BankGroup extends javax.swing.JFrame {
                 }
                 JOptionPane.showMessageDialog(this, "Transaction Successful", "Message", HEIGHT);
                 ClearAllData();
-              
+
             }
         } else {
             if (entry.getSelectedIndex() == 1) {
                 try {
+
                     query = "update bankledger set name='" + txtPartyName.getText().trim() + "', bankname='" + v.get(jComboBox1.getSelectedIndex()) + "', date='" + dateFormat.format(date.getDate()) + "', amt= '" + jTextField1.getText() + "', remarks='" + jTextField2.getText() + "', type='deposit' where rno=" + this.recp.trim() + "";
                     s.executeUpdate(query);
                 } catch (SQLException ex) {
@@ -312,7 +324,7 @@ public class BankGroup extends javax.swing.JFrame {
 
             }
         }
-          FatchTableData();
+        FatchTableData();
         this.recp = "-2";
         jButton3.setText("Save");
 
@@ -441,7 +453,7 @@ public class BankGroup extends javax.swing.JFrame {
         });
 
         jLabel5.setForeground(new java.awt.Color(238, 188, 81));
-        jLabel5.setText("Account Name");
+        jLabel5.setText("Account Name(From)");
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton2.setText("+");
@@ -581,7 +593,7 @@ public class BankGroup extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText("Bank :");
+        jLabel4.setText("Bank(To) :");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Entry :");
@@ -683,19 +695,19 @@ public class BankGroup extends javax.swing.JFrame {
     }//GEN-LAST:event_closebuttonActionPerformed
 
     private void tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableMouseClicked
-DefaultTableModel model2 = (DefaultTableModel) table.getModel();
-if(jButton3.getText().trim().equalsIgnoreCase("Save")){
-        int selectedrow = table.getSelectedRow();
-        String recp = model2.getValueAt(selectedrow, 6).toString();
-                BankGroup bg = null;
-                try {
-                    bg = new BankGroup();
-                } catch (Exception ex) {
-                    Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                bg.setVisible(true);
-                bg.fillByRedirect(recp);
-}
+        DefaultTableModel model2 = (DefaultTableModel) table.getModel();
+        if (jButton3.getText().trim().equalsIgnoreCase("Save")) {
+            int selectedrow = table.getSelectedRow();
+            String recp = model2.getValueAt(selectedrow, 6).toString();
+            BankGroup bg = null;
+            try {
+                bg = new BankGroup();
+            } catch (Exception ex) {
+                Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            bg.setVisible(true);
+            bg.fillByRedirect(recp);
+        }
 
     }//GEN-LAST:event_tableMouseClicked
 
@@ -892,8 +904,7 @@ if(jButton3.getText().trim().equalsIgnoreCase("Save")){
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new BankGroup().setVisible(true);
-               
-                
+
             }
         });
     }

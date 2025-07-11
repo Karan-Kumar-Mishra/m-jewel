@@ -1190,13 +1190,14 @@ public class LeisureTable extends javax.swing.JFrame {
                 String remark = "Rcpt. No." + String.valueOf(rs1.getInt("rno")) + ", ";
                 int salesbill = rs1.getInt("sales_Bill");
                 String type = rs1.getString("type");
+                String bankname=rs1.getString("bankname");
                 tableObject tableObj;
                 if (salesbill == -1) {
                     if ("withdraw".equals(type)) {
-                        tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "withdraw");
+                        tableObj = new tableObject(date, bankname, amount, 0.0, 1, remark, "Deposit w1");
                         initialTableData.add(tableObj);
                     } else {
-                        tableObj = new tableObject(date, name, amount, 0.0, 0, remark, "deposit");
+                        tableObj = new tableObject(date, bankname, 0.0,amount, 0, remark, "withdraw d1");
                         initialTableData.add(tableObj);
                     }
                 }
@@ -1214,6 +1215,8 @@ public class LeisureTable extends javax.swing.JFrame {
                 String remark = "Rcpt. No." + String.valueOf(rs1.getInt("rno")) + ", ";
                 int salesbill = rs1.getInt("sales_Bill");
                 String type = rs1.getString("type");
+                 String name2 = rs1.getString("name");
+                
                 tableObject tableObj;
                 if (salesbill > -1) {
                     remark = "Bill No. " + String.valueOf(salesbill);
@@ -1229,10 +1232,10 @@ public class LeisureTable extends javax.swing.JFrame {
                     }
                 } else {
                     if ("withdraw".equals(type)) {
-                        tableObj = new tableObject(date, name, amount, 0.0, 0, remark, "Deposit");
+                        tableObj = new tableObject(date, "Cash", 0.0, amount, 0, remark, "Deposit d2");
 
                     } else {
-                        tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "withdraw");
+                        tableObj = new tableObject(date, name2,  amount, 0.0, 1, remark, "withdraw w2");
                     }
                 }
                 initialTableData.add(tableObj);

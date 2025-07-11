@@ -833,6 +833,7 @@ public class PaymentScreen extends javax.swing.JFrame {
             }
             c.close();
             s.close();
+              JOptionPane.showMessageDialog(this, "try to getting the due amount=> "+currentDueAmount);
             return currentDueAmount;
         } catch (SQLException e) {
             Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, e);
@@ -859,8 +860,8 @@ public class PaymentScreen extends javax.swing.JFrame {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(jDateChooser1.getDate());
 
-            double ttlAmount = dueamt - amtpaid;
-
+            double ttlAmount = Math.abs(dueamt) - Math.abs(amtpaid);
+  JOptionPane.showMessageDialog(this, "dueamt=> "+dueamt+" amtpaid=> "+amtpaid);
 //        if (ttlAmount < 0.0) {
 //            JFrame f = new JFrame();
 //            JOptionPane.showMessageDialog(f,"Amount Exceeded!! \n Please enter Amount less than Due Amount.");
@@ -880,7 +881,8 @@ public class PaymentScreen extends javax.swing.JFrame {
             try {
                 Connection c1 = DBConnect.connect();
                 Statement s1 = c1.createStatement();
-
+                ttlAmount=Math.abs(ttlAmount);
+                
                 String q = "update account set dueamt = '" + String.format("%.2f", ttlAmount) + "' WHERE accountname = '" + name + "';";
                 result = s1.executeUpdate(q);
 
@@ -919,7 +921,7 @@ public class PaymentScreen extends javax.swing.JFrame {
         jDateChooser1.setDate(date);
         PAYMENTMODE.setSelectedItem(mop);
 
-        double dueamt = getDueAmountByName(partyname);
+        double dueamt = Math.abs(getDueAmountByName(partyname));
         txtdueamt.setText(String.valueOf(dueamt));
     }
 
@@ -1250,7 +1252,7 @@ public class PaymentScreen extends javax.swing.JFrame {
                 e.printStackTrace();
             }
             txtdueamt.setText(String.valueOf(dueAmount));
-
+            JOptionPane.showMessageDialog(this, "due amount is => "+dueAmount);
         }
     }//GEN-LAST:event_txtPartyNameKeyPressed
 

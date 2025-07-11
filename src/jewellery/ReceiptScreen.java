@@ -914,8 +914,10 @@ public class ReceiptScreen extends javax.swing.JFrame {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(jDateChooser1.getDate());
-
+              JOptionPane.showMessageDialog(this, "dueamt=> "+dueamt+" amtpaid=> "+amtpaid);
             double ttlAmount = dueamt - amtpaid;
+            
+            
             String transactionType = "Save";
             if (savebtn.getText().equals("Update")) {
                 transactionType = "Update";
