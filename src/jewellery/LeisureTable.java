@@ -1190,14 +1190,22 @@ public class LeisureTable extends javax.swing.JFrame {
                 String remark = "Rcpt. No." + String.valueOf(rs1.getInt("rno")) + ", ";
                 int salesbill = rs1.getInt("sales_Bill");
                 String type = rs1.getString("type");
-                String bankname=rs1.getString("bankname");
+                String bankname = rs1.getString("bankname");
                 tableObject tableObj;
                 if (salesbill == -1) {
                     if ("withdraw".equals(type)) {
-                        tableObj = new tableObject(date, bankname, amount, 0.0, 1, remark, "Deposit w1");
+                        String Type = "Deposit w1";
+                        if (type.equalsIgnoreCase("Online Transfer")) {
+                            Type = "Online Transfer";
+                        }
+                        tableObj = new tableObject(date, bankname, amount, 0.0, 1, remark, Type);
                         initialTableData.add(tableObj);
                     } else {
-                        tableObj = new tableObject(date, bankname, 0.0,amount, 0, remark, "withdraw d1");
+                        String Type = "withdraw d1";
+                        if (type.equalsIgnoreCase("Online Transfer")) {
+                            Type = "Online Transfer";
+                        }
+                        tableObj = new tableObject(date, bankname, 0.0, amount, 0, remark, Type);
                         initialTableData.add(tableObj);
                     }
                 }
@@ -1215,8 +1223,8 @@ public class LeisureTable extends javax.swing.JFrame {
                 String remark = "Rcpt. No." + String.valueOf(rs1.getInt("rno")) + ", ";
                 int salesbill = rs1.getInt("sales_Bill");
                 String type = rs1.getString("type");
-                 String name2 = rs1.getString("name");
-                
+                String name2 = rs1.getString("name");
+
                 tableObject tableObj;
                 if (salesbill > -1) {
                     remark = "Bill No. " + String.valueOf(salesbill);
@@ -1232,10 +1240,18 @@ public class LeisureTable extends javax.swing.JFrame {
                     }
                 } else {
                     if ("withdraw".equals(type)) {
-                        tableObj = new tableObject(date, "Cash", 0.0, amount, 0, remark, "Deposit d2");
+                        String Type = "Deposit d2";
+                        if (type.equalsIgnoreCase("Online Transfer")) {
+                            Type = "Online Transfer";
+                        }
+                        tableObj = new tableObject(date, "Cash", 0.0, amount, 0, remark, Type);
 
                     } else {
-                        tableObj = new tableObject(date, name2,  amount, 0.0, 1, remark, "withdraw w2");
+                        String Type = "withdraw w2";
+                        if (type.equalsIgnoreCase("Online Transfer")) {
+                            Type = "Online Transfer";
+                        }
+                        tableObj = new tableObject(date, name2, amount, 0.0, 1, remark, Type);
                     }
                 }
                 initialTableData.add(tableObj);

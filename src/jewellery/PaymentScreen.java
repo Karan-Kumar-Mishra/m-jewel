@@ -860,7 +860,7 @@ public class PaymentScreen extends javax.swing.JFrame {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(jDateChooser1.getDate());
 
-            double ttlAmount = Math.abs(dueamt) - Math.abs(amtpaid);
+            double ttlAmount = dueamt - amtpaid;
   JOptionPane.showMessageDialog(this, "dueamt=> "+dueamt+" amtpaid=> "+amtpaid);
 //        if (ttlAmount < 0.0) {
 //            JFrame f = new JFrame();
@@ -881,7 +881,7 @@ public class PaymentScreen extends javax.swing.JFrame {
             try {
                 Connection c1 = DBConnect.connect();
                 Statement s1 = c1.createStatement();
-                ttlAmount=Math.abs(ttlAmount);
+                ttlAmount=ttlAmount;
                 
                 String q = "update account set dueamt = '" + String.format("%.2f", ttlAmount) + "' WHERE accountname = '" + name + "';";
                 result = s1.executeUpdate(q);
@@ -921,7 +921,7 @@ public class PaymentScreen extends javax.swing.JFrame {
         jDateChooser1.setDate(date);
         PAYMENTMODE.setSelectedItem(mop);
 
-        double dueamt = Math.abs(getDueAmountByName(partyname));
+        double dueamt = getDueAmountByName(partyname);
         txtdueamt.setText(String.valueOf(dueamt));
     }
 
@@ -989,7 +989,7 @@ public class PaymentScreen extends javax.swing.JFrame {
                 currentDueAmount = rs.getDouble("dueamt");
             }
 
-            double newDueAmount = currentDueAmount + previousReceiptAmount - amount;
+            double newDueAmount =  currentDueAmount + previousReceiptAmount - amount;
             st.clearBatch();
             String dueAmountUpdateQuery = "update account set dueamt = " + newDueAmount + " where accountname = '" + partyname + "';";
             st.executeUpdate(dueAmountUpdateQuery);

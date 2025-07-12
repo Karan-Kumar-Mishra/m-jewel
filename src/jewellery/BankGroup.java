@@ -237,7 +237,7 @@ public class BankGroup extends javax.swing.JFrame {
                         type = "Online Transfer";
                     }
 
-                    query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`) VALUES ('" + txtPartyName.getText() + "','" + v.get(jComboBox1.getSelectedIndex()) + "', '" + dateFormat.format(date.getDate()) + "', '" + jTextField1.getText() + "', '" + jTextField2.getText() + "', '+type+');";
+                    query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`) VALUES ('" + txtPartyName.getText() + "','" + v.get(jComboBox1.getSelectedIndex()) + "', '" + dateFormat.format(date.getDate()) + "', '" + jTextField1.getText() + "', '" + jTextField2.getText() + "', '" + type + "');";
                     s.executeUpdate(query);
                 } catch (SQLException ex) {
                     Logger.getLogger(BankGroup.class.getName()).log(Level.SEVERE, null, ex);
@@ -271,11 +271,11 @@ public class BankGroup extends javax.swing.JFrame {
                 }
 //            if(amt >Double.parseDouble(jTextField1.getText())){
                 try {
-                     String type = "deposit";
+                    String type = "deposit";
                     if (entry.getSelectedItem() == "Online Transfer") {
                         type = "Online Transfer";
                     }
-                    query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`) VALUES ( '" + txtPartyName.getText() + "','" + v.get(jComboBox1.getSelectedIndex()) + "', '" + dateFormat.format(date.getDate()) + "', '" + jTextField1.getText() + "', '', '+type+');";
+                    query = "INSERT INTO `bankledger` ( `name`, `bankname`, `date`, `amt`, `remarks`, `type`) VALUES ( '" + txtPartyName.getText() + "','" + v.get(jComboBox1.getSelectedIndex()) + "', '" + dateFormat.format(date.getDate()) + "', '" + jTextField1.getText() + "', '', '" + type + "');";
                     s.executeUpdate(query);
                 } catch (SQLException ex) {
                     Logger.getLogger(BankGroup.class.getName()).log(Level.SEVERE, null, ex);
@@ -297,8 +297,11 @@ public class BankGroup extends javax.swing.JFrame {
         } else {
             if (entry.getSelectedIndex() == 1) {
                 try {
-
-                    query = "update bankledger set name='" + txtPartyName.getText().trim() + "', bankname='" + v.get(jComboBox1.getSelectedIndex()) + "', date='" + dateFormat.format(date.getDate()) + "', amt= '" + jTextField1.getText() + "', remarks='" + jTextField2.getText() + "', type='deposit' where rno=" + this.recp.trim() + "";
+                    String type = "deposit";
+                    if (entry.getSelectedItem() == "Online Transfer") {
+                        type = "Online Transfer";
+                    }
+                    query = "update bankledger set name='" + txtPartyName.getText().trim() + "', bankname='" + v.get(jComboBox1.getSelectedIndex()) + "', date='" + dateFormat.format(date.getDate()) + "', amt= '" + jTextField1.getText() + "', remarks='" + jTextField2.getText() + "', type='" + type + "' where rno=" + this.recp.trim() + "";
                     s.executeUpdate(query);
                 } catch (SQLException ex) {
                     Logger.getLogger(BankGroup.class.getName()).log(Level.SEVERE, null, ex);
@@ -313,7 +316,11 @@ public class BankGroup extends javax.swing.JFrame {
 
 //            if(amt >Double.parseDouble(jTextField1.getText())){
                 try {
-                    query = "update bankledger set name='" + txtPartyName.getText().trim() + "', bankname='" + v.get(jComboBox1.getSelectedIndex()) + "', date='" + dateFormat.format(date.getDate()) + "', amt= '" + jTextField1.getText() + "', remarks='" + jTextField2.getText() + "',type='withdraw' where rno=" + this.recp.trim() + "";
+                    String type = "withdraw";
+                    if (entry.getSelectedItem() == "Online Transfer") {
+                        type = "Online Transfer";
+                    }
+                    query = "update bankledger set name='" + txtPartyName.getText().trim() + "', bankname='" + v.get(jComboBox1.getSelectedIndex()) + "', date='" + dateFormat.format(date.getDate()) + "', amt= '" + jTextField1.getText() + "', remarks='" + jTextField2.getText() + "',type='" + type + "' where rno=" + this.recp.trim() + "";
                     s.executeUpdate(query);
                 } catch (SQLException ex) {
                     Logger.getLogger(BankGroup.class.getName()).log(Level.SEVERE, null, ex);
@@ -831,7 +838,7 @@ public class BankGroup extends javax.swing.JFrame {
 
     private void entryFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_entryFocusGained
         // TODO add your handling code here:
-        jComboBox1.showPopup();
+       // jComboBox1.showPopup();
     }//GEN-LAST:event_entryFocusGained
 
     private void jButton3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton3KeyPressed
