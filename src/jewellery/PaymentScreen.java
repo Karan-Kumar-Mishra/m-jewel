@@ -680,8 +680,10 @@ public class PaymentScreen extends javax.swing.JFrame {
                 suggestionsTable.addRow(new Object[]{
                     (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
                     (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                    (suggestion.get(2) == null) ? "NULL" : outstandingAnalysisHelper.fillTableInDateGivenParty(String.valueOf(suggestion.get(0))),});
-            } catch (ParseException ex) {
+                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2)});
+
+            } 
+            catch (Exception ex) {
                 Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
         });

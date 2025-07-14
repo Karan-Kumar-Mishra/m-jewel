@@ -227,7 +227,7 @@ public class BankGroup extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(BankGroup.class.getName()).log(Level.SEVERE, null, ex);
         }
-        JOptionPane.showMessageDialog(this, "Type is => " + entry.getSelectedItem());
+           JOptionPane.showMessageDialog(this, "Type is => " + entry.getSelectedItem());
         entry.getSelectedItem();
         if (!jButton3.getText().trim().equalsIgnoreCase("Update")) {
             if (entry.getSelectedIndex() == 1) {
@@ -271,7 +271,7 @@ public class BankGroup extends javax.swing.JFrame {
                 }
 //            if(amt >Double.parseDouble(jTextField1.getText())){
                 try {
-                    String type = "deposit";
+                    String type = "withdraw";
                     if (entry.getSelectedItem() == "Online Transfer") {
                         type = "Online Transfer";
                     }
@@ -460,7 +460,7 @@ public class BankGroup extends javax.swing.JFrame {
         });
 
         jLabel5.setForeground(new java.awt.Color(238, 188, 81));
-        jLabel5.setText("Account Name(From)");
+        jLabel5.setText("Account Name(To)");
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton2.setText("+");
@@ -600,7 +600,7 @@ public class BankGroup extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel4.setText("Bank(To) :");
+        jLabel4.setText("Bank(From) :");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Entry :");
@@ -838,7 +838,7 @@ public class BankGroup extends javax.swing.JFrame {
 
     private void entryFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_entryFocusGained
         // TODO add your handling code here:
-       // jComboBox1.showPopup();
+        // jComboBox1.showPopup();
     }//GEN-LAST:event_entryFocusGained
 
     private void jButton3KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton3KeyPressed
