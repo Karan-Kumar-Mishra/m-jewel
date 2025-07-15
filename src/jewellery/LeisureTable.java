@@ -669,7 +669,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //   sc.setVisible(true);
+                // sc.setVisible(true);
                 sc.closebtn.setVisible(false);
             } else if (type.equals("Payment")) {
                 String value = m.getValueAt(row, 3).toString();
@@ -682,7 +682,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 }
                 int selectedReceiptNumber = Integer.parseInt(value.substring(9, end));
                 PaymentScreen paymentScreen = new PaymentScreen();
-                //    paymentScreen.setVisible(true);
+                // paymentScreen.setVisible(true);
                 paymentScreen.paymentHistoryRedirectFill(selectedReceiptNumber);
             } else if (type.trim().equalsIgnoreCase("withdraw") || type.trim().equalsIgnoreCase("deposit")) {
                 String value = m.getValueAt(row, 3).toString();
@@ -700,7 +700,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 } catch (Exception ex) {
                     Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //     bg.setVisible(true);
+                // bg.setVisible(true);
                 bg.fillByRedirect(selectedReceiptNumber);
 
             } else if (type.trim().equals("Purchase")) {
@@ -709,7 +709,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 // JOptionPane.showMessageDialog(this,recp);
                 PurchaseScreen sc = new PurchaseScreen();
                 sc.sale_Bill(Integer.parseInt(recp));
-                //  sc.setVisible(true);
+                // sc.setVisible(true);
 
                 // nothing write
             } else { // receipt
@@ -728,7 +728,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 } catch (Exception ex) {
                     Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                //   rc.setVisible(true);
+                // rc.setVisible(true);
                 rc.fillByRedirect(selectedReceiptNumber);
             }
         }
@@ -862,7 +862,7 @@ public class LeisureTable extends javax.swing.JFrame {
 
         start = formatter.parse(formatter.format(start));
         to = formatter.parse(formatter.format(to));
-        //  JOptionPane.showMessageDialog(this, "top party= "+party);
+        // JOptionPane.showMessageDialog(this, "top party= "+party);
 
         try {
 
@@ -920,7 +920,7 @@ public class LeisureTable extends javax.swing.JFrame {
                 String remark = "Bill No." + billno;
 
                 if (party.equals("Cash")) {
-                    //   JOptionPane.showMessageDialog(this, "if block");
+                    // JOptionPane.showMessageDialog(this, "if block");
                     Statement stmtt = con.createStatement();
                     Statement stmttt = con.createStatement();
                     ResultSet r = stmtt.executeQuery("select sales_Bill from receipt where sales_Bill=" + billno + "");
@@ -963,14 +963,15 @@ public class LeisureTable extends javax.swing.JFrame {
                         double finalamount = 0;
                         try {
                             // Properly concatenate the partyName variable in the query
-                            List<Object> db = DBController.executeQuery("SELECT SUM(netamount) FROM sales WHERE bill='" + billno + "'");
+                            List<Object> db = DBController
+                                    .executeQuery("SELECT SUM(netamount) FROM sales WHERE bill='" + billno + "'");
 
                             if (db != null && !db.isEmpty() && db.get(0) != null) {
                                 // Handle potential decimal values by parsing to double first
                                 double amount = Double.parseDouble(db.get(0).toString());
                                 finalamount = amount;
 
-                                //  JOptionPane.showMessageDialog(this, "Final amount: " + finalamount);
+                                // JOptionPane.showMessageDialog(this, "Final amount: " + finalamount);
                             } else {
                                 JOptionPane.showMessageDialog(this, "No records found for party: " + partyName);
                             }
@@ -1029,7 +1030,8 @@ public class LeisureTable extends javax.swing.JFrame {
                             r.close();
                             stmtt.close();
                             stmttt.close();
-                            //    JOptionPane.showMessageDialog(this, "money1 money2 " + money1 + " " + money2);
+                            // JOptionPane.showMessageDialog(this, "money1 money2 " + money1 + " " +
+                            // money2);
                             if (getGroupName(party).equals("Bank")) {
                                 tableObject tableObj = new tableObject(date, partyName, 0.0, money1, 1,
                                         remark + ", " + (money1), "Sale");
@@ -1041,14 +1043,15 @@ public class LeisureTable extends javax.swing.JFrame {
                                     double finaldbamount = 0;
 
                                     // Properly concatenate the partyName variable in the query
-                                    List<Object> db = DBController.executeQuery("SELECT SUM(netamount) FROM sales WHERE bill='" + billno + "'");
+                                    List<Object> db = DBController.executeQuery(
+                                            "SELECT SUM(netamount) FROM sales WHERE bill='" + billno + "'");
 
                                     if (db != null && !db.isEmpty() && db.get(0) != null) {
                                         // Handle potential decimal values by parsing to double first
                                         double amount = Double.parseDouble(db.get(0).toString());
                                         finaldbamount = amount;
 
-                                        //  JOptionPane.showMessageDialog(this, "Final amount: " + finalamount);
+                                        // JOptionPane.showMessageDialog(this, "Final amount: " + finalamount);
                                     } else {
                                         JOptionPane.showMessageDialog(this, "No records found for party: " + partyName);
                                     }
@@ -1078,8 +1081,12 @@ public class LeisureTable extends javax.swing.JFrame {
                             }
 
                         } else {
+
+                            DBController.executeQueryUpdate("update  account set dueamt= " + netamount
+                                    + " where accountname='" + partyName.trim() + "';");
+
                             tableObject tableObj = new tableObject(date, partyName, 0.0,
-                                    netamount, 1, remark + "," + netamount, "Sale s5");
+                                    (int) netamount, 1, remark + "," + netamount, "Sale s5");
                             initialTableData.add(tableObj);
                         }
 
@@ -1115,20 +1122,23 @@ public class LeisureTable extends javax.swing.JFrame {
                         // remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " +
                         // rs1.getString("mop");
 
-                        List<Object> termdata = DBController.executeQuery("select terms from sales where partyname='" + name + "'");
+                        List<Object> termdata = DBController
+                                .executeQuery("select terms from sales where partyname='" + name + "'");
                         String term = termdata.get(0).toString();
-                        //JOptionPane.showMessageDialog(this, "term is=> " + term);
+                        // JOptionPane.showMessageDialog(this, "term is=> " + term);
                         if (term.equalsIgnoreCase("Cash")) {
-                            tableObject tableObj1 = new tableObject(date, name, 0, outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)), 1,
+                            tableObject tableObj1 = new tableObject(date, name, 0,
+                                    outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)), 1,
                                     remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)),
                                     "Sale s8");
-                            //  initialTableData.add(tableObj1);
+                            // initialTableData.add(tableObj1);
                         }
 
                         // tableObject tableObj = new tableObject(date, name, 0, amount, 1,
-                        //         remark + "," + outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)),
-                        //         "Sale ");
-                        //  initialTableData.add(tableObj);
+                        // remark + "," +
+                        // outstandingAnalysisHelper.GetNetAmount(String.valueOf(salesbill)),
+                        // "Sale ");
+                        // initialTableData.add(tableObj);
                     } else {
                         remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
                         if (name.equals("Cash")) {
@@ -1149,21 +1159,26 @@ public class LeisureTable extends javax.swing.JFrame {
                 } else {
 
                     if (!party.equals("Cash") && !getGroupName(party).equals("Bank")) {
+
                         remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
                         tableObject tableObj = new tableObject(date, name, amount, 0.0, 1, remark, "Receipt r4");
                         initialTableData.add(tableObj);
+
                     } else {
                         if (getGroupName(rs1.getString("mop")).equals("Bank")) {
-                            remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
+                            remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", "
+                                    + rs1.getString("mop");
                             tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Receipt r5");
-                            //initialTableData.add(tableObj);  
+                            // initialTableData.add(tableObj);
                         } else {
-                            remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
+                            remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", "
+                                    + rs1.getString("mop");
                             tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Receipt r6");
                             initialTableData.add(tableObj);
                         }
                         if (getGroupName(party).equals("Bank")) {
-                            remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
+                            remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", "
+                                    + rs1.getString("mop");
                             tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Receipt r7");
                             initialTableData.add(tableObj);
                         }
@@ -1422,6 +1437,13 @@ public class LeisureTable extends javax.swing.JFrame {
             for (int g = 0; g < jTable1.getColumnCount(); g++) {
                 jTable1.getColumnModel().getColumn(g).setCellRenderer(centerRenderer);
             }
+            JOptionPane.showMessageDialog(this, "final balance is => " + balance);
+            String partyname = txtPartyName.getText().trim();
+            if(!partyname.equalsIgnoreCase("Cash"))
+            {
+            DBController.executeQueryUpdate(
+                    "update  account set dueamt= " + balance + " where accountname='" + partyname + "';");
+            }
 
         } catch (SQLException e) {
             Logger.getLogger(LeisureTable.class.getName()).log(Level.SEVERE, null, e);
@@ -1538,8 +1560,7 @@ public class LeisureTable extends javax.swing.JFrame {
             // }
             // }
 
-
-} catch (FileNotFoundException ex) {
+        } catch (FileNotFoundException ex) {
             Logger.getLogger(LeisureTable.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
