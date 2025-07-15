@@ -2419,7 +2419,7 @@ public class SaleScreen extends javax.swing.JFrame {
 
         }
         if (cmbTerms.getSelectedItem().toString().equals("Credit")) {
-            txtreceive.setText(Long.toString(total_value));
+           // txtreceive.setText(Long.toString(total_value));
 
         }
 

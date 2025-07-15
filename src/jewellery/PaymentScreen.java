@@ -863,7 +863,7 @@ public class PaymentScreen extends javax.swing.JFrame {
             String date = sdf.format(jDateChooser1.getDate());
 
             double ttlAmount = dueamt - amtpaid;
-  JOptionPane.showMessageDialog(this, "dueamt=> "+dueamt+" amtpaid=> "+amtpaid);
+  JOptionPane.showMessageDialog(this, "dueamt=> "+dueamt+" amtpaid=> "+amtpaid +"final amount=> "+ttlAmount);
 //        if (ttlAmount < 0.0) {
 //            JFrame f = new JFrame();
 //            JOptionPane.showMessageDialog(f,"Amount Exceeded!! \n Please enter Amount less than Due Amount.");
