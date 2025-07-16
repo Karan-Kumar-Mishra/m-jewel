@@ -410,7 +410,7 @@
               <Color blue="51" green="bc" red="ee" type="rgb"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Total Amt."/>
+            <Property name="text" type="java.lang.String" value="Paid Amt."/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txttotalamt">

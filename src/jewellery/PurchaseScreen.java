@@ -1141,7 +1141,6 @@ public class PurchaseScreen extends javax.swing.JFrame {
 
         tagnoPopup.setBackground(new java.awt.Color(0, 51, 51));
         tagnoPopup.setPreferredSize(new java.awt.Dimension(200, 200));
-        tagnoPopup.setSize(new java.awt.Dimension(200, 200));
         tagnoPopup.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tagnoContainerFocusGained(evt);
@@ -1160,10 +1159,7 @@ public class PurchaseScreen extends javax.swing.JFrame {
         tagNoPopup.setBackground(new java.awt.Color(255, 204, 0));
         tagNoPopup.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, new java.awt.Color(255, 204, 0), new java.awt.Color(255, 255, 255), null, null));
         tagNoPopup.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        tagNoPopup.setFocusTraversalKeysEnabled(true);
         tagNoPopup.setPopupSize(new java.awt.Dimension(200, 200));
-        tagNoPopup.setPreferredSize(new java.awt.Dimension(200, 200));
-        tagNoPopup.setSize(new java.awt.Dimension(200, 200));
         tagNoPopup.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 tagNoPopupfocusGained(evt);
@@ -1619,6 +1615,11 @@ public class PurchaseScreen extends javax.swing.JFrame {
         jLabel25.setText("Total Amt.");
 
         txttotal.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        txttotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txttotalActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(255, 0, 0));
         jButton2.setText("Close");
@@ -2345,6 +2346,11 @@ public class PurchaseScreen extends javax.swing.JFrame {
 //                double netamount = (Double.parseDouble(currentBill.get("netamount").toString()) / netwt) * perwt;
                         data.add(currentBill.get("date"));
                         data.add(currentBill.get("cmbterms"));
+//                        if(currentBill.get("cmbterms").toString().equalsIgnoreCase("credit"))
+//                        {
+//                           JOptionPane.showMessageDialog(this, "final amount =>"+totalnetamountforitem);
+//                           totalnetamountforitem=-totalnetamountforitem; 
+//                        }
                         data.add(currentBill.get("partyname"));
                         data.add(currentBill.get("bill"));
                         data.add(currentBill.get("gst"));
@@ -2423,7 +2429,7 @@ public class PurchaseScreen extends javax.swing.JFrame {
                     netmoney += rs.getDouble("dueamt");
                 }
                 st.clearBatch();
-                st.execute("update account set dueamt = " + netmoney + " where accountname = '" + txtPartyName.getText() + "';");
+                st.execute("update account set dueamt = " + (-netmoney) + " where accountname = '" + txtPartyName.getText() + "';");
                 con.close();
                 st.close();
                 rs.close();
@@ -3648,6 +3654,10 @@ public class PurchaseScreen extends javax.swing.JFrame {
     private void tagNoPopupmouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tagNoPopupmouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_tagNoPopupmouseClicked
+
+    private void txttotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txttotalActionPerformed
 
     private void clearFields() {
         txtPartyName.setText("");

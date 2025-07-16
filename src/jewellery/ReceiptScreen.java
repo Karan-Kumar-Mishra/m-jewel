@@ -547,8 +547,8 @@ public class ReceiptScreen extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(238, 188, 81));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Amt. Paid");
-        pnlParent.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 130, 90, -1));
+        jLabel7.setText("Receipt Paid");
+        pnlParent.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 130, 120, -1));
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(238, 188, 81));

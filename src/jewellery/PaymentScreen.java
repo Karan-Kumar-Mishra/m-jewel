@@ -357,7 +357,7 @@ public class PaymentScreen extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(238, 188, 81));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Total Amt.");
+        jLabel7.setText("Paid Amt.");
 
         txttotalamt.setPreferredSize(new java.awt.Dimension(6, 30));
         txttotalamt.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -992,7 +992,7 @@ public class PaymentScreen extends javax.swing.JFrame {
 
             double newDueAmount = currentDueAmount + previousReceiptAmount - amount;
             st.clearBatch();
-            String dueAmountUpdateQuery = "update account set dueamt = " + newDueAmount + " where accountname = '" + partyname + "';";
+            String dueAmountUpdateQuery = "update account set dueamt = " + String.format("%.2f", newDueAmount) + " where accountname = '" + partyname + "';";
             st.executeUpdate(dueAmountUpdateQuery);
 
             con.close();
