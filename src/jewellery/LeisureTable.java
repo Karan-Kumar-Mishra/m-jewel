@@ -1310,6 +1310,7 @@ public class LeisureTable extends javax.swing.JFrame {
                     } else {
                         tableObject tableObj = new tableObject(date, name, 0.0, amount, 1, remark, "Payment p2 2");
                         initialTableData.add(tableObj);
+                 
                     }
 
                 }
@@ -1439,10 +1440,9 @@ public class LeisureTable extends javax.swing.JFrame {
             }
             JOptionPane.showMessageDialog(this, "final balance is => " + balance);
             String partyname = txtPartyName.getText().trim();
-            if(!partyname.equalsIgnoreCase("Cash"))
-            {
-            DBController.executeQueryUpdate(
-                    "update  account set dueamt= " + balance + " where accountname='" + partyname + "';");
+            if (!partyname.equalsIgnoreCase("Cash")) {
+                DBController.executeQueryUpdate(
+                        "update  account set dueamt= " + balance + " where accountname='" + partyname + "';");
             }
 
         } catch (SQLException e) {

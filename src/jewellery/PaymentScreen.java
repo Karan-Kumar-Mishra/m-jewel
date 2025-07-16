@@ -682,8 +682,7 @@ public class PaymentScreen extends javax.swing.JFrame {
                     (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
                     (suggestion.get(2) == null) ? "NULL" : suggestion.get(2)});
 
-            } 
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
@@ -769,10 +768,10 @@ public class PaymentScreen extends javax.swing.JFrame {
                 default:
                     EventQueue.invokeLater(() -> {
                         jPopupMenu1.setVisible(true);
-
                         populateSuggestionsTableFromDatabase(partyNameSuggestionsTableModel, "SELECT accountname, "
                                 + "state, dueamt FROM " + DatabaseCredentials.ACCOUNT_TABLE
                                 + " WHERE accountname LIKE " + "'" + txtPartyName.getText() + "%'");
+
                     });
                     break;
             }
@@ -835,7 +834,7 @@ public class PaymentScreen extends javax.swing.JFrame {
             }
             c.close();
             s.close();
-              JOptionPane.showMessageDialog(this, "try to getting the due amount=> "+currentDueAmount);
+            JOptionPane.showMessageDialog(this, "try to getting the due amount=> " + currentDueAmount);
             return currentDueAmount;
         } catch (SQLException e) {
             Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, e);
@@ -862,8 +861,8 @@ public class PaymentScreen extends javax.swing.JFrame {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(jDateChooser1.getDate());
 
-            double ttlAmount = dueamt - amtpaid;
-  JOptionPane.showMessageDialog(this, "dueamt=> "+dueamt+" amtpaid=> "+amtpaid +"final amount=> "+ttlAmount);
+            double ttlAmount = dueamt + amtpaid;
+            JOptionPane.showMessageDialog(this, "dueamt=> " + dueamt + " amtpaid=> " + amtpaid + "final amount=> " + ttlAmount);
 //        if (ttlAmount < 0.0) {
 //            JFrame f = new JFrame();
 //            JOptionPane.showMessageDialog(f,"Amount Exceeded!! \n Please enter Amount less than Due Amount.");
@@ -883,8 +882,8 @@ public class PaymentScreen extends javax.swing.JFrame {
             try {
                 Connection c1 = DBConnect.connect();
                 Statement s1 = c1.createStatement();
-                ttlAmount=ttlAmount;
-                
+                ttlAmount = ttlAmount;
+
                 String q = "update account set dueamt = '" + String.format("%.2f", ttlAmount) + "' WHERE accountname = '" + name + "';";
                 result = s1.executeUpdate(q);
 
@@ -991,7 +990,7 @@ public class PaymentScreen extends javax.swing.JFrame {
                 currentDueAmount = rs.getDouble("dueamt");
             }
 
-            double newDueAmount =  currentDueAmount + previousReceiptAmount - amount;
+            double newDueAmount = currentDueAmount + previousReceiptAmount - amount;
             st.clearBatch();
             String dueAmountUpdateQuery = "update account set dueamt = " + newDueAmount + " where accountname = '" + partyname + "';";
             st.executeUpdate(dueAmountUpdateQuery);
@@ -1254,7 +1253,7 @@ public class PaymentScreen extends javax.swing.JFrame {
                 e.printStackTrace();
             }
             txtdueamt.setText(String.valueOf(dueAmount));
-            JOptionPane.showMessageDialog(this, "due amount is => "+dueAmount);
+            JOptionPane.showMessageDialog(this, "due amount is => " + dueAmount);
         }
     }//GEN-LAST:event_txtPartyNameKeyPressed
 
