@@ -855,6 +855,7 @@ public class PaymentScreen extends javax.swing.JFrame {
                 dis = 0;
             }
             double amtpaid = Double.parseDouble(txttotalamt.getText());
+            
             String remarks = (String) jTextField1.getText();
             String mop = (String) PAYMENTMODE.getSelectedItem();
 
@@ -884,7 +885,7 @@ public class PaymentScreen extends javax.swing.JFrame {
                 Statement s1 = c1.createStatement();
                 ttlAmount = ttlAmount;
 
-                String q = "update account set dueamt = '" + String.format("%.2f", ttlAmount) + "' WHERE accountname = '" + name + "';";
+                String q = "update account set dueamt = '" + String.format("%.2f", ttlAmount+dis) + "' WHERE accountname = '" + name + "';";
                 result = s1.executeUpdate(q);
 
                 c1.close();
@@ -992,7 +993,7 @@ public class PaymentScreen extends javax.swing.JFrame {
 
             double newDueAmount = currentDueAmount + previousReceiptAmount - amount;
             st.clearBatch();
-            String dueAmountUpdateQuery = "update account set dueamt = " + String.format("%.2f", newDueAmount) + " where accountname = '" + partyname + "';";
+            String dueAmountUpdateQuery = "update account set dueamt = " + String.format("%.2f", newDueAmount+discount) + " where accountname = '" + partyname + "';";
             st.executeUpdate(dueAmountUpdateQuery);
 
             con.close();

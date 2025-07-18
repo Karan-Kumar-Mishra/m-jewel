@@ -115,9 +115,8 @@ public class ReceiptScreen extends javax.swing.JFrame {
             if (rs.next()) {
                 receiptNo = rs.getInt("maxReceiptno") + 1;
             }
-            if(receiptNo<=0)
-            {
-                receiptNo=1;
+            if (receiptNo <= 0) {
+                receiptNo = 1;
             }
             jTextField1.setText(String.valueOf(receiptNo));
             jTextField1.setEditable(false);
@@ -895,9 +894,8 @@ public class ReceiptScreen extends javax.swing.JFrame {
     private void savebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savebtnActionPerformed
         try {
             int recpno = Integer.parseInt(jTextField1.getText());
-            if(recpno<=0)
-            {
-                recpno=1;
+            if (recpno <= 0) {
+                recpno = 1;
             }
             String name = txtPartyName.getText();
             double dueamt = Double.parseDouble(jTextField3.getText());
@@ -914,10 +912,9 @@ public class ReceiptScreen extends javax.swing.JFrame {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(jDateChooser1.getDate());
-              JOptionPane.showMessageDialog(this, "dueamt=> "+dueamt+" amtpaid=> "+amtpaid);
-            double ttlAmount = dueamt - ( amtpaid);
-            
-            
+            JOptionPane.showMessageDialog(this, "dueamt=> " + dueamt + " amtpaid=> " + amtpaid + " discount => " + dis);
+            double ttlAmount = dueamt - (amtpaid + dis);
+
             String transactionType = "Save";
             if (savebtn.getText().equals("Update")) {
                 transactionType = "Update";
@@ -935,8 +932,7 @@ public class ReceiptScreen extends javax.swing.JFrame {
                 while (rs.next()) {
                     lastRec = rs.getInt("max(Receiptno)");
                 }
-                if(lastRec<=0)
-                {
+                if (lastRec <= 0) {
 //                    lastRec=1;
                 }
                 if (transactionType.equals("Update")) {

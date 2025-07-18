@@ -1105,7 +1105,7 @@ public class LeisureTable extends javax.swing.JFrame {
                             initialTableData.add(tableObj);
                         } else {
 
-                            tableObject tableObj = new tableObject(date, name, 0.0, amount, 0, remark + " Dis.Amt. " + discountAmount, "Receipt r2");
+                            tableObject tableObj = new tableObject(date, name, 0.0, amount, 0, remark+" Amt. "+amount+" Dis. Amt. "+discountAmount+" ", "Receipt r2");
                             initialTableData.add(tableObj);
                         }
 
@@ -1121,7 +1121,7 @@ public class LeisureTable extends javax.swing.JFrame {
                     if (!party.equals("Cash") && !getGroupName(party).equals("Bank")) {
 
                         remark = "Rcpt. No." + String.valueOf(rs1.getInt("ReceiptNo")) + ", " + rs1.getString("mop");
-                        tableObject tableObj = new tableObject(date, name, amount + discountAmount, 0.0, 1, remark, "Receipt r4");
+                        tableObject tableObj = new tableObject(date, name, amount + discountAmount, 0.0, 1, remark+" Amt. "+amount+" Dis. Amt. "+discountAmount+" ", "Receipt r4");
                         initialTableData.add(tableObj);
 
                     } else {
@@ -1262,14 +1262,15 @@ public class LeisureTable extends javax.swing.JFrame {
                 // initialTableData.add(tableObj);
                 // } else {
                 if (party.equals("Cash")) {
-                    tableObject tableObj = new tableObject(date, name, amount, 0.0, 1, remark + " Dis. Amt. " + discountAmount, "Payment p1");
+                    tableObject tableObj = new tableObject(date, name, amount, 0.0, 1, remark+" Amt. "+amount+" Dis. Amt. "+discountAmount+" ", "Payment p1");
                     initialTableData.add(tableObj);
                 } else {
                     if (getGroupName(party).equals("Bank")) {
                         tableObject tableObj = new tableObject(date, name, amount, 0.0, 1, remark, "Payment p2");
                         initialTableData.add(tableObj);
                     } else {
-                        tableObject tableObj = new tableObject(date, name, 0.0, amount + discountAmount, 1, remark, "Payment p2 2");
+                        
+                        tableObject tableObj = new tableObject(date, name, 0.0, amount + discountAmount, 1, remark+" Amt. "+amount+" Dis. Amt. "+discountAmount+" ", "Payment p2 2");
                         initialTableData.add(tableObj);
 
                     }
