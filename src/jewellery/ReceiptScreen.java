@@ -657,9 +657,9 @@ public class ReceiptScreen extends javax.swing.JFrame {
                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(105, 105, 105)
                 .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 192, Short.MAX_VALUE)
+                .addGap(77, 77, 77)
                 .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
+                .addContainerGap(134, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -912,12 +912,13 @@ public class ReceiptScreen extends javax.swing.JFrame {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String date = sdf.format(jDateChooser1.getDate());
-            JOptionPane.showMessageDialog(this, "dueamt=> " + dueamt + " amtpaid=> " + amtpaid + " discount => " + dis);
+
             double ttlAmount = dueamt - (amtpaid + dis);
 
             String transactionType = "Save";
             if (savebtn.getText().equals("Update")) {
                 transactionType = "Update";
+
             }
 
             try {
@@ -948,11 +949,15 @@ public class ReceiptScreen extends javax.swing.JFrame {
                 e.printStackTrace();
             }
             try {
+
+                double alldiscount = Double.parseDouble(DBController.executeQuery("select sum(discount) from receipt where Name ='" + name + "';").get(0).toString());
+                double allamount = Double.parseDouble(DBController.executeQuery("select sum(amtpaid) from receipt where Name ='" + name + "';").get(0).toString());
+                JOptionPane.showMessageDialog(this, "all dscount=> " + alldiscount + " allamount=> " + allamount);
                 Connection c1 = DBConnect.connect();
 
                 Statement s1 = c1.createStatement();
 
-                String q = "update account set dueamt = '" + String.format("%.2f", ttlAmount) + "' WHERE accountname = '" + name + "';";
+                String q = "update account set dueamt = '" + String.format("%.2f", -(alldiscount+allamount)) + "' WHERE accountname = '" + name + "';";
                 s1.executeUpdate(q);
 
                 c1.close();

@@ -368,6 +368,11 @@ public class PaymentScreen extends javax.swing.JFrame {
                 txttotalamtFocusLost(evt);
             }
         });
+        txttotalamt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txttotalamtActionPerformed(evt);
+            }
+        });
         txttotalamt.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txttotalamtKeyReleased(evt);
@@ -992,8 +997,10 @@ public class PaymentScreen extends javax.swing.JFrame {
             }
 
             double newDueAmount = currentDueAmount + previousReceiptAmount - amount;
+            double newAmount=Double.parseDouble(txttotalamt.getText());
+            double newdiscountAmount= Double.parseDouble(txtdiscountamt.getText());
             st.clearBatch();
-            String dueAmountUpdateQuery = "update account set dueamt = " + String.format("%.2f", newDueAmount+discount) + " where accountname = '" + partyname + "';";
+            String dueAmountUpdateQuery = "update account set dueamt = " + String.format("%.2f", newAmount+newdiscountAmount) + " where accountname = '" + partyname + "';";
             st.executeUpdate(dueAmountUpdateQuery);
 
             con.close();
@@ -1267,6 +1274,10 @@ public class PaymentScreen extends javax.swing.JFrame {
     private void txtPartyNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPartyNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPartyNameActionPerformed
+
+    private void txttotalamtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttotalamtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txttotalamtActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
