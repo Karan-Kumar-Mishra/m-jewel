@@ -769,10 +769,10 @@ public class PaymentScreen extends javax.swing.JFrame {
 
         suggestions.forEach((suggestion) -> {
             try {
-                suggestionsTable.addRow(new Object[] {
-                        (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
-                        (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
-                        (suggestion.get(2) == null) ? "NULL" : suggestion.get(2) });
+                suggestionsTable.addRow(new Object[]{
+                    (suggestion.get(0) == null) ? "NULL" : suggestion.get(0),
+                    (suggestion.get(1) == null) ? "NULL" : suggestion.get(1),
+                    (suggestion.get(2) == null) ? "NULL" : suggestion.get(2)});
 
             } catch (Exception ex) {
                 Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -800,7 +800,7 @@ public class PaymentScreen extends javax.swing.JFrame {
                 String Contact = rs.getString("discount");
                 String mop = rs.getString("mop");
                 String amount = rs.getString("remarks");
-                m.addRow(new Object[] { rec, name, ID, Contact, mop, amount });
+                m.addRow(new Object[]{rec, name, ID, Contact, mop, amount});
             }
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
             centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -998,8 +998,13 @@ public class PaymentScreen extends javax.swing.JFrame {
                 double allamount = Double.parseDouble(
                         DBController.executeQuery("select sum(amtpaid) from payments where Name ='" + name + "';")
                                 .get(0).toString());
-                JOptionPane.showMessageDialog(this, "all dscount=> " + alldiscount + " allamount=> " + allamount);
-                String q = "update account set dueamt = '" + String.format("%.2f", alldiscount + allamount)
+
+                double prevDueamount = Double.parseDouble(
+                        DBController.executeQuery("select dueamt  from account where accountname ='" + name + "';")
+                                .get(0).toString());
+
+                JOptionPane.showMessageDialog(this, "all dscount=> " + alldiscount + " allamount=> " + allamount + " prev due=> " + prevDueamount);
+                String q = "update account set dueamt = '" + String.format("%.2f", alldiscount + allamount + prevDueamount)
                         + "' WHERE accountname = '" + name + "';";
                 result = s1.executeUpdate(q);
 
@@ -1082,51 +1087,46 @@ public class PaymentScreen extends javax.swing.JFrame {
         String remarks = jTextField1.getText();
 
         try {
-            Connection con = DBConnect.connect();
-            Statement st = con.createStatement();
-
-            ResultSet rs1 = st.executeQuery("select amtpaid from payments where Receiptno = " + receiptNo + ";");
-            double previousReceiptAmount = 0.0;
-            while (rs1.next()) {
-                previousReceiptAmount = rs1.getDouble("amtpaid");
-            }
-            st.clearBatch();
-
-            String query = "update payments set "
-                    + "date = '" + date + "',"
-                    + "discount = " + discount + ","
-                    + "amtpaid = " + amount + ","
-                    + "mop = '" + paymentMode + "',"
-                    + "remarks = '" + remarks + "'"
-                    + " where Receiptno = " + receiptNo + ";";
-            st.executeUpdate(query);
-            st.clearBatch();
-            String dueAmountQuery = "select dueamt from account where accountname = '" + partyname + "';";
-            ResultSet rs = st.executeQuery(dueAmountQuery);
-            double currentDueAmount = 0;
-            while (rs.next()) {
-                currentDueAmount = rs.getDouble("dueamt");
-            }
-
-            st.clearBatch();
             double alldiscount = Double.parseDouble(
                     DBController.executeQuery("select sum(discount) from payments where Name ='" + partyname + "';")
                             .get(0).toString());
             double allamount = Double.parseDouble(
                     DBController.executeQuery("select sum(amtpaid) from payments where Name ='" + partyname + "';")
                             .get(0).toString());
-            String dueAmountUpdateQuery = "update account set dueamt = "
-                    + String.format("%.2f", alldiscount + allamount) + " where accountname = '" + partyname + "';";
-            st.executeUpdate(dueAmountUpdateQuery);
+            double prevDueamount = Double.parseDouble(
+                    DBController.executeQuery("select dueamt  from account where accountname ='" + partyname + "';")
+                            .get(0).toString());
+            double currentamount = Double.parseDouble(txttotalamt.getText().trim());
+            double currentdiscountamount = Double.parseDouble(txtdiscountamt.getText().trim());
+            double finalcurrentamount = currentamount + currentdiscountamount;
 
-            con.close();
-            st.close();
+            double selectamount = Double.parseDouble(
+                    DBController.executeQuery("select amtpaid from payments where Receiptno ='" + txtreceipt.getText().trim() + "';")
+                            .get(0).toString());
+
+            double selectdiscountamount = Double.parseDouble(
+                    DBController.executeQuery("select discount from payments where Receiptno ='" + txtreceipt.getText().trim() + "';")
+                            .get(0).toString());
+            double selectfinalamount = selectamount + selectdiscountamount;
+
+            JOptionPane.showMessageDialog(null, "selectamount=> " + selectamount + " selectdiscountamount => " + selectdiscountamount);
+
+            // JOptionPane.showMessageDialog(null, "prevdue=> " + prevDueamount + " select current=> " + selectfinalamount);
+            DBController.executeQueryUpdate("update account set dueamt = "
+                    + String.format("%.2f", prevDueamount - selectfinalamount) + " where accountname = '" + partyname + "';");
+            
+
+            // JOptionPane.showMessageDialog(null, "prevdue=> " + prevDueamount + " final current=> " + finalcurrentamount);
+            DBController.executeQueryUpdate("update account set dueamt = '"
+                    + String.format("%.2f", prevDueamount + finalcurrentamount) + "' WHERE accountname = '" + partyname + "';");
+
+          
 
             updateButton.setVisible(false);
             deletebutton.setVisible(false);
             refresh();
             clear();
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1308,8 +1308,6 @@ public class PaymentScreen extends javax.swing.JFrame {
             JFrame f = new JFrame();
             JOptionPane.showMessageDialog(f, "Receipt Deleted !");
             deletebutton.setVisible(false);
-            refresh();
-            clear();
 
             JOptionPane.showMessageDialog(this, "party name  is => " + name);
             List<Object> discountResult = DBController
@@ -1326,8 +1324,18 @@ public class PaymentScreen extends javax.swing.JFrame {
             if (amountResult != null && !amountResult.isEmpty() && amountResult.get(0) != null) {
                 allamount = Double.parseDouble(amountResult.get(0).toString());
             }
+            double prevDueamount = Double.parseDouble(
+                    DBController.executeQuery("select dueamt  from account where accountname ='" + name + "';")
+                            .get(0).toString());
+            double currentamount = Double.parseDouble(txttotalamt.getText().trim());
+            double currentdiscountamount = Double.parseDouble(txtdiscountamt.getText().trim());
+            double finalcurrentamount = currentamount + currentdiscountamount;
+
+            JOptionPane.showMessageDialog(this, "prevdue amount is => " + prevDueamount + "  current amount=> " + (alldiscount + allamount));
             DBController.executeQueryUpdate("update account set dueamt = '"
-                    + String.format("%.2f", alldiscount + allamount) + "' WHERE accountname = '" + name + "';");
+                    + String.format("%.2f", prevDueamount - finalcurrentamount) + "' WHERE accountname = '" + name + "';");
+            refresh();
+            clear();
 
         } catch (SQLException e) {
             Logger.getLogger(PaymentScreen.class.getName()).log(Level.SEVERE, null, e);
